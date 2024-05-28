@@ -1,6 +1,33 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import Image from "next/image";
+import { useEffect, useState } from "react";
+
+const BASE_URL: string | undefined = process.env.NEXT_PUBLIC_BASE_URL;
+
+export default function Home(): JSX.Element {
+  // USE STATE
+  const [message, setMessage] = useState<string>("");
+
+  // USE EFFECT
+  useEffect((): void => {
+    console.log("url", BASE_URL);
+    void handleFetch();
+  }, []);
+
+  // FUNCTION
+  async function handleFetch() {
+    try {
+      if (!BASE_URL) throw new Error("BASE_URL is not defined");
+      const response: Response = await fetch(BASE_URL);
+      const res: Promise<string> = response.text();
+      setMessage(await res);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // RETURN
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
@@ -47,7 +74,7 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
+            {message}{" "}
             <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
               -&gt;
             </span>
