@@ -8,6 +8,17 @@ const BASE_URL: string | undefined = process.env.NEXT_PUBLIC_BASE_URL;
 export default function Home(): JSX.Element {
   // USE STATE
   const [message, setMessage] = useState<string>("");
+  // const response = await fetch(`${BASE_URL}/verify_user`, {
+  //   method: "POST",
+  //   credentials: "include",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({
+  //     email: email,
+  //     password: password,
+  //   }),
+  // });
 
   // USE EFFECT
   useEffect((): void => {
@@ -19,7 +30,14 @@ export default function Home(): JSX.Element {
   async function handleFetch() {
     try {
       if (!BASE_URL) throw new Error("BASE_URL is not defined");
-      const response: Response = await fetch(BASE_URL);
+      const response: Response = await fetch(BASE_URL, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
       const res: Promise<string> = response.text();
       setMessage(await res);
     } catch (err) {
