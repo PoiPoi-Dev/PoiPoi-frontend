@@ -8,7 +8,7 @@ export const sample = {
       description: "A famous landmark in Tokyo",
       img_url: "https://example.com/tokyo-tower.jpg",
       is_main_attraction: true,
-      tag: ["Historical", "Tower", "Scenery"],
+      tags: ["Historical", "Tower", "Scenery"],
     },
     {
       latitude: 35.6762,
@@ -18,7 +18,7 @@ export const sample = {
       description: "JUMP official store that located on Tokyo tower",
       img_url: "https://example.com/tokyo-tower.jpg",
       is_main_attraction: true,
-      tag: ["Shopping", "Anime", "Cafe"],
+      tags: ["Shopping", "Anime", "Cafe"],
     },
     {
       latitude: 35.6584,
@@ -28,7 +28,7 @@ export const sample = {
       description: "A historic Buddhist temple in the Minato ward of Tokyo",
       img_url: "https://example.com/tokyo-tower.jpg",
       is_main_attraction: false,
-      tag: ["Historical", "Temple"],
+      tags: ["Historical", "Temple"],
     },
     {
       latitude: 35.6607,
@@ -39,7 +39,7 @@ export const sample = {
         "A Shinto shrine dedicated to the kami Atago, located on Mount Atago",
       img_url: "https://example.com/tokyo-tower.jpg",
       is_main_attraction: true,
-      tag: ["Temple", "Shrine", "Scenery"],
+      tags: ["Temple", "Shrine", "Scenery"],
     },
     {
       latitude: 35.6595,
@@ -50,7 +50,7 @@ export const sample = {
         "A Shinto shrine that is part of the Zojoji Temple complex, dedicated to Tokugawa Ieyasu",
       img_url: "https://example.com/tokyo-tower.jpg",
       is_main_attraction: false,
-      tag: ["Shrine", "Temple"],
+      tags: ["Shrine", "Temple"],
     },
   ],
 };
