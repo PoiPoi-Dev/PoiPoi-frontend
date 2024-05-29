@@ -1,4 +1,6 @@
-export const sample = {
+import { PinData } from "../_utils/global.d";
+
+export const sample: PinData = {
   pin: [
     {
       latitude: 35.6762,

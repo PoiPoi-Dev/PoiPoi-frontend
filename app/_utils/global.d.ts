@@ -1,8 +1,8 @@
-interface PinData {
+export interface PinData {
   pin: Pin[];
 }
 
-interface Pin {
+export interface Pin {
   latitude: number;
   longitude: number;
   radius: number;
@@ -10,5 +10,5 @@ interface Pin {
   description: string;
   img_url: string;
   is_main_attraction: boolean;
-  tag: string[];
+  tags: string[];
 }
