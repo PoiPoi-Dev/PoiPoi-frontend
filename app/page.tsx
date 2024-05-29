@@ -2,27 +2,18 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { sample } from "./_api/sample";
 
 const BASE_URL: string | undefined = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Home(): JSX.Element {
   // USE STATE
   const [message, setMessage] = useState<string>("");
-  // const response = await fetch(`${BASE_URL}/verify_user`, {
-  //   method: "POST",
-  //   credentials: "include",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     email: email,
-  //     password: password,
-  //   }),
-  // });
 
   // USE EFFECT
   useEffect((): void => {
     console.log("url", BASE_URL);
+    console.log(sample);
     void handleFetch();
   }, []);
 
