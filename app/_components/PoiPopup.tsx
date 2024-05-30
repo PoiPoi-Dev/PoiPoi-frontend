@@ -1,5 +1,9 @@
-import { PoiCard } from "../components/PoiCard";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { PoiCard } from "./PoiCard";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/app/_components/ui/dialog";
 
 export default function PoiPopup({ id }: { id: number }): JSX.Element {
   // RETURN

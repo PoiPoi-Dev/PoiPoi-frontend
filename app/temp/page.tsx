@@ -1,6 +1,6 @@
 "use client";
 
-import PoiPopup from "@/components/PoiPopup";
+import PoiPopup from "@/app/_components/PoiPopup";
 
 export default function Home(): JSX.Element {
   // USE STATE
