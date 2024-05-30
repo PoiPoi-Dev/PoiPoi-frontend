@@ -1,4 +1,4 @@
-import Map from "../_components/map";
+import Map from "../_components/Map";
 
 export default function Home(): JSX.Element {
   return <main>

@@ -7,10 +7,10 @@ import maplibregl from "maplibre-gl";
 export default function Map ():JSX.Element {
   const mapContainer = useRef(null);
   const map = useRef<maplibregl.Map>();
-  const [longitude] = useState<number>(140.892582);
-  const [latitude] = useState<number>(36.403631);
+  const [longitude] = useState<number>(139.69241);
+  const [latitude] = useState<number>(35.666762);
 
-  const [zoom] = useState<number>(5);
+  const [zoom] = useState<number>(8);
 
   useEffect(() => {
     if (map.current) return;
@@ -39,15 +39,15 @@ export default function Map ():JSX.Element {
 
     map.current = new maplibregl.Map({
       container: mapContainer.current as unknown as HTMLElement,
-      style: `https://demotiles.maplibre.org/style.json`,
+      style: `https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`,
       center: [longitude, latitude],
       zoom: zoom,
     });
   }, [longitude, latitude, zoom]);
 
   return (
-    <div className="relative">
-      <div className="absolute h-full " ref={mapContainer}/>
+    <div className="relative h-screen w-screen">
+      <div className="absolute h-full w-full" ref={mapContainer}/>
     </div>
   )
 }
