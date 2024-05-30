@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
 
-export function PoiCard(): JSX.Element {
+export function PoiCard({ id }: { id: number }): JSX.Element {
   return (
     <section
       className="relative top-0 flex flex-col bg-gray-300 w-[300px] min-h-[600px] max-h-full rounded-2xl overflow-hidden border-solid border-white border-4
@@ -17,7 +17,9 @@ export function PoiCard(): JSX.Element {
         className="object-cover h-[460px]"
       />
       <article className="flex-auto max-h-full w-full p-2">
-        <h1 className="text-2xl font-bold text-black p-0 m-0 mb-2">Hachiko</h1>
+        <h1 className="text-2xl font-bold text-black p-0 m-0 mb-2">
+          Hachiko {id}
+        </h1>
         <div className="flex flex-wrap gap-2 text-sm">
           <a className="rounded-full p-1 bg-blue-500 min-w-[80px] text-center">
             Statue
