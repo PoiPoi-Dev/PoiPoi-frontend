@@ -1,9 +1,10 @@
 import Image from "next/image";
+import { Button } from "./ui/button";
 
 export function PoiCard(): JSX.Element {
   return (
     <section
-      className="flex flex-col bg-gray-300 min-w-[300px] max-w-full min-h-[600px] max-h-full rounded-2xl overflow-hidden border-solid border-white border-4
+      className="relative top-0 flex flex-col bg-gray-300 w-[300px] min-h-[600px] max-h-full rounded-2xl overflow-hidden border-solid border-white border-4
     "
     >
       <Image
@@ -15,19 +16,23 @@ export function PoiCard(): JSX.Element {
         priority
         className="object-cover h-[460px]"
       />
-      <article className="flex-auto max-h-full w-full p-4">
-        <h1 className="text-2xl font-bold text-black p-0 m-0 mb-2">Title</h1>
-        <div className="flex gap-2">
+      <article className="flex-auto max-h-full w-full p-2">
+        <h1 className="text-2xl font-bold text-black p-0 m-0 mb-2">Hachiko</h1>
+        <div className="flex flex-wrap gap-2 text-sm">
           <a className="rounded-full p-1 bg-blue-500 min-w-[80px] text-center">
-            Tag1
+            Statue
           </a>
           <a className="rounded-full p-1 bg-blue-500 min-w-[80px] text-center">
-            Tag1
+            Animal
           </a>
           <a className="rounded-full p-1 bg-blue-500 min-w-[80px] text-center">
-            Tag1
+            Historical
+          </a>
+          <a className="rounded-full p-1 bg-blue-500 min-w-[80px] text-center">
+            Popular
           </a>
         </div>
+        <Button className="w-full mt-4 rounded-lg">Button</Button>
       </article>
     </section>
   );
