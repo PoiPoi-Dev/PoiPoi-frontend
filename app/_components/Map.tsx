@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useRef, useState } from "react"
 
-import maplibregl from "maplibre-gl";
+import maplibregl, {GeolocateControl} from "maplibre-gl";
 
 export default function Map ():JSX.Element {
   const mapContainer = useRef(null);
@@ -20,7 +20,17 @@ export default function Map ():JSX.Element {
       center: [longitude, latitude],
       zoom: zoom,
     });
+
+    map.current.addControl(new GeolocateControl({
+      positionOptions: {
+          enableHighAccuracy: true
+      },
+      showUserLocation: true,
+      trackUserLocation: true,
+    }));
+
   }, [longitude, latitude, zoom]);
+  
 
   return (
     <div className="relative h-screen w-screen">
