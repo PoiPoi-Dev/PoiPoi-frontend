@@ -3,10 +3,6 @@ import { initializeApp } from "firebase/app";
 import { 
   getAuth,
   connectAuthEmulator,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
 } from "firebase/auth";
 
 // Add SDKs for Firebase products that you want to use
@@ -27,48 +23,10 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 //Use the command firebase emulators:start --only auth
-if (process.env.NODE_ENV === 'development') connectAuthEmulator(auth, "http://localhost:9099");
-
-//Authentication Logic
-/**
- * Attempts to login the user based on the credentials in Google Firebase Authentication.
- */
-const loginEmailPassword = async (email: string, password: string) : Promise<string | undefined> => {
-  const loginEmail = email;
-  const loginPassword = password
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-    return userCredential.user.uid;
-  } catch (e: unknown) {
-    console.error(e);
-  }
+if (process.env.NODE_ENV === 'development') {
+  console.log("Connecting to the firebase emulator.");
+  connectAuthEmulator(auth, "http://localhost:9099");
 }
-
-/**
- * Creates a user in Google Firebase Authentication. Password storage and hashing is handled by Google Firebase.
- */
-const createAccount = async (email: string, password: string) : Promise<string | undefined> => {
-  const loginEmail = email;
-  const loginPassword = password
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, loginEmail, loginPassword);
-    return userCredential.user.uid;
-  } catch (e: unknown) {
-    console.error(e);
-  }
-}
-
-const monitorAuthState = async () => {
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      console.log("Logged in as", user);
-    } else {
-      console.log("Not logged in.")
-    }
-
-  })
-}
-monitorAuthState();
 
 export {
   auth,
