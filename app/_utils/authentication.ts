@@ -8,7 +8,8 @@ import {
 
 //Authentication Logic
 /**
- * Attempts to login the user based on the credentials in Google Firebase Authentication.
+ * Attempts to login the user based on the credentials in Google Firebase Authentication. 
+ * @returns uuid string
  */
 const loginEmailPassword = async (email: string, password: string) : Promise<string | undefined> => {
   const loginEmail = email;
@@ -22,7 +23,8 @@ const loginEmailPassword = async (email: string, password: string) : Promise<str
 };
 
 /**
- * Creates a user in Google Firebase Authentication. Password storage and hashing is handled by Google Firebase.
+ * Creates a user in Google Firebase Authentication. Password storage and hashing is handled by Google Firebase. 
+ * @returns uuid string
  */
 const createAccount = async (email: string, password: string) : Promise<string | undefined> => {
   const loginEmail = email;
