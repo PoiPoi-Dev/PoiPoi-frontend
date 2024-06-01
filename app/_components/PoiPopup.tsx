@@ -8,7 +8,9 @@ import {
 export default function PoiPopup({
   id,
   payload,
+  setShowPopup,
 }: {
+  setShowPopup: (arg0: undefined) => void;
   id: number;
   payload: {
     id: number;
@@ -26,8 +28,8 @@ export default function PoiPopup({
   return (
     <main className="flex h-screen flex-col items-center justify-between">
       <Dialog defaultOpen>
-        <DialogTrigger></DialogTrigger>
-        <DialogContent>
+        <DialogTrigger />
+        <DialogContent onClick={() => setShowPopup(undefined)}>
           <PoiCard id={id} payload={payload} />
         </DialogContent>
       </Dialog>
