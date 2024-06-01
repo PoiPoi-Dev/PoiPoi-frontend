@@ -3,6 +3,7 @@ export interface PinData {
 }
 
 export interface Pin {
+  id: number;
   latitude: number;
   longitude: number;
   radius: number;

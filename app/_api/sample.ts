@@ -3,8 +3,9 @@ import { PinData } from "../_utils/global.d";
 export const sample: PinData = {
   pin: [
     {
-      latitude: 35.6762,
-      longitude: 139.6503,
+      id: 1,
+      latitude: 35.6586,
+      longitude: 139.7454,
       radius: 50,
       title: "Tokyo Tower",
       description: "A famous landmark in Tokyo",
@@ -13,8 +14,9 @@ export const sample: PinData = {
       tags: ["Historical", "Tower", "Scenery"],
     },
     {
-      latitude: 35.6762,
-      longitude: 139.6503,
+      id: 2,
+      latitude: 35.6587,
+      longitude: 139.7455,
       radius: 50,
       title: "JUMP shop @Tokyo tower",
       description: "JUMP official store that located on Tokyo tower",
@@ -23,6 +25,7 @@ export const sample: PinData = {
       tags: ["Shopping", "Anime", "Cafe"],
     },
     {
+      id: 3,
       latitude: 35.6584,
       longitude: 139.7471,
       radius: 50,
@@ -33,6 +36,7 @@ export const sample: PinData = {
       tags: ["Historical", "Temple"],
     },
     {
+      id: 4,
       latitude: 35.6607,
       longitude: 139.7451,
       radius: 50,
@@ -44,6 +48,7 @@ export const sample: PinData = {
       tags: ["Temple", "Shrine", "Scenery"],
     },
     {
+      id: 5,
       latitude: 35.6595,
       longitude: 139.7469,
       radius: 50,
