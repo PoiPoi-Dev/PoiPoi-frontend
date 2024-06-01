@@ -24,10 +24,6 @@ function MapContainer() {
     zoom: 9,
   });
 
-  React.useEffect(() => {
-    console.log(showPopup);
-  }, [showPopup]);
-
   return (
     <Map
       {...viewPort}
