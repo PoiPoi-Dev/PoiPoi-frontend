@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 export function PoiCard({ id }: { id: number }): JSX.Element {
   return (
     <section
-      className="relative top-0 flex flex-col bg-gray-300 w-[300px] min-h-[600px] max-h-full rounded-2xl overflow-hidden border-solid border-white border-4
+      className="relative top-0 flex flex-col bg-gray-300 w-[300px] min-h-[600px] max-h-full rounded-2xl overflow-hidden border-solid border-white border-4 z-[999]
     "
     >
       <Image
