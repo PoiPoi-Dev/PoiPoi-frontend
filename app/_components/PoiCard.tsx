@@ -48,7 +48,12 @@ export function PoiCard({
             );
           })}
         </div>
-        <Button className="w-full mt-4 rounded-lg">Button</Button>
+        <Button
+          className="w-full mt-4 rounded-lg"
+          onClick={() => alert("click")}
+        >
+          Button
+        </Button>
       </article>
     </section>
   );

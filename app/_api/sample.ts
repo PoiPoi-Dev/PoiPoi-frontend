@@ -12,7 +12,7 @@ export const sample: PinData = {
       img_url:
         "https://travelmate.tech/media/images/cache/tokyo_tokyo_tower_01_presentazione_jpg_1920_1080_cover_70.jpg",
       is_main_attraction: true,
-      tags: ["Historical", "Tower", "Scenery"],
+      tags: ["Historical", "Tower", "Scenery", "Popular"],
     },
     {
       id: 2,
