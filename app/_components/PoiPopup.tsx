@@ -5,14 +5,32 @@ import {
   DialogTrigger,
 } from "@/app/_components/ui/dialog";
 
-export default function PoiPopup({ id }: { id: number }): JSX.Element {
+export default function PoiPopup({
+  id,
+  payload,
+  setShowPopup,
+}: {
+  setShowPopup: (arg0: undefined) => void;
+  id: number;
+  payload: {
+    id: number;
+    latitude: number;
+    longitude: number;
+    radius: number;
+    title: string;
+    description: string;
+    img_url: string;
+    is_main_attraction: boolean;
+    tags: string[];
+  };
+}): JSX.Element {
   // RETURN
   return (
     <main className="flex h-screen flex-col items-center justify-between">
-      <Dialog>
-        <DialogTrigger>ICON HERE</DialogTrigger>
-        <DialogContent>
-          <PoiCard id={id} />
+      <Dialog defaultOpen>
+        <DialogTrigger />
+        <DialogContent onClick={() => setShowPopup(undefined)}>
+          <PoiCard id={id} payload={payload} />
         </DialogContent>
       </Dialog>
     </main>

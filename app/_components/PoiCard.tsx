@@ -1,14 +1,30 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
 
-export function PoiCard({ id }: { id: number }): JSX.Element {
+export function PoiCard({
+  id,
+  payload,
+}: {
+  id: number;
+  payload: {
+    id: number;
+    latitude: number;
+    longitude: number;
+    radius: number;
+    title: string;
+    description: string;
+    img_url: string;
+    is_main_attraction: boolean;
+    tags: string[];
+  };
+}): JSX.Element {
   return (
     <section
-      className="relative top-0 flex flex-col bg-gray-300 w-[300px] min-h-[600px] max-h-full rounded-2xl overflow-hidden border-solid border-white border-4
+      className="relative top-0 flex flex-col bg-gray-300 w-[300px] min-h-[600px] max-h-full rounded-2xl overflow-hidden border-solid border-white border-4 z-[999]
     "
     >
       <Image
-        src="/hachiko.jpg"
+        src={payload.img_url}
         alt="Hachiko Poi Hint"
         width={300}
         height={400}
@@ -18,23 +34,26 @@ export function PoiCard({ id }: { id: number }): JSX.Element {
       />
       <article className="flex-auto max-h-full w-full p-2">
         <h1 className="text-2xl font-bold text-black p-0 m-0 mb-2">
-          Hachiko {id}
+          {payload.title}
         </h1>
         <div className="flex flex-wrap gap-2 text-sm">
-          <a className="rounded-full p-1 bg-blue-500 min-w-[80px] text-center">
-            Statue
-          </a>
-          <a className="rounded-full p-1 bg-blue-500 min-w-[80px] text-center">
-            Animal
-          </a>
-          <a className="rounded-full p-1 bg-blue-500 min-w-[80px] text-center">
-            Historical
-          </a>
-          <a className="rounded-full p-1 bg-blue-500 min-w-[80px] text-center">
-            Popular
-          </a>
+          {payload.tags.map((tag: string): JSX.Element => {
+            return (
+              <a
+                key={tag + id}
+                className="rounded-full p-1 bg-blue-500 min-w-[80px] text-center"
+              >
+                {tag}
+              </a>
+            );
+          })}
         </div>
-        <Button className="w-full mt-4 rounded-lg">Button</Button>
+        <Button
+          className="w-full mt-4 rounded-lg"
+          onClick={() => alert("click")}
+        >
+          Button
+        </Button>
       </article>
     </section>
   );
