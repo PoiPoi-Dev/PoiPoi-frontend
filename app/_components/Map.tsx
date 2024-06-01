@@ -1,30 +1,66 @@
-"use client"
-import { useEffect, useRef, useState } from "react"
+"use client";
 
-import maplibregl from "maplibre-gl";
+import Image from "next/image";
+import * as React from "react";
+import { useState } from "react";
+import Map, { Marker, ScaleControl } from "react-map-gl/maplibre";
+import { PoiCard } from "./PoiCard";
 
-export default function Map ():JSX.Element {
-  const mapContainer = useRef(null);
-  const map = useRef<maplibregl.Map>();
+function MapContainer() {
+  const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
+
   const [longitude] = useState<number>(139.69241);
   const [latitude] = useState<number>(35.666762);
 
-  const [zoom] = useState<number>(8);
-
-  useEffect(() => {
-    if (map.current) return;
-
-    map.current = new maplibregl.Map({
-      container: mapContainer.current as unknown as HTMLElement,
-      style: `https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`,
-      center: [longitude, latitude],
-      zoom: zoom,
-    });
-  }, [longitude, latitude, zoom]);
+  const [viewState, setViewState] = React.useState({
+    longitude: longitude,
+    latitude: latitude,
+    zoom: 8,
+  });
 
   return (
-    <div className="relative h-screen w-screen">
-      <div className="absolute h-full w-full" ref={mapContainer}/>
-    </div>
-  )
+    <Map
+      {...viewState}
+      onMove={(evt) => setViewState(evt.viewState)}
+      style={{ width: "100vw", height: "100vh", position: "relative" }}
+      mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
+    >
+      <ScaleControl />
+      <Marker
+        longitude={longitude}
+        latitude={latitude}
+        rotationAlignment="map"
+        style={{ position: "absolute", top: 0, left: 0, opacity: 1 }}
+        offset={[0, 0]}
+        onClick={() => setShowPopup(1)}
+      >
+        <Image src="/next.svg" alt="pin" width={64} height={64} />
+        {showPopup === 1 && (
+          <div className="z-50">
+            <PoiCard id={1} />
+            <button onClick={() => setShowPopup(undefined)}>close</button>
+          </div>
+        )}
+      </Marker>
+
+      <Marker
+        longitude={longitude + 0.01}
+        latitude={latitude + 0.01}
+        rotationAlignment="map"
+        style={{ position: "absolute", top: 0, left: 0, opacity: 1 }}
+        offset={[0, 0]}
+        onClick={() => setShowPopup(2)}
+      >
+        <Image src="/vercel.svg" alt="pin" width={64} height={64} />
+        {showPopup === 2 && (
+          <div className="z-50">
+            <PoiCard id={2} />
+            <button onClick={() => setShowPopup(undefined)}>close</button>
+          </div>
+        )}
+      </Marker>
+    </Map>
+  );
 }
+
+export default MapContainer;
