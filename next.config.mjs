@@ -32,6 +32,12 @@ const nextConfig = {
         port: "",
         pathname: "/wikipedia/commons/thumb/**/**/**",
       },
+      {
+        protocol: "http",
+        hostname: "w3.org",
+        port: "",
+        pathname: "/**/**",
+      }
     ],
   },
 };
