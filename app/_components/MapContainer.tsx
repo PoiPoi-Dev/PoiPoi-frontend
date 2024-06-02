@@ -2,14 +2,11 @@
 
 import Image from "next/image";
 import * as React from "react";
-import { useState, } from "react";
+import { useState } from "react";
 import Map, { Marker } from "react-map-gl/maplibre";
 import { sample } from "../_api/sample";
 import PoiPopup from "./PoiPopup";
-import {
-  Popover,
-  PopoverContent,
-} from "@radix-ui/react-popover";
+import { Popover, PopoverContent } from "@radix-ui/react-popover";
 import { Pin } from "../_utils/global";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
@@ -33,7 +30,6 @@ function MapInner() {
         onMove={(evt) => setViewPort(evt.viewState)}
         style={{ width: "100vw", height: "100vh" }}
         reuseMaps
-        // disable map rotation since it's not correctly calculated into the bounds atm :')
         dragRotate={false}
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
       >
@@ -81,26 +77,31 @@ function MapInner() {
                 }}
               />
               {showPopup === pin.id && (
-                <Popover defaultOpen>
-                  <PopoverContent className="absolute bg-transparent left-[50%] top-[50%] grid w-fit max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg">
-                    <PoiPopup setShowPopup={setShowPopup} id={pin.id} payload={payload} />
-                  </PopoverContent>
-                </Popover>
+                <div className="fixed top-0 left-0 w-screen h-screen">
+                  <Popover defaultOpen>
+                    <PopoverContent className="">
+                      <PoiPopup
+                        setShowPopup={setShowPopup}
+                        id={pin.id}
+                        payload={payload}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
               )}
             </Marker>
           );
         })}
-        <MapControls/>
+        <MapControls />
       </Map>
     </div>
   );
 }
 
-
 const MapContainer = () => (
   <MapContextProvider>
     <MapInner />
   </MapContextProvider>
-)
+);
 
 export default MapContainer;
