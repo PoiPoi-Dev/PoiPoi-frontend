@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 
 export function PoiCard({
-  id,
+  id, // will be used for vaidate the card and mark in future implementation.
   payload,
 }: {
   id: number;
