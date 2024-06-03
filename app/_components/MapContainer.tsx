@@ -7,10 +7,11 @@ import { sample } from "../_api/sample";
 import { Pin } from "../_utils/global";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
-import MarkerContainer from "./MarkerContainer";
+import TagFilterDropdown from "./TagFilterDropdown";
 
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
+  const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [longitude] = useState<number>(139.80241);
   const [latitude] = useState<number>(35.56762);
   const [viewPort, setViewPort] = useState({
@@ -19,12 +20,22 @@ function MapInner() {
     zoom: 10,
   });
 
-  React.useEffect(() => {
-    console.log(showPopup);
-  }, [showPopup]);
+  const handleFilter = (selectedTags: string[]) => {
+    if (selectedTags.length === 0) {
+      setFilteredPins(sample.pin);
+    } else {
+      const filtered = sample.pin.filter((pin) =>
+        selectedTags.every((tag) => pin.tags.includes(tag))
+      );
+      setFilteredPins(filtered);
+    }
+    console.log("Currently filtering", selectedTags.length > 0 ? selectedTags.join(", ") : "All");
+  };
+
 
   return (
     <div className="absolute overflow-hidden inset-0 bg-mapBg">
+      <TagFilterDropdown onFilter={handleFilter}/>
       <Map
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
@@ -33,7 +44,30 @@ function MapInner() {
         dragRotate={false}
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
       >
-        {sample.pin.map((pin: Pin): JSX.Element => {
+        {filteredPins.map((pin: Pin): JSX.Element => {
+          const {
+            id,
+            latitude,
+            longitude,
+            radius,
+            title,
+            description,
+            img_url,
+            is_main_attraction,
+            tags,
+          } = pin;
+          const payload = {
+            id,
+            latitude,
+            longitude,
+            radius,
+            title,
+            description,
+            img_url,
+            is_main_attraction,
+            tags,
+          };
+
           return (
             <MarkerContainer
               key={pin.id}
