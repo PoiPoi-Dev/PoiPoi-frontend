@@ -48,28 +48,6 @@ function MapInner() {
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
       >
         {filteredPins.map((pin: Pin): JSX.Element => {
-          const {
-            id,
-            latitude,
-            longitude,
-            radius,
-            title,
-            description,
-            img_url,
-            is_main_attraction,
-            tags,
-          } = pin;
-          const payload = {
-            id,
-            latitude,
-            longitude,
-            radius,
-            title,
-            description,
-            img_url,
-            is_main_attraction,
-            tags,
-          };
 
           return (
             <MarkerContainer
