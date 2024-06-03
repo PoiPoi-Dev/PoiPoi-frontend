@@ -11,6 +11,8 @@ import MarkerContainer from "./MarkerContainer";
 
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
+
+  // Default camera map when user open the app
   const [longitude] = useState<number>(139.80241);
   const [latitude] = useState<number>(35.56762);
   const [viewPort, setViewPort] = useState({
@@ -18,10 +20,6 @@ function MapInner() {
     latitude: latitude,
     zoom: 10,
   });
-
-  React.useEffect(() => {
-    console.log(showPopup);
-  }, [showPopup]);
 
   return (
     <div className="absolute overflow-hidden inset-0 bg-mapBg">
