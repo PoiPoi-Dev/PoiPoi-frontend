@@ -6,7 +6,7 @@ export const sample: PinData = {
       id: 1,
       latitude: 35.6586,
       longitude: 139.7454,
-      radius: 50,
+      radius: 130,
       title: "Tokyo Tower",
       description: "A famous landmark in Tokyo",
       img_url:
@@ -30,7 +30,7 @@ export const sample: PinData = {
       id: 3,
       latitude: 35.6584,
       longitude: 139.7471,
-      radius: 50,
+      radius: 100,
       title: "Zojoji Temple",
       description: "A historic Buddhist temple in the Minato ward of Tokyo",
       img_url: "https://www.japan-guide.com/g18/3010_02.jpg",
@@ -41,7 +41,7 @@ export const sample: PinData = {
       id: 4,
       latitude: 35.6607,
       longitude: 139.7451,
-      radius: 50,
+      radius: 100,
       title: "Atago Shrine",
       description:
         "A Shinto shrine dedicated to the kami Atago, located on Mount Atago",
