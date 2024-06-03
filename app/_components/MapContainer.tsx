@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Map, { Marker } from "react-map-gl/maplibre";
 import { sample } from "../_api/sample";
 import PoiPopup from "./PoiPopup";
@@ -10,6 +10,7 @@ import { Popover, PopoverContent } from "@radix-ui/react-popover";
 import { Pin } from "../_utils/global";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
+import { Button } from "./ui/button";
 
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
@@ -22,6 +23,10 @@ function MapInner() {
     latitude: latitude,
     zoom: 10,
   });
+
+  useEffect(() => {
+    console.log(showPopup);
+  }, [showPopup]);
 
   return (
     <div className="absolute overflow-hidden inset-0 bg-mapBg">
@@ -92,6 +97,9 @@ function MapInner() {
             </Marker>
           );
         })}
+        <div className="fixed right-0 bottom-0 w-auto h-auto">
+          <Button>distance button</Button>
+        </div>
         <MapControls />
       </Map>
     </div>
