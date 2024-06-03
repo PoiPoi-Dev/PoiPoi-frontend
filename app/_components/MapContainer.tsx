@@ -5,6 +5,7 @@ import { useState } from "react";
 import Map from "react-map-gl/maplibre";
 import { sample } from "../_api/sample";
 import { Pin } from "../_utils/global";
+import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
 import TagFilterDropdown from "./TagFilterDropdown";
@@ -31,12 +32,15 @@ function MapInner() {
       );
       setFilteredPins(filtered);
     }
-    console.log("Currently filtering", selectedTags.length > 0 ? selectedTags.join(", ") : "All");
+    console.log(
+      "Currently filtering",
+      selectedTags.length > 0 ? selectedTags.join(", ") : "All"
+    );
   };
 
   return (
     <div className="absolute overflow-hidden inset-0 bg-mapBg">
-      <TagFilterDropdown onFilter={handleFilter}/>
+      <TagFilterDropdown onFilter={handleFilter} />
       <Map
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
