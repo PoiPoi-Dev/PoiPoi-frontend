@@ -5,6 +5,7 @@ import { useState } from "react";
 import Map from "react-map-gl/maplibre";
 import { sample } from "../_api/sample";
 import { Pin } from "../_utils/global";
+import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
 import TagFilterDropdown from "./TagFilterDropdown";
@@ -29,13 +30,11 @@ function MapInner() {
       );
       setFilteredPins(filtered);
     }
-    console.log("Currently filtering", selectedTags.length > 0 ? selectedTags.join(", ") : "All");
   };
-
 
   return (
     <div className="absolute overflow-hidden inset-0 bg-mapBg">
-      <TagFilterDropdown onFilter={handleFilter}/>
+      <TagFilterDropdown onFilter={handleFilter} />
       <Map
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
@@ -45,28 +44,6 @@ function MapInner() {
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
       >
         {filteredPins.map((pin: Pin): JSX.Element => {
-          const {
-            id,
-            latitude,
-            longitude,
-            radius,
-            title,
-            description,
-            img_url,
-            is_main_attraction,
-            tags,
-          } = pin;
-          const payload = {
-            id,
-            latitude,
-            longitude,
-            radius,
-            title,
-            description,
-            img_url,
-            is_main_attraction,
-            tags,
-          };
 
           return (
             <MarkerContainer
