@@ -4,6 +4,7 @@ export const sample: PinData = {
   pin: [
     {
       id: 1,
+      collect: true,
       latitude: 35.6586,
       longitude: 139.7454,
       radius: 130,
@@ -16,6 +17,7 @@ export const sample: PinData = {
     },
     {
       id: 2,
+      collect: false,
       latitude: 35.6587,
       longitude: 139.7455,
       radius: 50,
@@ -28,6 +30,7 @@ export const sample: PinData = {
     },
     {
       id: 3,
+      collect: false,
       latitude: 35.6584,
       longitude: 139.7471,
       radius: 100,
@@ -39,6 +42,7 @@ export const sample: PinData = {
     },
     {
       id: 4,
+      collect: false,
       latitude: 35.6607,
       longitude: 139.7451,
       radius: 100,
@@ -52,6 +56,7 @@ export const sample: PinData = {
     },
     {
       id: 5,
+      collect: true,
       latitude: 35.6595,
       longitude: 139.7469,
       radius: 50,
