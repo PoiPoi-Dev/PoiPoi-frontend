@@ -47,7 +47,7 @@ function DistanceHintButton({
         }
 
         setTrackingPin(pinToTrack);
-        let distanceInMeters = DegreesToMeters(shortestDistance);
+        const distanceInMeters = DegreesToMeters(shortestDistance);
         setDistanceToPin(distanceInMeters);
       },
       (error) => {

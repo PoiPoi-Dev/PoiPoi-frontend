@@ -1,35 +1,43 @@
 "use client";
 
-import Image from "next/image";
 import * as React from "react";
-import { useState, useEffect } from "react";
-import Map, { Marker } from "react-map-gl/maplibre";
+import { useState } from "react";
+import Map from "react-map-gl/maplibre";
 import { sample } from "../_api/sample";
-import PoiPopup from "./PoiPopup";
-import { Popover, PopoverContent } from "@radix-ui/react-popover";
 import { Pin } from "../_utils/global";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
-import { Button } from "./ui/button";
+import TagFilterDropdown from "./TagFilterDropdown";
+import MarkerContainer from "./MarkerContainer";
+import DistanceHintButton from "./DistanceHintButton";
 
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
-
+  const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [longitude] = useState<number>(139.80241);
   const [latitude] = useState<number>(35.56762);
-
   const [viewPort, setViewPort] = useState({
     longitude: longitude,
     latitude: latitude,
     zoom: 10,
   });
 
-  useEffect(() => {
-    console.log(showPopup);
-  }, [showPopup]);
+  const handleFilter = (selectedTags: string[]) => {
+    if (selectedTags.length === 0) {
+      setFilteredPins(sample.pin);
+    } else {
+      const filtered = sample.pin.filter((pin) =>
+        selectedTags.every((tag) => pin.tags.includes(tag))
+      );
+      setFilteredPins(filtered);
+    }
+    console.log("Currently filtering", selectedTags.length > 0 ? selectedTags.join(", ") : "All");
+  };
+
 
   return (
     <div className="absolute overflow-hidden inset-0 bg-mapBg">
+      <TagFilterDropdown onFilter={handleFilter}/>
       <Map
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
@@ -38,68 +46,17 @@ function MapInner() {
         dragRotate={false}
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
       >
-        {sample.pin.map((pin: Pin): JSX.Element => {
-          const {
-            id,
-            latitude,
-            longitude,
-            radius,
-            title,
-            description,
-            img_url,
-            is_main_attraction,
-            tags,
-          } = pin;
-          const payload = {
-            id,
-            latitude,
-            longitude,
-            radius,
-            title,
-            description,
-            img_url,
-            is_main_attraction,
-            tags,
-          };
+        {filteredPins.map((pin: Pin): JSX.Element => {
           return (
-            <Marker
-              key={pin.latitude}
-              longitude={pin.longitude}
-              latitude={pin.latitude}
-              rotationAlignment="map"
-              style={{ position: "absolute", top: 0, left: 0, opacity: 1 }}
-              offset={[0, 0]}
-              anchor="bottom"
-            >
-              <Image
-                src="/PinIcon.png"
-                alt="pin"
-                width={32}
-                height={32}
-                className="relative z-10"
-                onClick={() => {
-                  setShowPopup(pin.id);
-                }}
-              />
-              {showPopup === pin.id && (
-                <div className="fixed top-0 left-0 w-screen h-screen">
-                  <Popover defaultOpen>
-                    <PopoverContent className="">
-                      <PoiPopup
-                        setShowPopup={setShowPopup}
-                        id={pin.id}
-                        payload={payload}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              )}
-            </Marker>
+            <MarkerContainer
+              key={pin.id}
+              pin={pin}
+              showPopup={showPopup}
+              setShowPopup={setShowPopup}
+            />
           );
         })}
-        <div className="fixed right-0 bottom-0 w-auto h-auto">
-          <Button>distance button</Button>
-        </div>
+        <DistanceHintButton pins={sample.pin}/>
         <MapControls />
       </Map>
     </div>
