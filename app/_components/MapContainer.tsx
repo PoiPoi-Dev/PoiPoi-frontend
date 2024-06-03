@@ -39,7 +39,7 @@ function MapInner() {
 
   return (
     <div className="absolute overflow-hidden inset-0 bg-mapBg">
-      <TagFilterDropdown onFilter={handleFilter} />
+      <TagFilterDropdown onFilter={handleFilter}/>
       <Map
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
