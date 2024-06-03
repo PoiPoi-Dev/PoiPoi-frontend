@@ -13,6 +13,8 @@ import TagFilterDropdown from "./TagFilterDropdown";
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
   const [filteredPins, setFilteredPins] = useState(sample.pin);
+
+  // Default camera map when user open the app
   const [longitude] = useState<number>(139.80241);
   const [latitude] = useState<number>(35.56762);
   const [viewPort, setViewPort] = useState({
@@ -44,7 +46,6 @@ function MapInner() {
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
       >
         {filteredPins.map((pin: Pin): JSX.Element => {
-
           return (
             <MarkerContainer
               key={pin.id}

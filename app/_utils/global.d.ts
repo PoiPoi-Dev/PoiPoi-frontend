@@ -4,6 +4,7 @@ export interface PinData {
 
 export interface Pin {
   id: number;
+  collect: boolean;
   latitude: number;
   longitude: number;
   radius: number;
@@ -12,4 +13,10 @@ export interface Pin {
   img_url: string;
   is_main_attraction: boolean;
   tags: string[];
+}
+
+export interface MarkerContainerProps {
+  pin: Pin;
+  showPopup: number | undefined;
+  setShowPopup: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
