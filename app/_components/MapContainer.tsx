@@ -10,9 +10,11 @@ import { Popover, PopoverContent } from "@radix-ui/react-popover";
 import { Pin } from "../_utils/global";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
+import TagFilterDropdown from "./TagFilterDropdown";
 
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
+  const [filteredPins, setFilteredPins] = useState(sample.pin);
 
   const [longitude] = useState<number>(139.80241);
   const [latitude] = useState<number>(35.56762);
@@ -23,8 +25,21 @@ function MapInner() {
     zoom: 10,
   });
 
+  const handleFilter = (selectedTags: string[]) => {
+    if (selectedTags.length === 0) {
+      setFilteredPins(sample.pin);
+    } else {
+      const filtered = sample.pin.filter((pin) =>
+        selectedTags.every((tag) => pin.tags.includes(tag))
+      );
+      setFilteredPins(filtered);
+    }
+    console.log("Currently filtering", selectedTags.length > 0 ? selectedTags.join(", ") : "All");
+  };
+
   return (
     <div className="absolute overflow-hidden inset-0 bg-mapBg">
+      <TagFilterDropdown onFilter={handleFilter} />
       <Map
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
@@ -33,7 +48,7 @@ function MapInner() {
         dragRotate={false}
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
       >
-        {sample.pin.map((pin: Pin): JSX.Element => {
+        {filteredPins.map((pin: Pin): JSX.Element => {
           const {
             id,
             latitude,
