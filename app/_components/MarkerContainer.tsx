@@ -1,9 +1,10 @@
-import Image from "next/image";
+
 import * as React from "react";
 import { Layer, Marker, Source } from "react-map-gl/maplibre";
 import PoiPopup from "./PoiPopup";
 import { Popover, PopoverContent } from "@radix-ui/react-popover";
 import { Pin } from "../_utils/global";
+import { PiSealQuestionBold } from "react-icons/pi";
 
 const geojson = (lat: number, long: number) => {
   return {
@@ -62,7 +63,8 @@ function MarkerContainer({
       anchor="center"
     >
       {/* Pin icon */}
-      <Image
+      <PiSealQuestionBold size={32} onClick={() => setShowPopup(pin.id)} />
+      {/* <Image
         src="/PinIcon.png"
         alt="pin"
         width={32}
@@ -71,7 +73,7 @@ function MarkerContainer({
         onClick={() => {
           setShowPopup(pin.id);
         }}
-      />
+      /> */}
 
       {/* Source */}
       <Source
