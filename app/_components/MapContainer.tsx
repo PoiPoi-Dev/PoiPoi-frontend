@@ -30,10 +30,6 @@ function MapInner() {
       );
       setFilteredPins(filtered);
     }
-    console.log(
-      "Currently filtering",
-      selectedTags.length > 0 ? selectedTags.join(", ") : "All"
-    );
   };
 
   return (
