@@ -8,6 +8,7 @@ export function PoiCard({
   id: number;
   payload: {
     id: number;
+    collect: boolean;
     latitude: number;
     longitude: number;
     radius: number;
@@ -48,12 +49,16 @@ export function PoiCard({
             );
           })}
         </div>
-        <Button
-          className="w-full mt-4 rounded-lg"
-          onClick={() => alert("click")}
-        >
-          Button
-        </Button>
+        {payload.collect ? (
+          <p>{payload.description}</p>
+        ) : (
+          <Button
+            className="w-full mt-4 rounded-lg"
+            onClick={() => (payload.collect = true)}
+          >
+            Collect
+          </Button>
+        )}
       </article>
     </section>
   );
