@@ -1,5 +1,4 @@
 import { Coordinates, DegToRad, GetDistanceFromCoordinatesToMeters } from "@/app/_utils/coordinateMath";
-import { latest } from "maplibre-gl";
 
 describe ("DegToRad", () => {
 

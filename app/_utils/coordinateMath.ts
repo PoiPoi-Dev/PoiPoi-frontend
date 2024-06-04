@@ -3,8 +3,6 @@ export interface Coordinates {
   longitude: number;
 }
 
-const METERSTODEGREES: number = 111139;
-
 export function DegToRad(degrees: number): number {
   return degrees * (Math.PI / 180);
 }
@@ -25,8 +23,4 @@ export function GetDistanceFromCoordinatesToMeters(
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = earthRadius * c;
   return distance;
-}
-
-export function DegreesToMeters(degrees: number): number {
-  return degrees / METERSTODEGREES;
 }
