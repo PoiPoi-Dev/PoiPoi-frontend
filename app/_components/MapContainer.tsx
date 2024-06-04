@@ -8,7 +8,7 @@ import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
 import CreateSearchzoneButton from "./CreateSearchzoneButton";
-// import TagFilterDropdown from "./TagFilterDropdown";
+import TagFilterDropdown from "./TagFilterDropdown";
 import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
 import PoidexButton from "./PoidexButton";
