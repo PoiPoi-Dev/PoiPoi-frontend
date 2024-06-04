@@ -1,9 +1,10 @@
-import Image from "next/image";
 import * as React from "react";
-import { Layer, Marker, Source } from "react-map-gl/maplibre";
+import { Layer, Marker, Source, LayerProps } from "react-map-gl/maplibre";
 import PoiPopup from "./PoiPopup";
 import { Popover, PopoverContent } from "@radix-ui/react-popover";
-import { Pin } from "../_utils/global";
+import { MarkerContainerProps } from "../_utils/global";
+import { PiSealQuestion } from "react-icons/pi";
+import { IoMdCheckmarkCircle } from "react-icons/io";
 
 const geojson = (lat: number, long: number) => {
   return {
@@ -21,18 +22,12 @@ const geojson = (lat: number, long: number) => {
 const metersToPixelsAtMaxZoom = (meters: number, latitude: number) =>
   meters / 0.075 / Math.cos((latitude * Math.PI) / 180);
 
-const layerStyle = (pinTitle: string, radius: number, latitude: number) => {
+const layerStyle = (pinTitle: string, radius: number, latitude: number) : LayerProps => {
   return {
     id: pinTitle,
     type: "circle",
     paint: {
-      "circle-radius": {
-        stops: [
-          [0, 0],
-          [20, metersToPixelsAtMaxZoom(radius, latitude)],
-        ],
-        base: 2,
-      },
+      "circle-radius": ["interpolate",["exponential", 2],["zoom"],0, 0,   20, metersToPixelsAtMaxZoom(radius, latitude)],
       "circle-color": "#007cbf",
       "circle-opacity": 0.5,
     },
@@ -40,17 +35,14 @@ const layerStyle = (pinTitle: string, radius: number, latitude: number) => {
   };
 };
 
-interface MarkerContainerProps {
-  pin: Pin;
-  showPopup: number | undefined;
-  setShowPopup: React.Dispatch<React.SetStateAction<number | undefined>>;
-}
-
 function MarkerContainer({
   pin,
   showPopup,
   setShowPopup,
 }: MarkerContainerProps): JSX.Element {
+
+  const generateLayerStyle:LayerProps = layerStyle(pin.title, pin.radius, pin.latitude);
+
   return (
     <Marker
       key={pin.latitude}
@@ -62,25 +54,22 @@ function MarkerContainer({
       anchor="center"
     >
       {/* Pin icon */}
-      <Image
-        src="/PinIcon.png"
-        alt="pin"
-        width={32}
-        height={32}
-        className="relative z-10"
-        onClick={() => {
-          setShowPopup(pin.id);
-        }}
-      />
+      {pin.collect ? (
+        <IoMdCheckmarkCircle size={48} onClick={() => setShowPopup(pin.id)} />
+      ) : (
+        <PiSealQuestion size={32} onClick={() => setShowPopup(pin.id)} />
+      )}
 
-      {/* Source */}
-      <Source
-        id={pin.title}
-        type="geojson"
-        data={geojson(pin.latitude, pin.longitude)}
-      >
-        <Layer {...layerStyle(pin.title, pin.radius, pin.latitude)} />
-      </Source>
+      {/* Radius */}
+      {!pin.collect && (
+        <Source
+          id={pin.title}
+          type="geojson"
+          data={geojson(pin.latitude, pin.longitude)}
+        >
+          <Layer {...generateLayerStyle} />
+        </Source>
+      )}
 
       {/* Popup */}
       {showPopup === pin.id && (
