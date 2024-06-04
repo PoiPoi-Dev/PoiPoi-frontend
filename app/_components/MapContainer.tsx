@@ -10,10 +10,12 @@ import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
 import TagFilterDropdown from "./TagFilterDropdown";
 import DistanceHintButton from "./DistanceHintButton";
+import HintButton from "./HintButton";
 
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
   const [filteredPins, setFilteredPins] = useState(sample.pin);
+  const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(undefined);
 
   // Default camera map when user open the app
   const [longitude] = useState<number>(139.80241);
@@ -38,6 +40,7 @@ function MapInner() {
   return (
     <div className="absolute overflow-hidden inset-0 bg-mapBg">
       <TagFilterDropdown onFilter={handleFilter} />
+      <HintButton poi_id={selectedPoiId}/>
       <Map
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
@@ -53,6 +56,7 @@ function MapInner() {
               pin={pin}
               showPopup={showPopup}
               setShowPopup={setShowPopup}
+              setSelectedPoiId={setSelectedPoiId}
             />
           );
         })}

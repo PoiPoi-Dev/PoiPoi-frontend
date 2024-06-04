@@ -1,4 +1,4 @@
-import { PinData } from "../_utils/global.d";
+import { PinData, HintData } from "../_utils/global.d";
 
 export const sample: PinData = {
   pin: [
@@ -69,4 +69,33 @@ export const sample: PinData = {
       tags: ["Shrine", "Temple"],
     },
   ],
+};
+
+export const hintSample: HintData = {
+  hints: [
+    {
+      poi_id: 1,
+      user_id: 1,
+      hint_id: 1,
+      content: "It's very tall, in red and white.",
+    },
+    {
+      poi_id: 2,
+      user_id: 3,
+      hint_id: 2,
+      content: "It's between Tokyo Prince Hotel and the Prince Park Tower Tokyo."
+    },
+    {
+      poi_id: 1,
+      user_id: 2,
+      hint_id: 3,
+      content: "It lights up at night."
+    },
+    {
+      poi_id: 1,
+      user_id: 3,
+      hint_id: 4,
+      content:"It is close to Akabanebashi Station."
+    },
+  ]
 };
