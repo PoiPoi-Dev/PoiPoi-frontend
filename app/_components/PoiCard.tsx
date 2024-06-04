@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
+import { useEffect, useState } from "react";
 
 export function PoiCard({
   id, // will be used for vaidate the card and mark in future implementation.
@@ -19,6 +20,15 @@ export function PoiCard({
     tags: string[];
   };
 }): JSX.Element {
+  // USE STATE
+  const [collect, setCollect] = useState<boolean>(payload.collect);
+
+  // EFFECT
+  useEffect(() => {}, []);
+
+  // FUNCTION
+
+  // RETURN
   return (
     <section
       className="relative top-0 flex flex-col bg-gray-300 w-[300px] min-h-[600px] max-h-full rounded-2xl overflow-hidden border-solid border-white border-4 z-[999]
@@ -49,12 +59,15 @@ export function PoiCard({
             );
           })}
         </div>
-        {payload.collect ? (
+        {collect ? (
           <p>{payload.description}</p>
         ) : (
           <Button
             className="w-full mt-4 rounded-lg"
-            onClick={() => (payload.collect = true)}
+            onClick={() => {
+              setCollect(true);
+              payload.collect = true;
+            }}
           >
             Collect
           </Button>
