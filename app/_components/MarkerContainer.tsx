@@ -51,12 +51,19 @@ function MarkerContainer({
   pin,
   showPopup,
   setShowPopup,
+  setSelectedPoiId,
 }: MarkerContainerProps): JSX.Element {
   const generateLayerStyle: LayerProps = layerStyle(
     pin.title,
     pin.radius,
     pin.latitude
   );
+
+
+  const handleClick = () => {
+    setShowPopup(pin.id);
+    setSelectedPoiId(pin.id);
+  };
 
   return (
     <Marker
@@ -70,9 +77,9 @@ function MarkerContainer({
     >
       {/* Pin icon */}
       {pin.collect ? (
-        <IoMdCheckmarkCircle size={48} onClick={() => setShowPopup(pin.id)} />
+        <IoMdCheckmarkCircle size={48} onClick={handleClick} />
       ) : (
-        <PiSealQuestion size={32} onClick={() => setShowPopup(pin.id)} />
+        <PiSealQuestion size={32} onClick={handleClick} />
       )}
 
       {/* Radius */}
