@@ -1,12 +1,12 @@
 import { NavigationControl, GeolocateControl } from "react-map-gl/maplibre";
 
-const MapControls = ():React.JSX.Element => {
+const MapControls = (): React.JSX.Element => {
   return (
-  <>
-    <NavigationControl position="top-right"/>
-    <GeolocateControl position="top-right" />
-  </>
-  )
-}
+    <>
+      <NavigationControl position="top-right" />
+      <GeolocateControl position="top-right" trackUserLocation={true} />
+    </>
+  );
+};
 
 export default MapControls;
