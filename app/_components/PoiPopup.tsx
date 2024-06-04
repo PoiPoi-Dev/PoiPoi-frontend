@@ -10,7 +10,6 @@ export default function PoiPopup({
   payload,
   setShowPopup,
 }: {
-  setShowPopup: (arg0: undefined) => void;
   id: number;
   payload: {
     id: number;
@@ -23,6 +22,7 @@ export default function PoiPopup({
     is_main_attraction: boolean;
     tags: string[];
   };
+  setShowPopup: (arg0: undefined) => void;
 }): JSX.Element {
   // RETURN
   return (

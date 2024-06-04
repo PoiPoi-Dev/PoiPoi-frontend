@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Layer, Marker, Source } from "react-map-gl/maplibre";
+import { Layer, Marker, Source, LayerProps } from "react-map-gl/maplibre";
 import PoiPopup from "./PoiPopup";
 import { Popover, PopoverContent } from "@radix-ui/react-popover";
 import { MarkerContainerProps } from "../_utils/global";
@@ -22,18 +22,12 @@ const geojson = (lat: number, long: number) => {
 const metersToPixelsAtMaxZoom = (meters: number, latitude: number) =>
   meters / 0.075 / Math.cos((latitude * Math.PI) / 180);
 
-const layerStyle = (pinTitle: string, radius: number, latitude: number) => {
+const layerStyle = (pinTitle: string, radius: number, latitude: number) : LayerProps => {
   return {
     id: pinTitle,
     type: "circle",
     paint: {
-      "circle-radius": {
-        stops: [
-          [0, 0],
-          [20, metersToPixelsAtMaxZoom(radius, latitude)],
-        ],
-        base: 2,
-      },
+      "circle-radius": ["interpolate",["exponential", 2],["zoom"],0, 0,   20, metersToPixelsAtMaxZoom(radius, latitude)],
       "circle-color": "#007cbf",
       "circle-opacity": 0.5,
     },
@@ -46,6 +40,9 @@ function MarkerContainer({
   showPopup,
   setShowPopup,
 }: MarkerContainerProps): JSX.Element {
+
+  const generateLayerStyle:LayerProps = layerStyle(pin.title, pin.radius, pin.latitude);
+
   return (
     <Marker
       key={pin.latitude}
@@ -70,7 +67,7 @@ function MarkerContainer({
           type="geojson"
           data={geojson(pin.latitude, pin.longitude)}
         >
-          <Layer {...layerStyle(pin.title, pin.radius, pin.latitude)} />
+          <Layer {...generateLayerStyle} />
         </Source>
       )}
 
