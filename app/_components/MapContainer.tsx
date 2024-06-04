@@ -9,7 +9,6 @@ import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
 import TagFilterDropdown from "./TagFilterDropdown";
-import MarkerContainer from "./MarkerContainer";
 import DistanceHintButton from "./DistanceHintButton";
 
 function MapInner() {
