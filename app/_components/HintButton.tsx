@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
 
 interface poiId {
     poi_id: number | undefined;
   }
 
-// const BASE_URL = import.meta.env.local.NEXT_PUBLIC_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const HintButton: React.FC<poiId> = ({ poi_id }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,16 +13,13 @@ const HintButton: React.FC<poiId> = ({ poi_id }) => {
 
   const fetchHints = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/hints/${poi_id}`);
+        const response = await fetch(`${BASE_URL}/api/hints/${poi_id}`);
         const data = await response.json();
-        console.log("all data: ", data);
         let arrayOfContent = [];
         for (let i = 0; i < data.length; i++) {
             arrayOfContent.push(data[i].content);
         }
         setHints(arrayOfContent);
-        console.log(arrayOfContent);
-        console.log("fetch happened!");
       } catch (error) {
         console.error("Error fetching hints:", error);
       }
@@ -38,12 +35,13 @@ const HintButton: React.FC<poiId> = ({ poi_id }) => {
   };
 
   return (
-    <div className="absolute top-11 left-0 z-50">
+    <div className="absolute top-0 left-32 z-50">
       <Button onClick={toggleDisplay} variant="default">Hints</Button>
       {isOpen && (
         <div className="absolute bg-white border rounded shadow-lg mt-2 p-2 z-10">
           {hints.map((hint, index) => (
             <div key={index} className="flex items-center space-x-2">
+                <span>{index + 1}</span>
                 <p>{hint}</p>
             </div>
           ))}
