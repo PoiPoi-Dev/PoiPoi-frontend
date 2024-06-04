@@ -8,6 +8,7 @@ import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
+import CreateSearchzoneButton from "./CreateSearchzoneButton";
 import TagFilterDropdown from "./TagFilterDropdown";
 import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
@@ -39,6 +40,7 @@ function MapInner() {
 
   return (
     <div className="absolute overflow-hidden inset-0 bg-mapBg">
+      <CreateSearchzoneButton />
       <TagFilterDropdown onFilter={handleFilter} />
       <HintButton poi_id={selectedPoiId}/>
       <Map
