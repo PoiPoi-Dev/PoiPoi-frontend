@@ -27,7 +27,6 @@ function DistanceHintButton({
 
   useEffect(() => {
     const id = navigator.geolocation.watchPosition((position) => {
-      console.table(position.coords);
       handleDistanceHintButtonState(position.coords);
     });
     return () => navigator.geolocation.clearWatch(id);
@@ -36,8 +35,6 @@ function DistanceHintButton({
   useEffect(() => {
     if (!trackingPin) return;
     setIsActiveState(isWithinSearchZone());
-    console.log("tracked pin", trackingPin.title);
-    console.log("in search zone?", isWithinSearchZone());
   }, [trackingPin, distanceToPin]);
 
   useEffect(()=>{
