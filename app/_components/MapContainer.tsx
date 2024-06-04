@@ -33,7 +33,6 @@ function MapInner() {
     longitude: longitude,
     latitude: latitude,
     zoom: 14,
-    zoom: 14,
   });
 
   // USE EFFECT
@@ -84,13 +83,14 @@ function MapInner() {
   // RETURN
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
+      {/* THIS SHOULD BE MOVED TO OTHER PLACE */}
       <div className="absolute top-4 left-4 z-10 flex gap-2">
         {/* <TagFilterDropdown onFilter={handleFilter} /> */}
         <PoidexButton onClick={() => setShowPoidex(true)} />
         <HintButton poi_id={selectedPoiId} />
       </div>
-      <HintButton poi_id={selectedPoiId} />
-      <PoidexButton onClick={() => setShowPoidex(true)} />
+
+      {/* MAP CANVAS */}
       <Map
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
@@ -125,7 +125,6 @@ function MapInner() {
           );
         })} */}
         <DistanceHintButton pins={sample} />
-        })}
         {/* {filteredPins.map((pin: Pin): JSX.Element => {
           return (
             <MarkerContainer
@@ -142,7 +141,6 @@ function MapInner() {
       </Map>
       {showPoidex ? (
         <PoidexModal
-          pins={sample}
           pins={sample}
           onClose={handleClosePoidex}
           onPoiClick={handlePoiClick}
