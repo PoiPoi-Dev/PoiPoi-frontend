@@ -9,6 +9,7 @@ import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
 import TagFilterDropdown from "./TagFilterDropdown";
+import DistanceHintButton from "./DistanceHintButton";
 
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
@@ -55,8 +56,7 @@ function MapInner() {
             />
           );
         })}
-
-        {/* Controller */}
+        <DistanceHintButton pins={sample.pin}/>
         <MapControls />
       </Map>
     </div>
