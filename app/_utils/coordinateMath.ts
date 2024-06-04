@@ -1,6 +1,3 @@
-import { lineString } from "@turf/helpers";
-import { Feature } from "maplibre-gl";
-
 export interface Coordinates {
   latitude: number;
   longitude: number;
@@ -8,7 +5,7 @@ export interface Coordinates {
 
 const METERSTODEGREES: number = 111139;
 
-function DegToRad(degrees: number): number {
+export function DegToRad(degrees: number): number {
   return degrees * (Math.PI / 180);
 }
 
