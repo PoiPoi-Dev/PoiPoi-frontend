@@ -1,9 +1,10 @@
-import Image from "next/image";
 import * as React from "react";
 import { Layer, Marker, Source, LayerProps } from "react-map-gl/maplibre";
 import PoiPopup from "./PoiPopup";
 import { Popover, PopoverContent } from "@radix-ui/react-popover";
-import { Pin } from "../_utils/global";
+import { MarkerContainerProps } from "../_utils/global";
+import { PiSealQuestion } from "react-icons/pi";
+import { IoMdCheckmarkCircle } from "react-icons/io";
 
 const geojson = (lat: number, long: number) => {
   return {
@@ -34,14 +35,6 @@ const layerStyle = (pinTitle: string, radius: number, latitude: number) : LayerP
   };
 };
 
-interface MarkerContainerProps {
-  pin: Pin;
-  showPopup: number | undefined;
-  setShowPopup: React.Dispatch<React.SetStateAction<number | undefined>>;
-}
-
-
-
 function MarkerContainer({
   pin,
   showPopup,
@@ -61,25 +54,22 @@ function MarkerContainer({
       anchor="center"
     >
       {/* Pin icon */}
-      <Image
-        src="/PinIcon.png"
-        alt="pin"
-        width={32}
-        height={32}
-        className="relative z-10"
-        onClick={() => {
-          setShowPopup(pin.id);
-        }}
-      />
+      {pin.collect ? (
+        <IoMdCheckmarkCircle size={48} onClick={() => setShowPopup(pin.id)} />
+      ) : (
+        <PiSealQuestion size={32} onClick={() => setShowPopup(pin.id)} />
+      )}
 
-      {/* Source */}
-      <Source
-        id={pin.title}
-        type="geojson"
-        data={geojson(pin.latitude, pin.longitude)}
-      >
-        <Layer {...generateLayerStyle} />
-      </Source>
+      {/* Radius */}
+      {!pin.collect && (
+        <Source
+          id={pin.title}
+          type="geojson"
+          data={geojson(pin.latitude, pin.longitude)}
+        >
+          <Layer {...generateLayerStyle} />
+        </Source>
+      )}
 
       {/* Popup */}
       {showPopup === pin.id && (
