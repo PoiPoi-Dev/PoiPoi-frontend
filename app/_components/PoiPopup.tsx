@@ -13,6 +13,7 @@ export default function PoiPopup({
   id: number;
   payload: {
     id: number;
+    collect: boolean;
     latitude: number;
     longitude: number;
     radius: number;
