@@ -15,9 +15,13 @@ const HintButton: React.FC<poiId> = ({ poi_id }) => {
       try {
         const response = await fetch(`http://localhost:8000/api/hints/${poi_id}`);
         const data = await response.json();
-        
-        setHints(data[0].content);
-        console.log(data[0].content);
+        console.log("all data: ", data);
+        let arrayOfContent = [];
+        for (let i = 0; i < data.length; i++) {
+            arrayOfContent.push(data[i].content);
+        }
+        setHints(arrayOfContent);
+        console.log(arrayOfContent);
         console.log("fetch happened!");
       } catch (error) {
         console.error("Error fetching hints:", error);
@@ -38,12 +42,11 @@ const HintButton: React.FC<poiId> = ({ poi_id }) => {
       <Button onClick={toggleDisplay} variant="default">Hints</Button>
       {isOpen && (
         <div className="absolute bg-white border rounded shadow-lg mt-2 p-2 z-10">
-          {/* {hints.map((hint, index) => (
+          {hints.map((hint, index) => (
             <div key={index} className="flex items-center space-x-2">
                 <p>{hint}</p>
             </div>
-          ))} */}
-          <p>{hints}</p>
+          ))}
           <Button onClick={closeHints} variant="default" className="mt-2">Close</Button>
         </div>
       )}
