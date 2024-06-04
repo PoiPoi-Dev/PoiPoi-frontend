@@ -22,12 +22,24 @@ const geojson = (lat: number, long: number) => {
 const metersToPixelsAtMaxZoom = (meters: number, latitude: number) =>
   meters / 0.075 / Math.cos((latitude * Math.PI) / 180);
 
-const layerStyle = (pinTitle: string, radius: number, latitude: number) : LayerProps => {
+const layerStyle = (
+  pinTitle: string,
+  radius: number,
+  latitude: number
+): LayerProps => {
   return {
     id: pinTitle,
     type: "circle",
     paint: {
-      "circle-radius": ["interpolate",["exponential", 2],["zoom"],0, 0,   20, metersToPixelsAtMaxZoom(radius, latitude)],
+      "circle-radius": [
+        "interpolate",
+        ["exponential", 2],
+        ["zoom"],
+        0,
+        0,
+        20,
+        metersToPixelsAtMaxZoom(radius, latitude),
+      ],
       "circle-color": "#007cbf",
       "circle-opacity": 0.5,
     },
@@ -40,8 +52,11 @@ function MarkerContainer({
   showPopup,
   setShowPopup,
 }: MarkerContainerProps): JSX.Element {
-
-  const generateLayerStyle:LayerProps = layerStyle(pin.title, pin.radius, pin.latitude);
+  const generateLayerStyle: LayerProps = layerStyle(
+    pin.title,
+    pin.radius,
+    pin.latitude
+  );
 
   return (
     <Marker
@@ -49,7 +64,7 @@ function MarkerContainer({
       longitude={pin.longitude}
       latitude={pin.latitude}
       rotationAlignment="map"
-      style={{ position: "absolute", top: 0, left: 0, opacity: 1 }}
+      style={{ position: "absolute", top: 0, left: 0, opacity: 1, zIndex: 999 }}
       offset={[0, 0]}
       anchor="center"
     >
