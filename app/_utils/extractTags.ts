@@ -1,6 +1,6 @@
 import { sample } from "../_api/sample";
 
-let tagArray:string[] = []
+const tagArray:string[] = []
 
 export const extractTags = () => {
   sample.pin.forEach((pin) => {

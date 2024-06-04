@@ -2,7 +2,7 @@ import { auth } from "@/config/firebaseconfig";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
+  // onAuthStateChanged,
   signOut,
 } from "firebase/auth";
 
@@ -37,26 +37,26 @@ const createAccount = async (email: string, password: string) : Promise<string |
   }
 };
 
-const monitorAuthState = async (): Promise<void> => {
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      console.log("Logged in as", user);
-    } else {
-      console.log("Not logged in.")
-    }
-  });
-};
+// const monitorAuthState = async (): Promise<void> => {
+//   onAuthStateChanged(auth, user => {
+//     if (user) {
+//       console.log("Logged in as", user);
+//     } else {
+//       console.log("Not logged in.")
+//     }
+//   });
+// };
 
 const logout = async (): Promise<void> => {
   await signOut(auth);
 }
 
-monitorAuthState();
+// monitorAuthState();
 
 
 export {
   loginEmailPassword,
   createAccount,
-  monitorAuthState,
+  // monitorAuthState,
   logout
 }

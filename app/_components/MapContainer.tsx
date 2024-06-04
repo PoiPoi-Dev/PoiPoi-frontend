@@ -8,6 +8,7 @@ import { Pin } from "../_utils/global";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
 import TagFilterDropdown from "./TagFilterDropdown";
+import MarkerContainer from "./MarkerContainer";
 
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
@@ -45,28 +46,6 @@ function MapInner() {
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
       >
         {filteredPins.map((pin: Pin): JSX.Element => {
-          const {
-            id,
-            latitude,
-            longitude,
-            radius,
-            title,
-            description,
-            img_url,
-            is_main_attraction,
-            tags,
-          } = pin;
-          const payload = {
-            id,
-            latitude,
-            longitude,
-            radius,
-            title,
-            description,
-            img_url,
-            is_main_attraction,
-            tags,
-          };
 
           return (
             <MarkerContainer
