@@ -51,7 +51,6 @@ function MarkerContainer({
   const handleClick = () => {
     setShowPopup(pin.id);
     setSelectedPoiId(pin.id);
-    console.log("pin id: ", pin.id);
   };
 
   return (
