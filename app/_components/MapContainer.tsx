@@ -11,12 +11,15 @@ import MapControls from "./MapControls";
 import TagFilterDropdown from "./TagFilterDropdown";
 import PoidexButton from "./PoidexButton";
 import PoidexModal from "./PoidexModal";
+import DistanceHintButton from "./DistanceHintButton";
+import HintButton from "./HintButton";
 
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
   const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [showPoidex, setShowPoidex] = useState(false);
   const [selectedPoi, setSelectedPoi] = useState<Pin | null>(null);
+  const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(undefined);
 
   // Default camera map when user opens the app
   const [longitude] = useState<number>(139.80241);
@@ -55,6 +58,8 @@ function MapInner() {
           <PoidexButton onClick={() => setShowPoidex(true)} />
         </div>
       </div>
+      <TagFilterDropdown onFilter={handleFilter} />
+      <HintButton poi_id={selectedPoiId}/>
       <Map
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
@@ -63,16 +68,18 @@ function MapInner() {
         dragRotate={false}
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
       >
-        {filteredPins.map((pin: Pin): JSX.Element => (
-          <MarkerContainer
-            key={pin.id}
-            pin={pin}
-            showPopup={showPopup}
-            setShowPopup={setShowPopup}
-          />
-        ))}
-
-        {/* Controller */}
+        {filteredPins.map((pin: Pin): JSX.Element => {
+          return (
+            <MarkerContainer
+              key={pin.id}
+              pin={pin}
+              showPopup={showPopup}
+              setShowPopup={setShowPopup}
+              setSelectedPoiId={setSelectedPoiId}
+            />
+          );
+        })}
+        <DistanceHintButton pins={sample.pin}/>
         <MapControls />
       </Map>
       {showPoidex ? (
