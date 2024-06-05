@@ -4,12 +4,25 @@ import { Button } from "./ui/button";
 
 const CreateSearchzoneButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [newSearchzone, setNewSearchzone] = useState<Poi>({});
+  const [newSearchzone, setNewSearchzone] = useState<Poi>({} as Poi);
 
   const togglePopover = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewSearchzone((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("form data", newSearchzone);
+    togglePopover();
+  };
   return (
     <div>
       <Button
@@ -22,13 +35,16 @@ const CreateSearchzoneButton: React.FC = () => {
       {isOpen && (
         <div className="absolute bg-white border rounded shadow-lg mt-2 p-2 top-[100px] left-0 z-[1000]">
           Form!!
-          <form>
+          <form onSubmit={handleSubmit}>
             <div>
               <label htmlFor="title">Enter title:</label>
               <input
                 className="border border-black rounded"
                 type="text"
                 required
+                onChange={handleInputChange}
+                name="title"
+                value={newSearchzone.title}
               ></input>
             </div>
             <div>
@@ -37,6 +53,9 @@ const CreateSearchzoneButton: React.FC = () => {
                 className="border border-black rounded"
                 type="text"
                 required
+                onChange={handleInputChange}
+                name="description"
+                value={newSearchzone.description}
               ></input>
             </div>
             <div>
@@ -45,30 +64,42 @@ const CreateSearchzoneButton: React.FC = () => {
                 className="border border-black rounded"
                 type="text"
                 required
+                onChange={handleInputChange}
+                name="img_url"
+                value={newSearchzone.img_url}
               ></input>
             </div>
             <div>
               <label htmlFor="creator_id">Enter creator id:</label>
               <input
                 className="border border-black rounded"
-                type="text"
+                type="number"
                 required
+                onChange={handleInputChange}
+                name="creator_id"
+                value={newSearchzone.creator_id}
               ></input>
             </div>
             <div>
               <label htmlFor="poi_lat">Enter exact latitude:</label>
               <input
                 className="border border-black rounded"
-                type="text"
+                type="number"
                 required
+                onChange={handleInputChange}
+                name="poi_latitude"
+                value={newSearchzone.poi_latitude}
               ></input>
             </div>
             <div>
               <label htmlFor="poi_long">Enter exact longitude:</label>
               <input
                 className="border border-black rounded"
-                type="text"
+                type="number"
                 required
+                onChange={handleInputChange}
+                name="poi_longitude"
+                value={newSearchzone.poi_longitude}
               ></input>
             </div>
             <div>
@@ -77,35 +108,47 @@ const CreateSearchzoneButton: React.FC = () => {
               </label>
               <input
                 className="border border-black rounded"
-                type="text"
+                type="number"
                 required
+                onChange={handleInputChange}
+                name="collection_radius"
+                value={newSearchzone.collection_radius}
               ></input>
             </div>
             <div>
               <label htmlFor="search_lat">Enter search zone latitude:</label>
               <input
                 className="border border-black rounded"
-                type="text"
+                type="number"
                 required
+                onChange={handleInputChange}
+                name="search_latitude"
+                value={newSearchzone.search_latitude}
               ></input>
             </div>
             <div>
               <label htmlFor="search_long">Enter search zone longitude:</label>
               <input
                 className="border border-black rounded"
-                type="text"
+                type="number"
                 required
+                onChange={handleInputChange}
+                name="search_longitude"
+                value={newSearchzone.search_longitude}
               ></input>
             </div>
             <div>
               <label htmlFor="search_radius">Enter search zone radius:</label>
               <input
                 className="border border-black rounded"
-                type="text"
+                type="number"
                 required
+                onChange={handleInputChange}
+                name="search_radius"
+                value={newSearchzone.search_radius}
               ></input>
             </div>
-            <Button onClick={togglePopover}>Submit</Button>
+            <Button onClick={handleSubmit}>Submit</Button>
           </form>
         </div>
       )}
