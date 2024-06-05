@@ -18,11 +18,22 @@ const CreateSearchzoneButton: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("form data", newSearchzone);
+    console.log("newSearchzone", newSearchzone);
+    //send req to BE
+    const response = await fetch("endpoint url", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newSearchzone),
+    });
+    console.log("response", response);
     togglePopover();
   };
+
   return (
     <div>
       <Button
