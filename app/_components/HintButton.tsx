@@ -14,8 +14,8 @@ const HintButton: React.FC<poiId> = ({ poi_id }) => {
   const fetchHints = async () => {
       try {
         const response = await fetch(`${BASE_URL}/api/hints/${poi_id}`);
-        const data = await response.json();
-        let arrayOfContent = [];
+        const data: { content: string, poi_id: number, user_id: number, hint_id: number }[] = await response.json() as { content: string, poi_id: number, user_id: number, hint_id: number }[];
+        const arrayOfContent: string[] = [];
         for (let i = 0; i < data.length; i++) {
             arrayOfContent.push(data[i].content);
         }
@@ -26,8 +26,12 @@ const HintButton: React.FC<poiId> = ({ poi_id }) => {
     };
 
   const toggleDisplay = () => {
-    fetchHints();
-    setIsOpen(!isOpen);
+    try {
+      void fetchHints();
+      setIsOpen(!isOpen);
+    } catch (error) {
+      console.error(error)
+    } 
   };
 
   const closeHints = () => {
