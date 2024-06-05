@@ -58,7 +58,6 @@ function MapInner() {
           <PoidexButton onClick={() => setShowPoidex(true)} />
         </div>
       </div>
-      <TagFilterDropdown onFilter={handleFilter} />
       <HintButton poi_id={selectedPoiId}/>
       <Map
         {...viewPort}

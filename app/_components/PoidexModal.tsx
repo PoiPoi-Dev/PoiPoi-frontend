@@ -45,11 +45,13 @@ const PoidexModal: React.FC<PoidexModalProps> = ({ pins, onClose, onPoiClick, se
           <div className="flex flex-col items-center">
             <button
               onClick={goBack}
-              className="absolute top-2 left-2 text-black bg-blue-500 rounded-full p-2 z-50"
+              className="fixed top-2 right-2 text-black bg-blue-500 rounded-full p-2 z-50"
             >
               Back
             </button>
-            <PoiCard id={selectedPoi.id} payload={{ ...selectedPoi, collected: selectedPoi.collect }} />
+            <div className="z-[9999] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              <PoiCard id={selectedPoi.id} payload={{ ...selectedPoi, collect: selectedPoi.collect }} />
+            </div>
           </div>
         )}
       </dialog>

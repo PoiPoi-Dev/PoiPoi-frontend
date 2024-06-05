@@ -18,7 +18,6 @@ export function PoiCard({
     img_url: string;
     is_main_attraction: boolean;
     tags: string[];
-    collected: boolean;
   };
 }): JSX.Element {
   // USE STATE
