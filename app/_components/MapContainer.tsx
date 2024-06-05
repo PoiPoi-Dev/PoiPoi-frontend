@@ -10,15 +10,19 @@ import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
 import CreateSearchzoneButton from "./CreateSearchzoneButton";
 import TagFilterDropdown from "./TagFilterDropdown";
+import PoidexButton from "./PoidexButton";
+import PoidexModal from "./PoidexModal";
 import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
 
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
   const [filteredPins, setFilteredPins] = useState(sample.pin);
+  const [showPoidex, setShowPoidex] = useState(false);
+  const [selectedPoi, setSelectedPoi] = useState<Pin | null>(null);
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(undefined);
 
-  // Default camera map when user open the app
+  // Default camera map when user opens the app
   const [longitude] = useState<number>(139.80241);
   const [latitude] = useState<number>(35.56762);
   const [viewPort, setViewPort] = useState({
@@ -38,10 +42,24 @@ function MapInner() {
     }
   };
 
+  const handlePoiClick = (poi: Pin) => {
+    setSelectedPoi(poi);
+  };
+
+  const handleClosePoidex = () => {
+    setShowPoidex(false);
+    setSelectedPoi(null); // Reset selectedPoi when closing PoidexModal
+  };
+
   return (
-    <div className="absolute overflow-hidden inset-0 bg-mapBg">
-      <CreateSearchzoneButton />
+    <div className="relative overflow-hidden inset-0 bg-mapBg">
+      <div className="absolute top-4 left-4 z-10">
+        <CreateSearchzoneButton />
       <TagFilterDropdown onFilter={handleFilter} />
+        <div className="mt-11">
+          <PoidexButton onClick={() => setShowPoidex(true)} />
+        </div>
+      </div>
       <HintButton poi_id={selectedPoiId}/>
       <Map
         {...viewPort}
@@ -65,6 +83,15 @@ function MapInner() {
         <DistanceHintButton pins={sample.pin}/>
         <MapControls />
       </Map>
+      {showPoidex ? (
+        <PoidexModal
+          pins={sample.pin}
+          onClose={handleClosePoidex}
+          onPoiClick={handlePoiClick}
+          selectedPoi={selectedPoi}
+          goBack={() => setSelectedPoi(null)}
+        />
+      ) : null}
     </div>
   );
 }

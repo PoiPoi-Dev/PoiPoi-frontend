@@ -30,7 +30,7 @@ function DistanceHintButton({
       handleDistanceHintButtonState(position.coords);
     });
     return () => navigator.geolocation.clearWatch(id);
-  }, []);
+  });
 
   useEffect(() => {
     if (!trackingPin) return;

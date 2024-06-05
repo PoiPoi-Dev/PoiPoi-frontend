@@ -59,7 +59,6 @@ function MarkerContainer({
     pin.latitude
   );
 
-
   const handleClick = () => {
     setShowPopup(pin.id);
     setSelectedPoiId(pin.id);
@@ -71,7 +70,7 @@ function MarkerContainer({
       longitude={pin.longitude}
       latitude={pin.latitude}
       rotationAlignment="map"
-      style={{ position: "absolute", top: 0, left: 0, opacity: 1, zIndex: 999 }}
+      style={{ position: "absolute", top: 0, left: 0, opacity: 1, zIndex: 50 }}
       offset={[0, 0]}
       anchor="center"
     >
