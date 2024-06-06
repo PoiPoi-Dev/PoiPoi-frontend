@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Map from "react-map-gl/maplibre";
-import { sample } from "../_api/sample";
+// import { sample } from "../_api/sample";
 import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
@@ -20,7 +20,6 @@ function MapInner() {
   // USE STATE
   const [poiData, setPoiData] = useState<Pin[]>([]);
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
-  // const [filteredPins, setFilteredPins] = useState(sample.pin);
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [showPoidex, setShowPoidex] = useState(false);
   const [selectedPoi, setSelectedPoi] = useState<Pin | null>(null);
@@ -114,7 +113,7 @@ function MapInner() {
             />
           );
         })} */}
-        
+
         {/* {filteredPins.map((pin: Pin): JSX.Element => {
           return (
             <MarkerContainer
@@ -126,8 +125,8 @@ function MapInner() {
             />
           );
         })} */}
-        <DistanceHintButton pins={sample} />
-        <SubmitGuessButton pins={sample.pin}/>
+        <DistanceHintButton pins={poiData} />
+        <SubmitGuessButton pins={poiData} />
         <MapControls />
       </Map>
       {showPoidex ? (
