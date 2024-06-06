@@ -38,14 +38,17 @@ import { User } from "../_utils/global";
 import { Button } from "../_components/ui/button";
 
 const CreateSearchzoneButton: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isLogin, setIsLogin] = useState<boolean>(true);
   const [User, setUser] = useState<User>({} as User);
 
-  const togglePopover = () => {
-    setIsOpen(!isOpen);
+  const toggleLogin = () => {
+    setIsLogin(!isLogin);
+    console.log("login status", isLogin);
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: {
+    target: { name: string; value: string };
+  }) => {
     const { name, value } = e.target;
     setUser((prevUserData) => ({
       ...prevUserData,
@@ -53,7 +56,7 @@ const CreateSearchzoneButton: React.FC = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
     console.log("User", User);
     //send req to BE
@@ -70,63 +73,70 @@ const CreateSearchzoneButton: React.FC = () => {
 
   return (
     <div>
-       <div className="absolute bg-white border rounded shadow-lg mt-2 p-2 top-[100px] left-0 z-[1000]"> 
-        Log in:
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="title">Email address:</label>
-            <input
-              className="border border-black rounded"
-              type="text"
-              required
-              onChange={handleInputChange}
-              name="email"
-              value={User.email}
-            ></input>
-          </div>
-          <div>
-            <label htmlFor="description">Set password:</label>
-            <input
-              className="border border-black rounded"
-              type="password"
-              required
-              onChange={handleInputChange}
-              name="password"
-              value={User.password}
-            ></input>
-          </div>
-          <Button onClick={handleSubmit}>Log in</Button>
-        </form>
-      </div>
+      {isLogin ? (
+        <div className="absolute bg-white border rounded shadow-lg mt-2 p-2 top-[100px] left-0 z-[1000]">
+          {/* {toggleLogin ? (<h4>Log in:</h4> ): (<h4>Create new account:</h4>)} */}
+          Log in:
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="title">Email address:</label>
+              <input
+                className="border border-black rounded"
+                type="text"
+                required
+                onChange={handleInputChange}
+                name="email"
+                value={User.email}
+              ></input>
+            </div>
+            <div>
+              <label htmlFor="description">Set password:</label>
+              <input
+                className="border border-black rounded"
+                type="password"
+                required
+                onChange={handleInputChange}
+                name="password"
+                value={User.password}
+              ></input>
+            </div>
+            <Button onClick={handleSubmit}>Log in</Button>
+            <Button onClick={toggleLogin}> Create new account</Button>
+          </form>
+        </div>
+      ) : (
+        <div className="absolute bg-white border rounded shadow-lg mt-2 p-2 top-[100px] left-0 z-[1000]">
+          Create new account:
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="title">Email address:</label>
+              <input
+                className="border border-black rounded"
+                type="text"
+                required
+                onChange={handleInputChange}
+                name="email"
+                value={User.email}
+              ></input>
+            </div>
+            <div>
+              <label htmlFor="description">Set password:</label>
+              <input
+                className="border border-black rounded"
+                type="password"
+                required
+                onChange={handleInputChange}
+                name="password"
+                value={User.password}
+              ></input>
+            </div>
+            <Button onClick={handleSubmit}>Create account</Button>
+            <Button onClick={toggleLogin}> Return</Button>
+          </form>
+        </div>
+      )}
+
       {/* creation */}
-      {/* <div className="absolute bg-white border rounded shadow-lg mt-2 p-2 top-[100px] left-0 z-[1000]"> 
-        Create new account:
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="title">Email address:</label>
-            <input
-              className="border border-black rounded"
-              type="text"
-              required
-              onChange={handleInputChange}
-              name="email"
-              value={User.email}
-            ></input>
-          </div>
-          <div>
-            <label htmlFor="description">Set password:</label>
-            <input
-              className="border border-black rounded"
-              type="password"
-              required
-              onChange={handleInputChange}
-              name="password"
-              value={User.password}
-            ></input>
-          </div>
-          <Button onClick={handleSubmit}>Create account</Button>
-        </form>
-      </div> */}
     </div>
   );
 };
