@@ -13,6 +13,7 @@ import PoidexButton from "./PoidexButton";
 import PoidexModal from "./PoidexModal";
 import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
+import SubmitGuessButton from "./SubmitGuessButton";
 
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
@@ -79,6 +80,7 @@ function MapInner() {
           );
         })}
         <DistanceHintButton pins={sample.pin}/>
+        <SubmitGuessButton pins={sample.pin}/>
         <MapControls />
       </Map>
       {showPoidex ? (
