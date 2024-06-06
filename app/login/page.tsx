@@ -37,9 +37,9 @@ import React, { useState } from "react";
 import { User } from "../_utils/global";
 import { Button } from "../_components/ui/button";
 
-const CreateSearchzoneButton: React.FC = () => {
+const LoginPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
-  const [User, setUser] = useState<User>({} as User);
+  const [user, setUser] = useState<User>({} as User);
 
   const toggleLogin = () => {
     setIsLogin(!isLogin);
@@ -60,7 +60,7 @@ const CreateSearchzoneButton: React.FC = () => {
     e: React.FormEvent<HTMLFormElement> | React.FormEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    console.log("User", User);
+    console.log("User", user);
     //send req to BE
     // const response = await fetch("endpoint url", {
     //   method: "POST",
@@ -68,7 +68,7 @@ const CreateSearchzoneButton: React.FC = () => {
     //   headers: {
     //     "Content-Type": "application/json",
     //   },
-    //   body: JSON.stringify(newUser),
+    //   body: JSON.stringify(user),
     // });
     // console.log("response", response);
   };
@@ -82,25 +82,25 @@ const CreateSearchzoneButton: React.FC = () => {
           <form onSubmit={handleSubmit}>
             {/* BEWARE! onSubmit event fires when user presses "enter" key at any point */}
             <div>
-              <label htmlFor="title">Email address:</label>
+              <label htmlFor="email">Email address:</label>
               <input
                 className="border border-black rounded"
                 type="text"
                 required
                 onChange={handleInputChange}
                 name="email"
-                value={User.email}
+                value={user.email}
               ></input>
             </div>
             <div>
-              <label htmlFor="description">Set password:</label>
+              <label htmlFor="password">Set password:</label>
               <input
                 className="border border-black rounded"
                 type="password"
                 required
                 onChange={handleInputChange}
                 name="password"
-                value={User.password}
+                value={user.password}
               ></input>
             </div>
             <Button onClick={handleSubmit}>Log in</Button>
@@ -112,25 +112,36 @@ const CreateSearchzoneButton: React.FC = () => {
           Create new account:
           <form onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="title">Email address:</label>
+              <label htmlFor="email">Email address:</label>
               <input
                 className="border border-black rounded"
                 type="text"
                 required
                 onChange={handleInputChange}
                 name="email"
-                value={User.email}
+                value={user.email}
               ></input>
             </div>
             <div>
-              <label htmlFor="description">Set password:</label>
+              <label htmlFor="username">Set display name:</label>
+              <input
+                className="border border-black rounded"
+                type="text"
+                required
+                onChange={handleInputChange}
+                name="displayName"
+                value={user.displayName}
+              ></input>
+            </div>
+            <div>
+              <label htmlFor="password">Set password:</label>
               <input
                 className="border border-black rounded"
                 type="password"
                 required
                 onChange={handleInputChange}
                 name="password"
-                value={User.password}
+                value={user.password}
               ></input>
             </div>
             <Button onClick={handleSubmit}>Create account</Button>
@@ -144,4 +155,4 @@ const CreateSearchzoneButton: React.FC = () => {
   );
 };
 
-export default CreateSearchzoneButton;
+export default LoginPage;
