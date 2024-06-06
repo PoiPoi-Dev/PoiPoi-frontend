@@ -60,16 +60,6 @@ function MapInner() {
   //     setFilteredPins(filtered);
   //   }
   // };
-  // const handleFilter = (selectedTags: string[]) => {
-  //   if (selectedTags.length === 0) {
-  //     setFilteredPins(sample.pin);
-  //   } else {
-  //     const filtered = sample.pin.filter((pin) =>
-  //       selectedTags.every((tag) => pin.tags.includes(tag))
-  //     );
-  //     setFilteredPins(filtered);
-  //   }
-  // };
 
   const handlePoiClick = (poi: Pin) => {
     setSelectedPoi(poi);
