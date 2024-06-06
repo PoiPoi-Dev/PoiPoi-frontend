@@ -86,3 +86,8 @@ export interface Poi {
   search_longitude: number;
   search_radius: number;
 }
+
+export interface User {
+  email: string;
+  password: string;
+}
