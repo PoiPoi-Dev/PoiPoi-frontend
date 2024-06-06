@@ -131,7 +131,7 @@ function MapInner() {
       </Map>
       {showPoidex ? (
         <PoidexModal
-          pins={sample}
+          pins={poiData}
           onClose={handleClosePoidex}
           onPoiClick={handlePoiClick}
           selectedPoi={selectedPoi}
