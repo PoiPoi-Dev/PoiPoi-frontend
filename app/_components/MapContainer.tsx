@@ -13,6 +13,7 @@ import PoidexButton from "./PoidexButton";
 import PoidexModal from "./PoidexModal";
 import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
+import SubmitGuessButton from "./SubmitGuessButton";
 import { AuthContext } from "./useContext/AuthContext";
 
 function MapInner() {
@@ -84,7 +85,9 @@ function MapInner() {
             />
           );
         })}
-        <DistanceHintButton pins={sample.pin} />
+
+        <DistanceHintButton pins={sample.pin}/>
+        <SubmitGuessButton pins={sample.pin}/>
         <MapControls />
       </Map>
       {showPoidex ? (
