@@ -56,7 +56,9 @@ const CreateSearchzoneButton: React.FC = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLInputElement>) => {
+  const handleSubmit = (
+    e: React.FormEvent<HTMLFormElement> | React.FormEvent<HTMLButtonElement>
+  ) => {
     e.preventDefault();
     console.log("User", User);
     //send req to BE
@@ -72,12 +74,13 @@ const CreateSearchzoneButton: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col items-center justify-between">
       {isLogin ? (
-        <div className="absolute bg-white border rounded shadow-lg mt-2 p-2 top-[100px] left-0 z-[1000]">
+        <div className="bg-white border rounded shadow-lg mt-2 p-2">
           {/* {toggleLogin ? (<h4>Log in:</h4> ): (<h4>Create new account:</h4>)} */}
           Log in:
           <form onSubmit={handleSubmit}>
+            {/* BEWARE! onSubmit event fires when user presses "enter" key at any point */}
             <div>
               <label htmlFor="title">Email address:</label>
               <input
