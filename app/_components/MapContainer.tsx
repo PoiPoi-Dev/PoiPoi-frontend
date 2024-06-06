@@ -8,6 +8,7 @@ import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
+import CreateSearchzoneButton from "./CreateSearchzoneButton";
 import TagFilterDropdown from "./TagFilterDropdown";
 import PoidexButton from "./PoidexButton";
 import PoidexModal from "./PoidexModal";
@@ -53,7 +54,8 @@ function MapInner() {
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
       <div className="absolute top-4 left-4 z-10">
-        <TagFilterDropdown onFilter={handleFilter} />
+        <CreateSearchzoneButton />
+      <TagFilterDropdown onFilter={handleFilter} />
         <div className="mt-11">
           <PoidexButton onClick={() => setShowPoidex(true)} />
         </div>
