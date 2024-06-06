@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Map from "react-map-gl/maplibre";
 import { sample } from "../_api/sample";
 import { Pin } from "../_utils/global";
@@ -13,6 +13,7 @@ import PoidexButton from "./PoidexButton";
 import PoidexModal from "./PoidexModal";
 import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
+import { AuthContext } from "./useContext/AuthContext";
 
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
@@ -31,6 +32,8 @@ function MapInner() {
     latitude: latitude,
     zoom: 10,
   });
+
+  const user = useContext(AuthContext);
 
   const handleFilter = (selectedTags: string[]) => {
     if (selectedTags.length === 0) {
@@ -55,6 +58,7 @@ function MapInner() {
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
       <div className="absolute top-4 left-4 z-10">
+        <div>{user? (<h1>{user.uid}</h1>) : <h1>Please Sign In</h1>}</div>
         <TagFilterDropdown onFilter={handleFilter} />
         <div className="mt-11">
           <PoidexButton onClick={() => setShowPoidex(true)} />
