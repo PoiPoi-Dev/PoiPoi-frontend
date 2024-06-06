@@ -1,11 +1,11 @@
-'use server'
+'use client'
 import { getAuthService } from "@/config/firebaseconfig";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-  getAuth,
+  // getAuth,
 } from "firebase/auth";
 
 //Authentication Logic
@@ -57,7 +57,7 @@ const logout = async (): Promise<void> => {
   await signOut(auth);
 }
 
-(async () => await monitorAuthState()) ();
+void (async () => await monitorAuthState()) ();
 
 
 export {
