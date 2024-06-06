@@ -1,9 +1,11 @@
-import { auth } from "@/config/firebaseconfig";
+'use server'
+import { getAuthService } from "@/config/firebaseconfig";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
+  getAuth,
 } from "firebase/auth";
 
 //Authentication Logic
@@ -15,6 +17,7 @@ const loginEmailPassword = async (email: string, password: string) : Promise<str
   const loginEmail = email;
   const loginPassword = password
   try {
+    const auth = await getAuthService()
     const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
     return userCredential.user.uid;
   } catch (e: unknown) {
@@ -30,6 +33,7 @@ const createAccount = async (email: string, password: string) : Promise<string |
   const loginEmail = email;
   const loginPassword = password
   try {
+    const auth = await getAuthService();
     const userCredential = await createUserWithEmailAndPassword(auth, loginEmail, loginPassword);
     return userCredential.user.uid;
   } catch (e: unknown) {
@@ -38,6 +42,7 @@ const createAccount = async (email: string, password: string) : Promise<string |
 };
 
 const monitorAuthState = async (): Promise<void> => {
+  const auth = await getAuthService();
   onAuthStateChanged(auth, user => {
     if (user) {
       console.log("Logged in as", user);
@@ -48,6 +53,7 @@ const monitorAuthState = async (): Promise<void> => {
 };
 
 const logout = async (): Promise<void> => {
+  const auth = await getAuthService();
   await signOut(auth);
 }
 
