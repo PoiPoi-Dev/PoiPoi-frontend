@@ -12,6 +12,7 @@ import CreateSearchzoneButton from "./CreateSearchzoneButton";
 import TagFilterDropdown from "./TagFilterDropdown";
 import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
+import PoidexButton from "./PoidexButton";
 
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
@@ -52,10 +53,15 @@ function MapInner() {
   };
 
   return (
-    <div className="absolute overflow-hidden inset-0 bg-mapBg">
-      <CreateSearchzoneButton />
-      <TagFilterDropdown onFilter={handleFilter} />
-      <HintButton poi_id={selectedPoiId}/>
+    <div className="relative overflow-hidden inset-0 bg-mapBg">
+      <div className="absolute top-4 left-4 z-10">
+        <CreateSearchzoneButton />
+        <TagFilterDropdown onFilter={handleFilter} />
+        <div className="mt-11">
+          <PoidexButton onClick={() => setShowPoidex(true)} />
+        </div>
+      </div>
+      <HintButton poi_id={selectedPoiId} />
       <Map
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
