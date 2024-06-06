@@ -1,5 +1,5 @@
 "use client";
-// // import { createAccount, loginEmailPassword } from "../_utils/authentication";
+
 // import { useEffect } from "react";
 
 // //TODO: Handle the async await in a use effect
@@ -36,6 +36,7 @@
 import React, { useState } from "react";
 import { User } from "../_utils/global";
 import { Button } from "../_components/ui/button";
+import { createUser, loginUser } from "../_actions/authenticationActions";
 
 const CreateSearchzoneButton: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
@@ -56,22 +57,31 @@ const CreateSearchzoneButton: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (
+  const handleCreateNewAccount = async (
     e: React.FormEvent<HTMLFormElement> | React.FormEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    console.log("User", User);
-    //send req to BE
-    // const response = await fetch("endpoint url", {
-    //   method: "POST",
-    //   credentials: "include",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(newUser),
-    // });
-    // console.log("response", response);
+    console.log("User", User, "attempting to create a new account.");
+
+    try {
+      if (!User.email || !User.password) throw 'Invalid User/Password';
+      await createUser(User.email, User.password);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement> | React.FormEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    console.log("Attempting to login");
+    try{
+      if (!User.email || !User.password) throw 'Invalid User/Password';
+      await loginUser(User.email, User.password);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <div className="flex flex-col items-center justify-between">
@@ -79,7 +89,7 @@ const CreateSearchzoneButton: React.FC = () => {
         <div className="bg-white border rounded shadow-lg mt-2 p-2">
           {/* {toggleLogin ? (<h4>Log in:</h4> ): (<h4>Create new account:</h4>)} */}
           Log in:
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleCreateNewAccount}>
             {/* BEWARE! onSubmit event fires when user presses "enter" key at any point */}
             <div>
               <label htmlFor="title">Email address:</label>
@@ -103,14 +113,14 @@ const CreateSearchzoneButton: React.FC = () => {
                 value={User.password}
               ></input>
             </div>
-            <Button onClick={handleSubmit}>Log in</Button>
+            <Button onClick={handleLogin}>Log in</Button>
             <Button onClick={toggleLogin}> Create new account</Button>
           </form>
         </div>
       ) : (
         <div className="absolute bg-white border rounded shadow-lg mt-2 p-2 top-[100px] left-0 z-[1000]">
           Create new account:
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleCreateNewAccount}>
             <div>
               <label htmlFor="title">Email address:</label>
               <input
@@ -133,7 +143,7 @@ const CreateSearchzoneButton: React.FC = () => {
                 value={User.password}
               ></input>
             </div>
-            <Button onClick={handleSubmit}>Create account</Button>
+            <Button onClick={handleCreateNewAccount}>Create account</Button>
             <Button onClick={toggleLogin}> Return</Button>
           </form>
         </div>
