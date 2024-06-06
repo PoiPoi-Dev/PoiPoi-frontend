@@ -8,11 +8,11 @@ import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
 // import TagFilterDropdown from "./TagFilterDropdown";
-// import PoidexButton from "./PoidexButton";
 import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
 import PoidexButton from "./PoidexButton";
 import PoidexModal from "./PoidexModal";
+import SubmitGuessButton from "./SubmitGuessButton";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -114,7 +114,7 @@ function MapInner() {
             />
           );
         })} */}
-        <DistanceHintButton pins={sample} />
+        
         {/* {filteredPins.map((pin: Pin): JSX.Element => {
           return (
             <MarkerContainer
@@ -127,6 +127,7 @@ function MapInner() {
           );
         })} */}
         <DistanceHintButton pins={sample} />
+        <SubmitGuessButton pins={sample.pin}/>
         <MapControls />
       </Map>
       {showPoidex ? (
