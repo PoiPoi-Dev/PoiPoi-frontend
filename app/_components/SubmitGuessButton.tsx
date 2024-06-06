@@ -79,6 +79,7 @@ function SubmitGuessButton({
     navigator.geolocation.getCurrentPosition(position => {
       const { latitude, longitude } = position.coords;
       console.log(`user location is lat: ${latitude}, long: ${longitude}`)
+      console.log(`user is ${distanceToPin} away from the poi`)
     },
     error => {
       console.error('Error getting location:', error);
