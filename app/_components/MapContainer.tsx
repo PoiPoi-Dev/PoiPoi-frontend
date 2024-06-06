@@ -7,7 +7,8 @@ import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
-import TagFilterDropdown from "./TagFilterDropdown";
+// import TagFilterDropdown from "./TagFilterDropdown";
+// import PoidexButton from "./PoidexButton";
 import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
 import PoidexButton from "./PoidexButton";
@@ -20,6 +21,7 @@ function MapInner() {
   const [poiData, setPoiData] = useState<Pin[]>([]);
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
+  // const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [showPoidex, setShowPoidex] = useState(false);
   const [selectedPoi, setSelectedPoi] = useState<Pin | null>(null);
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
@@ -30,6 +32,7 @@ function MapInner() {
   const [viewPort, setViewPort] = useState({
     longitude: longitude,
     latitude: latitude,
+    zoom: 14,
     zoom: 14,
   });
 
@@ -48,6 +51,16 @@ function MapInner() {
       console.log(error);
     }
   };
+  // const handleFilter = (selectedTags: string[]) => {
+  //   if (selectedTags.length === 0) {
+  //     setFilteredPins(sample.pin);
+  //   } else {
+  //     const filtered = sample.pin.filter((pin) =>
+  //       selectedTags.every((tag) => pin.tags.includes(tag))
+  //     );
+  //     setFilteredPins(filtered);
+  //   }
+  // };
   // const handleFilter = (selectedTags: string[]) => {
   //   if (selectedTags.length === 0) {
   //     setFilteredPins(sample.pin);
@@ -77,6 +90,7 @@ function MapInner() {
         <HintButton poi_id={selectedPoiId} />
       </div>
       <HintButton poi_id={selectedPoiId} />
+      <PoidexButton onClick={() => setShowPoidex(true)} />
       <Map
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
@@ -99,6 +113,19 @@ function MapInner() {
         })}
 
         {/* V0 DEVELOPMENT w/ FILTER FEATURE */}
+        {/* {sample.map((pin: Pin): JSX.Element => {
+          return (
+            <MarkerContainer
+              key={pin.id}
+              pin={pin}
+              showPopup={showPopup}
+              setShowPopup={setShowPopup}
+              setSelectedPoiId={setSelectedPoiId}
+            />
+          );
+        })} */}
+        <DistanceHintButton pins={sample} />
+        })}
         {/* {filteredPins.map((pin: Pin): JSX.Element => {
           return (
             <MarkerContainer
@@ -115,6 +142,7 @@ function MapInner() {
       </Map>
       {showPoidex ? (
         <PoidexModal
+          pins={sample}
           pins={sample}
           onClose={handleClosePoidex}
           onPoiClick={handlePoiClick}
