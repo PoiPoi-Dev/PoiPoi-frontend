@@ -55,15 +55,12 @@ function MapInner() {
 
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
-      <div className="absolute top-4 left-4 z-10">
-        <CreateSearchzoneButton />
+      <div className="absolute top-4 left-4 z-10 flex gap-2">
         {/* <TagFilterDropdown onFilter={handleFilter} /> */}
-        <div className="mt-11">
-          <PoidexButton onClick={() => setShowPoidex(true)} />
-        </div>
+        <PoidexButton onClick={() => setShowPoidex(true)} />
+        <HintButton poi_id={selectedPoiId} />
+        <CreateSearchzoneButton />
       </div>
-      <HintButton poi_id={selectedPoiId} />
-      <CreateSearchzoneButton />
       <Map
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
@@ -72,6 +69,7 @@ function MapInner() {
         dragRotate={false}
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
       >
+        {/* FOR V1 DEVELOPMENT */}
         {sample.map((pin: Pin): JSX.Element => {
           return (
             <MarkerContainer
@@ -83,6 +81,8 @@ function MapInner() {
             />
           );
         })}
+
+        {/* V0 DEVELOPMENT w/ FILTER FEATURE */}
         {/* {filteredPins.map((pin: Pin): JSX.Element => {
           return (
             <MarkerContainer
