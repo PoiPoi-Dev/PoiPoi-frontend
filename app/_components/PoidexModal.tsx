@@ -41,22 +41,22 @@ const PoidexModal: React.FC<PoidexModalProps> = ({
               {pins.map((pin) => (
                 <div
                   key={pin.id}
-                  onClick={pin.collect ? () => onPoiClick(pin) : undefined}
+                  onClick={pin.is_completed ? () => onPoiClick(pin) : undefined}
                   className={`flex flex-col items-center  ${
-                    pin.collect
+                    pin.is_completed
                       ? "cursor-pointer"
                       : "opacity-50 cursor-not-allowed"
                   }`}
                 >
                   <Image
-                    src={pin.collect ? pin.img_url : "/UnknownIcon.png"}
+                    src={pin.is_completed ? pin.img_url : "/UnknownIcon.png"}
                     alt={pin.title}
                     width={100}
                     height={100}
                     className="w-full h-auto max-h-32 object-contain"
                   />
                   <h2 className="text-center mt-2">
-                    {pin.collect ? pin.title : "???"}
+                    {pin.is_completed ? pin.title : "???"}
                   </h2>
                 </div>
               ))}
@@ -73,7 +73,10 @@ const PoidexModal: React.FC<PoidexModalProps> = ({
             <div className="z-[9999] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
               <PoiCard
                 id={selectedPoi.id}
-                payload={{ ...selectedPoi, collect: selectedPoi.collect }}
+                payload={{
+                  ...selectedPoi,
+                  is_completed: selectedPoi.is_completed,
+                }}
               />
             </div>
           </div>

@@ -1,38 +1,24 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Pin } from "../_utils/global";
 
 export function PoiCard({
-  id, // will be used for validate the card and mark in future implementation.
   payload,
 }: {
   id: number;
-  payload: {
-    id: number;
-    collect: boolean;
-    latitude: number;
-    longitude: number;
-    radius: number;
-    title: string;
-    description: string;
-    img_url: string;
-    is_main_attraction: boolean;
-    tags: string[];
-  };
+  payload: Pin;
 }): JSX.Element {
   // USE STATE
-  const [collect, setCollect] = useState<boolean>(payload.collect);
+  const [collect, setCollect] = useState<boolean>(payload.is_completed);
 
   // EFFECT
-  useEffect(() => {}, []);
 
   // FUNCTION
 
   // RETURN
   return (
-    <section
-      className="relative top-0 flex flex-col bg-gray-300 w-[300px] min-h-[600px] max-h-full rounded-2xl overflow-hidden border-solid border-white border-4 z-[999]"
-    >
+    <section className="relative top-0 flex flex-col bg-gray-300 w-[300px] min-h-[600px] max-h-full rounded-2xl overflow-hidden border-solid border-white border-4 z-[999]">
       <Image
         src={payload.img_url}
         alt={payload.title}
@@ -46,16 +32,18 @@ export function PoiCard({
         <h1 className="text-2xl font-bold text-black p-0 m-0 mb-2">
           {payload.title}
         </h1>
-        <div className="flex flex-wrap gap-2 text-sm mb-2">
-          {payload.tags.map((tag: string): JSX.Element => (
-            <a
-              key={tag + id}
-              className="rounded-full p-1 bg-blue-500 min-w-[80px] text-center"
-            >
-              {tag}
-            </a>
-          ))}
-        </div>
+        {/* <div className="flex flex-wrap gap-2 text-sm mb-2">
+          {payload.tags.map(
+            (tag: string): JSX.Element => (
+              <a
+                key={tag + id}
+                className="rounded-full p-1 bg-blue-500 min-w-[80px] text-center"
+              >
+                {tag}
+              </a>
+            )
+          )}
+        </div> */}
         {collect ? (
           <p>{payload.description}</p>
         ) : (
@@ -63,7 +51,7 @@ export function PoiCard({
             className="w-full mt-4 rounded-lg"
             onClick={() => {
               setCollect(true);
-              payload.collect = true;
+              payload.is_completed = true;
             }}
           >
             Collect

@@ -1,3 +1,4 @@
+import { Pin } from "../_utils/global";
 import { PoiCard } from "./PoiCard";
 import {
   Dialog,
@@ -11,18 +12,7 @@ export default function PoiPopup({
   setShowPopup,
 }: {
   id: number;
-  payload: {
-    id: number;
-    collect: boolean;
-    latitude: number;
-    longitude: number;
-    radius: number;
-    title: string;
-    description: string;
-    img_url: string;
-    is_main_attraction: boolean;
-    tags: string[];
-  };
+  payload: Pin;
   setShowPopup: (arg0: undefined) => void;
 }): JSX.Element {
   // RETURN

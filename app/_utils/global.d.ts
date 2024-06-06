@@ -8,15 +8,17 @@ export interface HintData {
 
 export interface Pin {
   id: number;
-  collect: boolean;
-  latitude: number;
-  longitude: number;
-  radius: number;
+  is_completed: boolean;
   title: string;
   description: string;
   img_url: string;
-  is_main_attraction: boolean;
-  tags: string[];
+  exact_latitude: number;
+  exact_longitude: number;
+  search_latitude: number;
+  search_longitude: number;
+  search_radius: number;
+  // is_main_attraction: boolean;
+  // tags: string[];
 }
 
 export interface Hint {
@@ -30,5 +32,5 @@ export interface MarkerContainerProps {
   pin: Pin;
   showPopup: number | undefined;
   setShowPopup: React.Dispatch<React.SetStateAction<number | undefined>>;
-  setSelectedPoiId: React.Dispatch<React.SetStateAction<number | undefined>>
+  setSelectedPoiId: React.Dispatch<React.SetStateAction<number | undefined>>;
 }

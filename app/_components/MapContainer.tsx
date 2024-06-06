@@ -8,38 +8,40 @@ import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
-import TagFilterDropdown from "./TagFilterDropdown";
-import PoidexButton from "./PoidexButton";
+// import TagFilterDropdown from "./TagFilterDropdown";
+// import PoidexButton from "./PoidexButton";
 import PoidexModal from "./PoidexModal";
 import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
 
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
-  const [filteredPins, setFilteredPins] = useState(sample.pin);
+  // const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [showPoidex, setShowPoidex] = useState(false);
   const [selectedPoi, setSelectedPoi] = useState<Pin | null>(null);
-  const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(undefined);
+  const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
+    undefined
+  );
 
   // Default camera map when user opens the app
-  const [longitude] = useState<number>(139.80241);
-  const [latitude] = useState<number>(35.56762);
+  const [longitude] = useState<number>(139.7454);
+  const [latitude] = useState<number>(35.6586);
   const [viewPort, setViewPort] = useState({
     longitude: longitude,
     latitude: latitude,
-    zoom: 10,
+    zoom: 14,
   });
 
-  const handleFilter = (selectedTags: string[]) => {
-    if (selectedTags.length === 0) {
-      setFilteredPins(sample.pin);
-    } else {
-      const filtered = sample.pin.filter((pin) =>
-        selectedTags.every((tag) => pin.tags.includes(tag))
-      );
-      setFilteredPins(filtered);
-    }
-  };
+  // const handleFilter = (selectedTags: string[]) => {
+  //   if (selectedTags.length === 0) {
+  //     setFilteredPins(sample.pin);
+  //   } else {
+  //     const filtered = sample.pin.filter((pin) =>
+  //       selectedTags.every((tag) => pin.tags.includes(tag))
+  //     );
+  //     setFilteredPins(filtered);
+  //   }
+  // };
 
   const handlePoiClick = (poi: Pin) => {
     setSelectedPoi(poi);
@@ -52,13 +54,13 @@ function MapInner() {
 
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
-      <div className="absolute top-4 left-4 z-10">
+      {/* <div className="absolute top-4 left-4 z-10">
         <TagFilterDropdown onFilter={handleFilter} />
         <div className="mt-11">
           <PoidexButton onClick={() => setShowPoidex(true)} />
         </div>
-      </div>
-      <HintButton poi_id={selectedPoiId}/>
+      </div> */}
+      <HintButton poi_id={selectedPoiId} />
       <Map
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
@@ -67,7 +69,7 @@ function MapInner() {
         dragRotate={false}
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
       >
-        {filteredPins.map((pin: Pin): JSX.Element => {
+        {sample.map((pin: Pin): JSX.Element => {
           return (
             <MarkerContainer
               key={pin.id}
@@ -78,12 +80,23 @@ function MapInner() {
             />
           );
         })}
-        <DistanceHintButton pins={sample.pin}/>
+        {/* {filteredPins.map((pin: Pin): JSX.Element => {
+          return (
+            <MarkerContainer
+              key={pin.id}
+              pin={pin}
+              showPopup={showPopup}
+              setShowPopup={setShowPopup}
+              setSelectedPoiId={setSelectedPoiId}
+            />
+          );
+        })} */}
+        <DistanceHintButton pins={sample} />
         <MapControls />
       </Map>
       {showPoidex ? (
         <PoidexModal
-          pins={sample.pin}
+          pins={sample}
           onClose={handleClosePoidex}
           onPoiClick={handlePoiClick}
           selectedPoi={selectedPoi}
