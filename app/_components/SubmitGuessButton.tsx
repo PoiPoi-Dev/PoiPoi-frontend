@@ -79,7 +79,16 @@ function SubmitGuessButton({
     navigator.geolocation.getCurrentPosition(position => {
       const { latitude, longitude } = position.coords;
       console.log(`user location is lat: ${latitude}, long: ${longitude}`)
-    })
+    },
+    error => {
+      console.error('Error getting location:', error);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+    }
+  )
   };
 
   const handleButtonTextRender = ():string => {
@@ -87,12 +96,15 @@ function SubmitGuessButton({
   }
 
   return (
-    <div className="fixed left-50 bottom-20 w-auto h-auto" style = {{visibility: (isActiveState)? "visible" : "hidden"}}>
-      <Button disabled={!isActiveState} onClick={handleSubmitGuessOnClick}>
+    <div
+    className="fixed bottom-20 left-0 w-full h-20 flex justify-center items-center"
+    style={{ visibility: isActiveState ? "visible" : "hidden" }}>
+      <Button className="w-full h-full" disabled={!isActiveState} onClick={handleSubmitGuessOnClick}>
         {handleButtonTextRender()}
       </Button>
     </div>
   );
+
 }
 
 export default SubmitGuessButton;
