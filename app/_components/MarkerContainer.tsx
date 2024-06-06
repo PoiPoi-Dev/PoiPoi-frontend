@@ -60,8 +60,8 @@ function MarkerContainer({
   );
 
   const handleClick = () => {
-    setShowPopup(pin.id);
-    setSelectedPoiId(pin.id);
+    setShowPopup(pin.poi_id);
+    setSelectedPoiId(pin.poi_id);
   };
 
   return (
@@ -86,13 +86,13 @@ function MarkerContainer({
           <IoMdCheckmarkCircle size={48} onClick={handleClick} />
 
           {/* Popup */}
-          {showPopup === pin.id && (
+          {showPopup === pin.poi_id && (
             <div className="fixed top-0 left-0 w-screen h-screen">
               <Popover defaultOpen>
                 <PopoverContent className="">
                   <PoiPopup
                     setShowPopup={setShowPopup}
-                    id={pin.id}
+                    id={pin.poi_id}
                     payload={pin}
                   />
                 </PopoverContent>
@@ -148,13 +148,13 @@ function MarkerContainer({
           )}
 
           {/* Popup */}
-          {showPopup === pin.id && (
+          {showPopup === pin.poi_id && (
             <div className="fixed top-0 left-0 w-screen h-screen">
               <Popover defaultOpen>
                 <PopoverContent className="">
                   <PoiPopup
                     setShowPopup={setShowPopup}
-                    id={pin.id}
+                    id={pin.poi_id}
                     payload={pin}
                   />
                 </PopoverContent>

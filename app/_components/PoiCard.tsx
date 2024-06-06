@@ -10,7 +10,9 @@ export function PoiCard({
   payload: Pin;
 }): JSX.Element {
   // USE STATE
-  const [collect, setCollect] = useState<boolean>(payload.is_completed);
+  const [collect, setCollect] = useState<boolean | undefined>(
+    payload.is_completed
+  );
 
   // EFFECT
 
@@ -45,7 +47,7 @@ export function PoiCard({
           )}
         </div> */}
         {collect ? (
-          <p>{payload.description}</p>
+          <p className="truncate">{payload.description}</p>
         ) : (
           <Button
             className="w-full mt-4 rounded-lg"

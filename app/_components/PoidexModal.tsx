@@ -40,7 +40,7 @@ const PoidexModal: React.FC<PoidexModalProps> = ({
             <div className="grid grid-cols-3 gap-4">
               {pins.map((pin) => (
                 <div
-                  key={pin.id}
+                  key={pin.poi_id}
                   onClick={pin.is_completed ? () => onPoiClick(pin) : undefined}
                   className={`flex flex-col items-center  ${
                     pin.is_completed
@@ -72,7 +72,7 @@ const PoidexModal: React.FC<PoidexModalProps> = ({
             </button>
             <div className="z-[9999] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
               <PoiCard
-                id={selectedPoi.id}
+                id={selectedPoi.poi_id}
                 payload={{
                   ...selectedPoi,
                   is_completed: selectedPoi.is_completed,

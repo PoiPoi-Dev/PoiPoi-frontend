@@ -1,7 +1,6 @@
 "use client";
 
-import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Map from "react-map-gl/maplibre";
 import { sample } from "../_api/sample";
 import { Pin } from "../_utils/global";
@@ -15,7 +14,11 @@ import HintButton from "./HintButton";
 import PoidexButton from "./PoidexButton";
 import PoidexModal from "./PoidexModal";
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
 function MapInner() {
+  // USE STATE
+  const [poiData, setPoiData] = useState<Pin[]>([]);
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [showPoidex, setShowPoidex] = useState(false);
@@ -23,9 +26,7 @@ function MapInner() {
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
     undefined
   );
-
-  // Default camera map when user opens the app
-  const [longitude] = useState<number>(139.7454);
+  const [longitude] = useState<number>(139.7454); // Default camera map when user opens the app
   const [latitude] = useState<number>(35.6586);
   const [viewPort, setViewPort] = useState({
     longitude: longitude,
@@ -33,6 +34,21 @@ function MapInner() {
     zoom: 14,
   });
 
+  // USE EFFECT
+  useEffect(() => {
+    void handleFetchPoi();
+  }, []);
+
+  // HANDLER FUNCTION
+  const handleFetchPoi = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/poi`);
+      const data: Pin[] = (await response.json()) as Pin[];
+      setPoiData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // const handleFilter = (selectedTags: string[]) => {
   //   if (selectedTags.length === 0) {
   //     setFilteredPins(sample.pin);
@@ -53,6 +69,7 @@ function MapInner() {
     setSelectedPoi(null); // Reset selectedPoi when closing PoidexModal
   };
 
+  // RETURN
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
       <div className="absolute top-4 left-4 z-10 flex gap-2">
@@ -70,10 +87,10 @@ function MapInner() {
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
       >
         {/* FOR V1 DEVELOPMENT */}
-        {sample.map((pin: Pin): JSX.Element => {
+        {poiData.map((pin: Pin): JSX.Element => {
           return (
             <MarkerContainer
-              key={pin.id}
+              key={pin.poi_id}
               pin={pin}
               showPopup={showPopup}
               setShowPopup={setShowPopup}
