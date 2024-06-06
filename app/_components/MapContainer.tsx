@@ -8,7 +8,6 @@ import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
-import CreateSearchzoneButton from "./CreateSearchzoneButton";
 import TagFilterDropdown from "./TagFilterDropdown";
 import PoidexButton from "./PoidexButton";
 import PoidexModal from "./PoidexModal";
@@ -20,7 +19,9 @@ function MapInner() {
   const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [showPoidex, setShowPoidex] = useState(false);
   const [selectedPoi, setSelectedPoi] = useState<Pin | null>(null);
-  const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(undefined);
+  const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
+    undefined
+  );
 
   // Default camera map when user opens the app
   const [longitude] = useState<number>(139.80241);
@@ -54,13 +55,12 @@ function MapInner() {
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
       <div className="absolute top-4 left-4 z-10">
-        <CreateSearchzoneButton />
-      <TagFilterDropdown onFilter={handleFilter} />
+        <TagFilterDropdown onFilter={handleFilter} />
         <div className="mt-11">
           <PoidexButton onClick={() => setShowPoidex(true)} />
         </div>
       </div>
-      <HintButton poi_id={selectedPoiId}/>
+      <HintButton poi_id={selectedPoiId} />
       <Map
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
@@ -80,7 +80,7 @@ function MapInner() {
             />
           );
         })}
-        <DistanceHintButton pins={sample.pin}/>
+        <DistanceHintButton pins={sample.pin} />
         <MapControls />
       </Map>
       {showPoidex ? (
