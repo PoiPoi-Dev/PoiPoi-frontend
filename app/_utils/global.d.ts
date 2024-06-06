@@ -30,7 +30,7 @@ export interface MarkerContainerProps {
   pin: Pin;
   showPopup: number | undefined;
   setShowPopup: React.Dispatch<React.SetStateAction<number | undefined>>;
-  setSelectedPoiId: React.Dispatch<React.SetStateAction<number | undefined>>
+  setSelectedPoiId: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
 export interface Poi {
@@ -45,4 +45,9 @@ export interface Poi {
   search_latitude: number;
   search_longitude: number;
   search_radius: number;
+}
+
+export interface User {
+  email: string;
+  password: string;
 }
