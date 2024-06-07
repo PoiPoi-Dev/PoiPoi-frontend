@@ -50,12 +50,12 @@ function SubmitGuessButton({
     //Finds the closest pin
     for (const pin of pins) {
       //Change based on new schema
-      if(pin.collect){
+      if(pin.is_completed){
         continue;
       }
       const pinCoordinates: Coordinates = {
-        longitude: pin.longitude,
-        latitude: pin.latitude,
+        longitude: pin.exact_longitude,
+        latitude: pin.exact_latitude,
       };
       const distance: number = GetDistanceFromCoordinatesToMeters(
         userCoordinates,
@@ -71,7 +71,7 @@ function SubmitGuessButton({
   };
 
   const isWithinSearchZone = (): boolean => {
-    if (trackingPin) return distanceToPin < trackingPin.radius;
+    if (trackingPin) return distanceToPin < trackingPin.search_radius;
     else return false;
   };
 
