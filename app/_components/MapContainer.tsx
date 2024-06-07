@@ -52,6 +52,7 @@ function MapInner() {
       setPoiData(data);
     } catch (error) {
       console.log(error);
+      setPoiData([])
     }
   };
   // const handleFilter = (selectedTags: string[]) => {
