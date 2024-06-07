@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Map from "react-map-gl/maplibre";
 // import { sample } from "../_api/sample";
 import { Pin } from "../_utils/global";
@@ -14,6 +14,7 @@ import PoidexButton from "./PoidexButton";
 import PoidexModal from "./PoidexModal";
 import SubmitGuessButton from "./SubmitGuessButton";
 import PoiPhotoToggle from "./PoiPhotoToggle";
+import { AuthContext } from "./useContext/AuthContext";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -37,6 +38,7 @@ function MapInner() {
     zoom: 14,
   });
 
+  const user = useContext(AuthContext);
   // USE EFFECT
   useEffect(() => {
     void handleFetchPoi();
@@ -75,6 +77,7 @@ function MapInner() {
   // RETURN
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
+        <div>{user? (<h1>{user.uid}</h1>) : <h1>Please Sign In</h1>}</div>
       {/* THIS SHOULD BE MOVED TO OTHER PLACE */}
       <div className="absolute top-4 left-4 z-10 flex gap-2">
         {/* <TagFilterDropdown onFilter={handleFilter} /> */}
