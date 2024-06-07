@@ -8,12 +8,15 @@ import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
 // import TagFilterDropdown from "./TagFilterDropdown";
-import DistanceHintButton from "./DistanceHintButton";
+// import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
 import PoidexButton from "./PoidexButton";
 import PoidexModal from "./PoidexModal";
 import SubmitGuessButton from "./SubmitGuessButton";
+import PoiPhotoToggle from "./PoiPhotoToggle";
 import { AuthContext } from "./useContext/AuthContext";
+import { getAuthService } from "@/config/firebaseconfig";
+// import { redirect } from "next/navigation";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -27,8 +30,10 @@ function MapInner() {
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
     undefined
   );
-  const [longitude] = useState<number>(139.7454); // Default camera map when user opens the app
-  const [latitude] = useState<number>(35.6586);
+
+  // Default camera map when user opens the app
+  const longitude: number = 139.72953967417234;
+  const latitude: number = 35.66060121205606;
   const [viewPort, setViewPort] = useState({
     longitude: longitude,
     latitude: latitude,
@@ -38,19 +43,41 @@ function MapInner() {
   const user = useContext(AuthContext);
   // USE EFFECT
   useEffect(() => {
-    void handleFetchPoi();
-  }, []);
+    user ? void handleFetchPoiByUid() : void handleFetchPoiByAnonymous();
+  }, [user]);
 
   // HANDLER FUNCTION
-  const handleFetchPoi = async () => {
+  const handleFetchPoiByUid = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/api/poi`);
+      const auth = await getAuthService();
+      if (!auth.currentUser) throw "No current user";
+      const uid: string = auth.currentUser.uid;
+
+      const response = await fetch(`${BASE_URL}/api/poi/status`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id: uid }),
+      });
+      const data: Pin[] = (await response.json()) as Pin[];
+      setPoiData(data);
+    } catch (error) {
+      console.log(error);
+      setPoiData([])
+    }
+  };
+
+  const handleFetchPoiByAnonymous = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/poi/`);
       const data: Pin[] = (await response.json()) as Pin[];
       setPoiData(data);
     } catch (error) {
       console.log(error);
     }
   };
+
   // const handleFilter = (selectedTags: string[]) => {
   //   if (selectedTags.length === 0) {
   //     setFilteredPins(sample.pin);
@@ -71,17 +98,19 @@ function MapInner() {
     setSelectedPoi(null); // Reset selectedPoi when closing PoidexModal
   };
 
+  // if (!user) {
+  //   redirect("/login");
+  // } else {}
+
   // RETURN
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
-        <div>{user? (<h1>{user.uid}</h1>) : <h1>Please Sign In</h1>}</div>
       {/* THIS SHOULD BE MOVED TO OTHER PLACE */}
       <div className="absolute top-4 left-4 z-10 flex gap-2">
         {/* <TagFilterDropdown onFilter={handleFilter} /> */}
         <PoidexButton onClick={() => setShowPoidex(true)} />
         <HintButton poi_id={selectedPoiId} />
       </div>
-
       {/* MAP CANVAS */}
       <Map
         {...viewPort}
@@ -128,10 +157,12 @@ function MapInner() {
             />
           );
         })} */}
-        <DistanceHintButton pins={poiData} />
+        {/* <DistanceHintButton pins={poiData} /> */}
         <SubmitGuessButton pins={poiData} />
+
         <MapControls />
       </Map>
+      <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
       {showPoidex ? (
         <PoidexModal
           pins={poiData}

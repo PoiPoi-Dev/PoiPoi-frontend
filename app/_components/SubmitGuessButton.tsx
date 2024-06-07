@@ -138,9 +138,20 @@ function SubmitGuessButton({
   const handleButtonTextRender = (): string => {
     return "Submit your answer?";
   };
+  const handleButtonTextRender = (): string => {
+    return "Submit your answer?";
+  };
 
   return (
     <div
+      className="fixed bottom-20 left-0 w-full h-20 flex justify-center items-center"
+      style={{ visibility: isActiveState ? "visible" : "hidden" }}
+    >
+      <Button
+        className="w-full h-full"
+        disabled={!isActiveState}
+        onClick={handleSubmitGuessOnClick}
+      >
       className="fixed bottom-20 left-0 w-full h-20 flex justify-center items-center"
       style={{ visibility: isActiveState ? "visible" : "hidden" }}
     >
