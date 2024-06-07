@@ -6,6 +6,10 @@ import {
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
 
+import { getAuthService } from "@/config/firebaseconfig";
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
 interface SubmitGuessButtonProps {
   pins: Pin[];
 }
@@ -19,7 +23,7 @@ interface SubmitGuessButtonProps {
 function SubmitGuessButton({
   pins,
 }: SubmitGuessButtonProps): React.JSX.Element {
-  const [trackingPin, setTrackingPin] = useState<Pin | null>(null);
+  const [trackingPin, setTrackingPin] = useState<Pin | null>(null); //arb pin?
   const [distanceToPin, setDistanceToPin] = useState<number>(0);
   const [isActiveState, setIsActiveState] = useState<boolean>(false);
 
@@ -47,7 +51,6 @@ function SubmitGuessButton({
 
     //Finds the closest pin
     for (const pin of pins) {
-      //Change based on new schema
       if (pin.is_completed) {
         continue;
       }
@@ -73,12 +76,56 @@ function SubmitGuessButton({
     else return false;
   };
 
+  const evaluateGuess = async (position: GeolocationPosition) => {
+    const { latitude, longitude } = position.coords;
+    console.log(`user location is lat: ${latitude}, long: ${longitude}`);
+    console.log(
+      `user is ${parseFloat(distanceToPin.toFixed(3))}m away from the poi`
+    );
+
+    try {
+      const auth = await getAuthService(); //gives auth service
+      if (!auth.currentUser) return; //error
+      const uid = auth.currentUser.uid;
+      console.log(`user id is ${uid}`);
+      const playerGuess = parseFloat(distanceToPin.toFixed(3));
+      const data: {
+        distance: number;
+        poi_id: number | undefined;
+        uid: string;
+      } = {
+        distance: playerGuess,
+        poi_id: trackingPin?.poi_id,
+        uid: uid,
+      };
+      console.log("data", data);
+      const response: Response = await fetch(
+        `${BASE_URL}/api/user_profiles/completed_poi`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      // checking the tracking pin
+      for (const pin of pins) {
+        if (pin.poi_id === trackingPin?.poi_id) {
+          trackingPin.is_completed = true;
+        }
+      }
+      console.log("response", response);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
   const handleSubmitGuessOnClick = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const { latitude, longitude } = position.coords;
-        console.log(`user location is lat: ${latitude}, long: ${longitude}`);
-        console.log(`user is ${distanceToPin} away from the poi`);
+        void evaluateGuess(position);
       },
       (error) => {
         console.error("Error getting location:", error);
@@ -103,7 +150,7 @@ function SubmitGuessButton({
       <Button
         className="w-full h-full"
         disabled={!isActiveState}
-        onClick={handleSubmitGuessOnClick}
+        onClick={(): void => handleSubmitGuessOnClick()}
       >
         {handleButtonTextRender()}
       </Button>
