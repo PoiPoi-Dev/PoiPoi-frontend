@@ -16,30 +16,9 @@ const LoginPage: React.FC = () => {
 
     return () => {};
   },[]);
-
-  // const handleIsLoggedIn = async () => {
-  //   try {
-  //     const auth = await getAuthService();
-  //     auth.onAuthStateChanged(user => {
-  //       try {
-  //         if (!user) throw 'No user';
-  //         user.getIdToken(true).then((userIdToken: string) => {
-  //           console.log("Logged in", userIdToken);
-  //         }).catch(error => {
-  //           console.log(error);
-  //         });
-  //       } catch(error) {
-  //         console.log(error);
-  //       }
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
+  
   const toggleLogin = () => {
       setIsLogin(!isLogin);
-      console.log("login status", isLogin);
   };
 
   const handleInputChange = (e: {

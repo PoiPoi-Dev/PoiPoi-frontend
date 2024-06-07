@@ -34,7 +34,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setUser(null);
     }
   };
@@ -48,10 +48,3 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 }
 
 export default AuthProvider;
-
-// export const useAuth = () => {
-//   const userProfile = useContext(AuthContext);
-//   if (AuthContext === undefined) throw new Error ("useAuth must be used with AuthContext");
-//   return userProfile;
-// }
-
