@@ -5,7 +5,9 @@ import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
+import { RequestHandler } from "next/dist/server/next";
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 interface SubmitGuessButtonProps {
   pins: Pin[];
@@ -36,7 +38,6 @@ function SubmitGuessButton({
     setIsActiveState(isWithinSearchZone());
   }, [trackingPin, distanceToPin]);
 
-
   const handleTrackingPinAndDistanceToPin = (
     userCoords: GeolocationCoordinates
   ) => {
@@ -50,12 +51,12 @@ function SubmitGuessButton({
     //Finds the closest pin
     for (const pin of pins) {
       //Change based on new schema
-      if(pin.collect){
+      if (pin.is_completed) {
         continue;
       }
       const pinCoordinates: Coordinates = {
-        longitude: pin.longitude,
-        latitude: pin.latitude,
+        longitude: pin.exact_longitude,
+        latitude: pin.exact_latitude,
       };
       const distance: number = GetDistanceFromCoordinatesToMeters(
         userCoordinates,
@@ -71,41 +72,70 @@ function SubmitGuessButton({
   };
 
   const isWithinSearchZone = (): boolean => {
-    if (trackingPin) return distanceToPin < trackingPin.radius;
+    if (trackingPin) return distanceToPin < trackingPin.search_radius;
     else return false;
   };
 
   const handleSubmitGuessOnClick = () => {
-    navigator.geolocation.getCurrentPosition(position => {
-      const { latitude, longitude } = position.coords;
-      console.log(`user location is lat: ${latitude}, long: ${longitude}`)
-      console.log(`user is ${distanceToPin} away from the poi`)
-    },
-    error => {
-      console.error('Error getting location:', error);
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0
-    }
-  )
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        console.log(`user location is lat: ${latitude}, long: ${longitude}`);
+        console.log(
+          `user is ${parseFloat(distanceToPin.toFixed(3))}m away from the poi`
+        );
+        const playerGuess = parseFloat(distanceToPin.toFixed(3));
+        const data: { distance: number; collected_poi_id: number | undefined } =
+          {
+            distance: playerGuess,
+            collected_poi_id: trackingPin?.poi_id,
+            //user id
+          };
+        try {
+          const response: Response = await fetch(
+            `${BASE_URL}/api/user_profiles/completed_poi`,
+            {
+              method: "POST",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            }
+          );
+        } catch (error) {
+          console.error("Error", error);
+        }
+      },
+      (error) => {
+        console.error("Error getting location:", error);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      }
+    );
   };
 
-  const handleButtonTextRender = ():string => {
-   return "Submit your answer?";
-  }
+  const handleButtonTextRender = (): string => {
+    return "Submit your answer?";
+  };
 
   return (
     <div
-    className="fixed bottom-20 left-0 w-full h-20 flex justify-center items-center"
-    style={{ visibility: isActiveState ? "visible" : "hidden" }}>
-      <Button className="w-full h-full" disabled={!isActiveState} onClick={handleSubmitGuessOnClick}>
+      className="fixed bottom-20 left-0 w-full h-20 flex justify-center items-center"
+      style={{ visibility: isActiveState ? "visible" : "hidden" }}
+    >
+      <Button
+        className="w-full h-full"
+        disabled={!isActiveState}
+        onClick={handleSubmitGuessOnClick}
+      >
         {handleButtonTextRender()}
       </Button>
     </div>
   );
-
 }
 
 export default SubmitGuessButton;
