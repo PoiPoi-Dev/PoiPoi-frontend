@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Button } from "./ui/button";
 import { Pin } from "../_utils/global";
 import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
-import { RequestHandler } from "next/dist/server/next";
+
+import { getAuthService } from "@/config/firebaseconfig";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -22,7 +23,7 @@ interface SubmitGuessButtonProps {
 function SubmitGuessButton({
   pins,
 }: SubmitGuessButtonProps): React.JSX.Element {
-  const [trackingPin, setTrackingPin] = useState<Pin | null>(null);
+  const [trackingPin, setTrackingPin] = useState<Pin | null>(null); //arb pin?
   const [distanceToPin, setDistanceToPin] = useState<number>(0);
   const [isActiveState, setIsActiveState] = useState<boolean>(false);
 
@@ -50,7 +51,6 @@ function SubmitGuessButton({
 
     //Finds the closest pin
     for (const pin of pins) {
-      //Change based on new schema
       if (pin.is_completed) {
         continue;
       }
@@ -84,14 +84,22 @@ function SubmitGuessButton({
         console.log(
           `user is ${parseFloat(distanceToPin.toFixed(3))}m away from the poi`
         );
-        const playerGuess = parseFloat(distanceToPin.toFixed(3));
-        const data: { distance: number; collected_poi_id: number | undefined } =
-          {
-            distance: playerGuess,
-            collected_poi_id: trackingPin?.poi_id,
-            //user id
-          };
+
         try {
+          const auth = await getAuthService(); //gives auth service
+          if (!auth.currentUser) return; //error
+          const uid = auth.currentUser.uid;
+          console.log(`user id is ${uid}`);
+          const playerGuess = parseFloat(distanceToPin.toFixed(3));
+          const data: {
+            distance: number;
+            poi_id: number | undefined;
+            uid: string;
+          } = {
+            distance: playerGuess,
+            poi_id: trackingPin?.poi_id,
+            uid: uid,
+          };
           const response: Response = await fetch(
             `${BASE_URL}/api/user_profiles/completed_poi`,
             {
@@ -103,8 +111,21 @@ function SubmitGuessButton({
               body: JSON.stringify(data),
             }
           );
+          //checking the tracking pin id against all POIs
+          for (let pin of pins) {
+            if (pin.poi_id === trackingPin?.poi_id) {
+              trackingPin.is_completed = true;
+            }
+          }
+          console.log("try block");
         } catch (error) {
           console.error("Error", error);
+          for (let pin of pins) {
+            if (pin.poi_id === trackingPin?.poi_id) {
+              trackingPin.is_completed = true;
+            }
+          }
+          console.log("catch block");
         }
       },
       (error) => {
