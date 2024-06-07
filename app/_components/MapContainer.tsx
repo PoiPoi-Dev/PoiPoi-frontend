@@ -14,15 +14,14 @@ import PoidexModal from "./PoidexModal";
 import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
 import SubmitGuessButton from "./SubmitGuessButton";
+import PoiPhotoToggle from "./PoiPhotoToggle";
 
 function MapInner() {
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
   const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [showPoidex, setShowPoidex] = useState(false);
   const [selectedPoi, setSelectedPoi] = useState<Pin | null>(null);
-  const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
-    undefined
-  );
+  const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(undefined);
 
   // Default camera map when user opens the app
   const [longitude] = useState<number>(139.80241);
@@ -61,7 +60,7 @@ function MapInner() {
           <PoidexButton onClick={() => setShowPoidex(true)} />
         </div>
       </div>
-      <HintButton poi_id={selectedPoiId} />
+      <HintButton poi_id={selectedPoiId}/>
       <Map
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
@@ -81,11 +80,11 @@ function MapInner() {
             />
           );
         })}
-
         <DistanceHintButton pins={sample.pin}/>
         <SubmitGuessButton pins={sample.pin}/>
         <MapControls />
       </Map>
+      <PoiPhotoToggle pins={sample.pin} /> {/* Integrate the new component */}
       {showPoidex ? (
         <PoidexModal
           pins={sample.pin}
