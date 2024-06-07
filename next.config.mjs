@@ -4,6 +4,12 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+        port: "",
+        pathname: "/**/**/**",
+      },
+      {
+        protocol: "https",
         hostname: "travelmate.tech",
         port: "",
         pathname: "/media/images/cache/**",
@@ -37,7 +43,7 @@ const nextConfig = {
         hostname: "w3.org",
         port: "",
         pathname: "/**/**",
-      }
+      },
     ],
   },
 };

@@ -5,42 +5,31 @@ import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
+import Image from "next/image";
 
-interface DistanceHintButtonProps {
+interface PoiPhotoToggleProps {
   pins: Pin[];
 }
 
-/**
- * TODO: Manage Button states based on closest pin's search radius.
- * This can done by constantly checking the user coordinates.
- * Manage how frequent this call is made.
- **/
-
-function DistanceHintButton({
-  pins,
-}: DistanceHintButtonProps): React.JSX.Element {
+const PoiPhotoToggle = ({ pins }: PoiPhotoToggleProps): React.JSX.Element => {
   const [trackingPin, setTrackingPin] = useState<Pin | null>(null);
   const [distanceToPin, setDistanceToPin] = useState<number>(0);
   const [isActiveState, setIsActiveState] = useState<boolean>(false);
-  const [isShowingDistance, setIsShowingDistance] = useState<boolean>(false);
+  const [showPhoto, setShowPhoto] = useState<boolean>(true);
 
   useEffect(() => {
     const id = navigator.geolocation.watchPosition((position) => {
-      handleDistanceHintButtonState(position.coords);
+      handleTrackingPinAndDistanceToPin(position.coords);
     });
     return () => navigator.geolocation.clearWatch(id);
-  });
+  }, [pins]);
 
   useEffect(() => {
     if (!trackingPin) return;
     setIsActiveState(isWithinSearchZone());
   }, [trackingPin, distanceToPin]);
 
-  useEffect(() => {
-    if (!isActiveState) setIsShowingDistance(false);
-  }, [isActiveState]);
-
-  const handleDistanceHintButtonState = (
+  const handleTrackingPinAndDistanceToPin = (
     userCoords: GeolocationCoordinates
   ) => {
     const userCoordinates: Coordinates = {
@@ -50,11 +39,14 @@ function DistanceHintButton({
     let shortestDistance: number = Number.MAX_SAFE_INTEGER;
     let pinToTrack: Pin | null = null;
 
-    //Finds the closest pin
+    // Finds the closest pin
     for (const pin of pins) {
+      if (pin.is_completed) {
+        continue;
+      }
       const pinCoordinates: Coordinates = {
-        longitude: pin.exact_longitude,
-        latitude: pin.exact_latitude,
+        longitude: pin.search_longitude,
+        latitude: pin.search_latitude,
       };
       const distance: number = GetDistanceFromCoordinatesToMeters(
         userCoordinates,
@@ -74,24 +66,37 @@ function DistanceHintButton({
     else return false;
   };
 
-  const handleDistanceHintOnClick = () => {
-    setIsShowingDistance(true);
-  };
-
-  const handleButtonTextRender = (): string => {
-    if (!isActiveState) return "Not in Search Zone!";
-    if (isShowingDistance)
-      return `distance to POI: ${Math.trunc(distanceToPin)} m`;
-    else return `Want distance to POI?`;
-  };
-
   return (
-    <div className="fixed right-0 bottom-10 w-auto h-auto">
-      <Button disabled={!isActiveState} onClick={handleDistanceHintOnClick}>
-        {handleButtonTextRender()}
-      </Button>
+    <div
+      className="fixed inset-0 flex items-end justify-center pointer-events-none z-50 bottom-0 pb-40"
+      style={{ bottom: "40px" }}
+    >
+      {isActiveState && (
+        <div
+          className={`relative flex flex-col items-center ${
+            showPhoto ? "bg-white p-4 border rounded shadow-lg" : ""
+          } pointer-events-auto`}
+        >
+          {showPhoto && trackingPin && (
+            <Image
+              src={trackingPin.img_url}
+              alt={trackingPin.title}
+              width={300}
+              height={400}
+              sizes="(max-width: 300px) 100vw, 300px"
+              className="object-cover h-[460px] border-8 border-white mb-2"
+            />
+          )}
+          <Button
+            className="mt-2 absolute bottom-0 z-[999]"
+            onClick={() => setShowPhoto(!showPhoto)}
+          >
+            {showPhoto ? "Show Map" : "Show Photo"}
+          </Button>
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export default DistanceHintButton;
+export default PoiPhotoToggle;
