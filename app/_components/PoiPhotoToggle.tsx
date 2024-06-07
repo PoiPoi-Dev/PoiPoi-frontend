@@ -5,6 +5,7 @@ import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
+import Image from "next/image";
 
 interface PoiPhotoToggleProps {
   pins: Pin[];
@@ -66,11 +67,18 @@ const PoiPhotoToggle = ({ pins }: PoiPhotoToggleProps): React.JSX.Element => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center pointer-events-none" style={{ bottom: '40px' }}>
+    <div
+      className="fixed inset-0 flex items-end justify-center pointer-events-none z-50 bottom-0 pb-40"
+      style={{ bottom: "40px" }}
+    >
       {isActiveState && (
-        <div className={`relative flex flex-col items-center ${showPhoto ? 'bg-white p-4 border rounded shadow-lg' : ''} pointer-events-auto`}>
+        <div
+          className={`relative flex flex-col items-center ${
+            showPhoto ? "bg-white p-4 border rounded shadow-lg" : ""
+          } pointer-events-auto`}
+        >
           {showPhoto && trackingPin && (
-            <img
+            <Image
               src={trackingPin.img_url}
               alt={trackingPin.title}
               width={300}
@@ -79,7 +87,10 @@ const PoiPhotoToggle = ({ pins }: PoiPhotoToggleProps): React.JSX.Element => {
               className="object-cover h-[460px] border-8 border-white mb-2"
             />
           )}
-          <Button className="mt-2 absolute bottom-4" onClick={() => setShowPhoto(!showPhoto)}>
+          <Button
+            className="mt-2 absolute bottom-0 z-[999]"
+            onClick={() => setShowPhoto(!showPhoto)}
+          >
             {showPhoto ? "Show Map" : "Show Photo"}
           </Button>
         </div>
