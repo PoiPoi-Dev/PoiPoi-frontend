@@ -5,30 +5,24 @@ import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
+import Image from "next/image";
 
-interface SubmitGuessButtonProps {
+interface PoiPhotoToggleProps {
   pins: Pin[];
 }
 
-/**
- * TODO: Manage Button states based on closest pin's search radius.
- * This can done by constantly checking the user coordinates.
- * Manage how frequent this call is made.
- **/
-
-function SubmitGuessButton({
-  pins,
-}: SubmitGuessButtonProps): React.JSX.Element {
+const PoiPhotoToggle = ({ pins }: PoiPhotoToggleProps): React.JSX.Element => {
   const [trackingPin, setTrackingPin] = useState<Pin | null>(null);
   const [distanceToPin, setDistanceToPin] = useState<number>(0);
   const [isActiveState, setIsActiveState] = useState<boolean>(false);
+  const [showPhoto, setShowPhoto] = useState<boolean>(true);
 
   useEffect(() => {
     const id = navigator.geolocation.watchPosition((position) => {
       handleTrackingPinAndDistanceToPin(position.coords);
     });
     return () => navigator.geolocation.clearWatch(id);
-  });
+  }, [pins]);
 
   useEffect(() => {
     if (!trackingPin) return;
@@ -45,15 +39,14 @@ function SubmitGuessButton({
     let shortestDistance: number = Number.MAX_SAFE_INTEGER;
     let pinToTrack: Pin | null = null;
 
-    //Finds the closest pin
+    // Finds the closest pin
     for (const pin of pins) {
-      //Change based on new schema
       if (pin.is_completed) {
         continue;
       }
       const pinCoordinates: Coordinates = {
-        longitude: pin.exact_longitude,
-        latitude: pin.exact_latitude,
+        longitude: pin.search_longitude,
+        latitude: pin.search_latitude,
       };
       const distance: number = GetDistanceFromCoordinatesToMeters(
         userCoordinates,
@@ -73,42 +66,37 @@ function SubmitGuessButton({
     else return false;
   };
 
-  const handleSubmitGuessOnClick = () => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        console.log(`user location is lat: ${latitude}, long: ${longitude}`);
-        console.log(`user is ${distanceToPin} away from the poi`);
-      },
-      (error) => {
-        console.error("Error getting location:", error);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0,
-      }
-    );
-  };
-
-  const handleButtonTextRender = (): string => {
-    return "Submit your answer?";
-  };
-
   return (
     <div
-      className="fixed bottom-20 left-0 w-full h-20 flex justify-center items-center"
-      style={{ visibility: isActiveState ? "visible" : "hidden" }}
+      className="fixed inset-0 flex items-end justify-center pointer-events-none z-50 bottom-0 pb-40"
+      style={{ bottom: "40px" }}
     >
-      <Button
-        className="w-full h-full"
-        disabled={!isActiveState}
-        onClick={handleSubmitGuessOnClick}
-      >
-        {handleButtonTextRender()}
-      </Button>
+      {isActiveState && (
+        <div
+          className={`relative flex flex-col items-center ${
+            showPhoto ? "bg-white p-4 border rounded shadow-lg" : ""
+          } pointer-events-auto`}
+        >
+          {showPhoto && trackingPin && (
+            <Image
+              src={trackingPin.img_url}
+              alt={trackingPin.title}
+              width={300}
+              height={400}
+              sizes="(max-width: 300px) 100vw, 300px"
+              className="object-cover h-[460px] border-8 border-white mb-2"
+            />
+          )}
+          <Button
+            className="mt-2 absolute bottom-0 z-[999]"
+            onClick={() => setShowPhoto(!showPhoto)}
+          >
+            {showPhoto ? "Show Map" : "Show Photo"}
+          </Button>
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export default SubmitGuessButton;
+export default PoiPhotoToggle;

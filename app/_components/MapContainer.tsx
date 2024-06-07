@@ -13,6 +13,7 @@ import HintButton from "./HintButton";
 import PoidexButton from "./PoidexButton";
 import PoidexModal from "./PoidexModal";
 import SubmitGuessButton from "./SubmitGuessButton";
+import PoiPhotoToggle from "./PoiPhotoToggle";
 import { AuthContext } from "./useContext/AuthContext";
 import { getAuthService } from "@/config/firebaseconfig";
 // import { redirect } from "next/navigation";
@@ -29,8 +30,10 @@ function MapInner() {
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
     undefined
   );
-  const [longitude] = useState<number>(139.7454); // Default camera map when user opens the app
-  const [latitude] = useState<number>(35.6586);
+
+  // Default camera map when user opens the app
+  const longitude: number = 139.72953967417234;
+  const latitude: number = 35.66060121205606;
   const [viewPort, setViewPort] = useState({
     longitude: longitude,
     latitude: latitude,
@@ -61,6 +64,7 @@ function MapInner() {
       setPoiData(data);
     } catch (error) {
       console.log(error);
+      setPoiData([])
     }
   };
 
@@ -107,7 +111,6 @@ function MapInner() {
         <PoidexButton onClick={() => setShowPoidex(true)} />
         <HintButton poi_id={selectedPoiId} />
       </div>
-
       {/* MAP CANVAS */}
       <Map
         {...viewPort}
@@ -156,8 +159,10 @@ function MapInner() {
         })} */}
         {/* <DistanceHintButton pins={poiData} /> */}
         <SubmitGuessButton pins={poiData} />
+
         <MapControls />
       </Map>
+      <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
       {showPoidex ? (
         <PoidexModal
           pins={poiData}
