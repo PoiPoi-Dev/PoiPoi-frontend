@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Pin } from "../_utils/global";
-import { Coordinates, GetDistanceFromCoordinatesToMeters } from "../_utils/coordinateMath";
+import {
+  Coordinates,
+  GetDistanceFromCoordinatesToMeters,
+} from "../_utils/coordinateMath";
+import Image from "next/image";
 
 interface PoiPhotoToggleProps {
   pins: Pin[];
@@ -11,7 +15,7 @@ const PoiPhotoToggle = ({ pins }: PoiPhotoToggleProps): React.JSX.Element => {
   const [trackingPin, setTrackingPin] = useState<Pin | null>(null);
   const [distanceToPin, setDistanceToPin] = useState<number>(0);
   const [isActiveState, setIsActiveState] = useState<boolean>(false);
-  const [showPhoto, setShowPhoto] = useState<boolean>(true);
+  const [showPhoto, setShowPhoto] = useState<boolean>(false);
 
   useEffect(() => {
     const id = navigator.geolocation.watchPosition((position) => {
@@ -25,7 +29,9 @@ const PoiPhotoToggle = ({ pins }: PoiPhotoToggleProps): React.JSX.Element => {
     setIsActiveState(isWithinSearchZone());
   }, [trackingPin, distanceToPin]);
 
-  const handleTrackingPinAndDistanceToPin = (userCoords: GeolocationCoordinates) => {
+  const handleTrackingPinAndDistanceToPin = (
+    userCoords: GeolocationCoordinates
+  ) => {
     const userCoordinates: Coordinates = {
       longitude: userCoords.longitude,
       latitude: userCoords.latitude,
@@ -36,8 +42,8 @@ const PoiPhotoToggle = ({ pins }: PoiPhotoToggleProps): React.JSX.Element => {
     // Finds the closest pin
     for (const pin of pins) {
       const pinCoordinates: Coordinates = {
-        longitude: pin.longitude,
-        latitude: pin.latitude,
+        longitude: pin.search_longitude,
+        latitude: pin.search_latitude,
       };
       const distance: number = GetDistanceFromCoordinatesToMeters(
         userCoordinates,
@@ -53,16 +59,24 @@ const PoiPhotoToggle = ({ pins }: PoiPhotoToggleProps): React.JSX.Element => {
   };
 
   const isWithinSearchZone = (): boolean => {
-    if (trackingPin) return distanceToPin < trackingPin.radius;
+    console.log(trackingPin);
+    if (trackingPin) return distanceToPin < trackingPin.search_radius;
     else return false;
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center pointer-events-none" style={{ bottom: '40px' }}>
+    <div
+      className="fixed inset-0 flex items-center justify-center pointer-events-none"
+      style={{ bottom: "40px" }}
+    >
       {isActiveState && (
-        <div className={`relative flex flex-col items-center ${showPhoto ? 'bg-white p-4 border rounded shadow-lg' : ''} pointer-events-auto`}>
+        <div
+          className={`relative flex flex-col items-center ${
+            showPhoto ? "bg-white p-4 border rounded shadow-lg" : ""
+          } pointer-events-auto`}
+        >
           {showPhoto && trackingPin && (
-            <img
+            <Image
               src={trackingPin.img_url}
               alt={trackingPin.title}
               width={300}
@@ -74,7 +88,10 @@ const PoiPhotoToggle = ({ pins }: PoiPhotoToggleProps): React.JSX.Element => {
           {!showPhoto && (
             <div className="h-[460px]"></div> // Placeholder to maintain height
           )}
-          <Button className="mt-2 absolute bottom-4" onClick={() => setShowPhoto(!showPhoto)}>
+          <Button
+            className="mt-2 absolute bottom-4"
+            onClick={() => setShowPhoto(!showPhoto)}
+          >
             {showPhoto ? "Show Map" : "Show Photo"}
           </Button>
         </div>

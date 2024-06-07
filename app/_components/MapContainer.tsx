@@ -24,7 +24,9 @@ function MapInner() {
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [showPoidex, setShowPoidex] = useState(false);
   const [selectedPoi, setSelectedPoi] = useState<Pin | null>(null);
-  const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(undefined);
+  const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
+    undefined
+  );
 
   // Default camera map when user opens the app
   const [longitude] = useState<number>(139.80241);
@@ -79,9 +81,6 @@ function MapInner() {
         <PoidexButton onClick={() => setShowPoidex(true)} />
         <HintButton poi_id={selectedPoiId} />
       </div>
-      
-      <HintButton poi_id={selectedPoiId}/>
-
       {/* MAP CANVAS */}
       <Map
         {...viewPort}
@@ -133,7 +132,7 @@ function MapInner() {
 
         <MapControls />
       </Map>
-      <PoiPhotoToggle pins={sample.pin} /> {/* Integrate the new component */}
+      <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
       {showPoidex ? (
         <PoidexModal
           pins={poiData}
