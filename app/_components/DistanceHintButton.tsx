@@ -6,7 +6,6 @@ import {
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
 
-
 interface DistanceHintButtonProps {
   pins: Pin[];
 }
@@ -37,9 +36,9 @@ function DistanceHintButton({
     setIsActiveState(isWithinSearchZone());
   }, [trackingPin, distanceToPin]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!isActiveState) setIsShowingDistance(false);
-  }, [isActiveState])
+  }, [isActiveState]);
 
   const handleDistanceHintButtonState = (
     userCoords: GeolocationCoordinates
@@ -54,8 +53,8 @@ function DistanceHintButton({
     //Finds the closest pin
     for (const pin of pins) {
       const pinCoordinates: Coordinates = {
-        longitude: pin.longitude,
-        latitude: pin.latitude,
+        longitude: pin.exact_longitude,
+        latitude: pin.exact_latitude,
       };
       const distance: number = GetDistanceFromCoordinatesToMeters(
         userCoordinates,
@@ -71,7 +70,7 @@ function DistanceHintButton({
   };
 
   const isWithinSearchZone = (): boolean => {
-    if (trackingPin) return distanceToPin < trackingPin.radius;
+    if (trackingPin) return distanceToPin < trackingPin.search_radius;
     else return false;
   };
 
@@ -79,11 +78,12 @@ function DistanceHintButton({
     setIsShowingDistance(true);
   };
 
-  const handleButtonTextRender = ():string => {
+  const handleButtonTextRender = (): string => {
     if (!isActiveState) return "Not in Search Zone!";
-    if (isShowingDistance) return `distance to POI: ${Math.trunc(distanceToPin)} m`;
-    else return `Want distance to POI?`
-  }
+    if (isShowingDistance)
+      return `distance to POI: ${Math.trunc(distanceToPin)} m`;
+    else return `Want distance to POI?`;
+  };
 
   return (
     <div className="fixed right-0 bottom-10 w-auto h-auto">
