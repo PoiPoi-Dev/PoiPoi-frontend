@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Pin } from "../_utils/global";
+import { AuthContext } from "./useContext/AuthContext";
 
 export function PoiCard({
   payload,
@@ -13,6 +14,7 @@ export function PoiCard({
   const [collect, setCollect] = useState<boolean | undefined>(
     payload.is_completed
   );
+  const user = useContext(AuthContext);
 
   // EFFECT
 
@@ -52,8 +54,12 @@ export function PoiCard({
           <Button
             className="w-full mt-4 rounded-lg"
             onClick={() => {
-              setCollect(true);
-              payload.is_completed = true;
+              if (user) {
+                setCollect(true);
+                payload.is_completed = true;
+              } else {
+                alert("please login");
+              }
             }}
           >
             Collect
