@@ -30,8 +30,8 @@ function MapInner() {
   );
 
   // Default camera map when user opens the app
-  const [longitude] = useState<number>(139.80241);
-  const [latitude] = useState<number>(35.56762);
+  const longitude: number = 139.72953967417234;
+  const latitude: number = 35.66060121205606;
   const [viewPort, setViewPort] = useState({
     longitude: longitude,
     latitude: latitude,
@@ -77,7 +77,7 @@ function MapInner() {
   // RETURN
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
-        <div>{user? (<h1>{user.uid}</h1>) : <h1>Please Sign In</h1>}</div>
+      <div>{user ? <h1>{user.uid}</h1> : <h1>Please Sign In</h1>}</div>
       {/* THIS SHOULD BE MOVED TO OTHER PLACE */}
       <div className="absolute top-4 left-4 z-10 flex gap-2">
         {/* <TagFilterDropdown onFilter={handleFilter} /> */}
