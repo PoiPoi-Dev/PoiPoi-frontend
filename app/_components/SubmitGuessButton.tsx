@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Pin } from "../_utils/global";
 import {
@@ -76,53 +76,56 @@ function SubmitGuessButton({
     else return false;
   };
 
+  const evaluateGuess = async (position: GeolocationPosition) => {
+    const { latitude, longitude } = position.coords;
+    console.log(`user location is lat: ${latitude}, long: ${longitude}`);
+    console.log(
+      `user is ${parseFloat(distanceToPin.toFixed(3))}m away from the poi`
+    );
+
+    try {
+      const auth = await getAuthService(); //gives auth service
+      if (!auth.currentUser) return; //error
+      const uid = auth.currentUser.uid;
+      console.log(`user id is ${uid}`);
+      const playerGuess = parseFloat(distanceToPin.toFixed(3));
+      const data: {
+        distance: number;
+        poi_id: number | undefined;
+        uid: string;
+      } = {
+        distance: playerGuess,
+        poi_id: trackingPin?.poi_id,
+        uid: uid,
+      };
+      console.log("data", data);
+      const response: Response = await fetch(
+        `${BASE_URL}/api/user_profiles/completed_poi`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      // checking the tracking pin
+      for (const pin of pins) {
+        if (pin.poi_id === trackingPin?.poi_id) {
+          trackingPin.is_completed = true;
+        }
+      }
+      console.log("response", response);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
   const handleSubmitGuessOnClick = () => {
     navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-        console.log(`user location is lat: ${latitude}, long: ${longitude}`);
-        console.log(
-          `user is ${parseFloat(distanceToPin.toFixed(3))}m away from the poi`
-        );
-
-        try {
-          const auth = await getAuthService(); //gives auth service
-          if (!auth.currentUser) return; //error
-          const uid = auth.currentUser.uid;
-          console.log(`user id is ${uid}`);
-          const playerGuess = parseFloat(distanceToPin.toFixed(3));
-          const data: {
-            distance: number;
-            poi_id: number | undefined;
-            uid: string;
-          } = {
-            distance: playerGuess,
-            poi_id: trackingPin?.poi_id,
-            uid: uid,
-          };
-          console.log("data", data);
-          const response: Response = await fetch(
-            `${BASE_URL}/api/user_profiles/completed_poi`,
-            {
-              method: "POST",
-              credentials: "include",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(data),
-            }
-          );
-          //checking the tracking pin id against all POIs
-          for (let pin of pins) {
-            if (pin.poi_id === trackingPin?.poi_id) {
-              trackingPin.is_completed = true;
-            }
-            console.log(pin);
-          }
-          console.log("response", response);
-        } catch (error) {
-          console.error("Error", error);
-        }
+      (position) => {
+        void evaluateGuess(position);
       },
       (error) => {
         console.error("Error getting location:", error);
@@ -147,7 +150,7 @@ function SubmitGuessButton({
       <Button
         className="w-full h-full"
         disabled={!isActiveState}
-        onClick={handleSubmitGuessOnClick}
+        onClick={(): void => handleSubmitGuessOnClick()}
       >
         {handleButtonTextRender()}
       </Button>
