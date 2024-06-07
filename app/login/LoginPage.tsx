@@ -2,7 +2,11 @@
 import { useEffect, useState } from "react";
 import { User } from "../_utils/global";
 import { Button } from "../_components/ui/button";
-import { createUser, isVerified, loginUser } from "../_actions/authenticationActions";
+import {
+  createUser,
+  isVerified,
+  loginUser,
+} from "../_actions/authenticationActions";
 // import { onAuthStateChanged } from "firebase/auth";
 import { getAuthService } from "@/config/firebaseconfig";
 // import { AuthContext } from "../_components/useContext/AuthContext"
@@ -13,12 +17,11 @@ const LoginPage: React.FC = () => {
 
   // const firebaseUser = useContext(AuthContext);
   useEffect(() => {
-
     return () => {};
-  },[]);
-  
+  }, []);
+
   const toggleLogin = () => {
-      setIsLogin(!isLogin);
+    setIsLogin(!isLogin);
   };
 
   const handleInputChange = (e: {
@@ -38,35 +41,41 @@ const LoginPage: React.FC = () => {
     console.log("User", user, "attempting to create a new account.");
 
     try {
-      if (!user.email || !user.password || !user.displayName) throw 'Invalid User/Password/Display Name';
+      if (!user.email || !user.password || !user.displayName)
+        throw "Invalid User/Password/Display Name";
       await createUser(user.email, user.password, user.displayName);
+      alert("Account created successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Account creation failed, please try again.");
+    }
+  };
+
+  const handleLogin = async (
+    e: React.FormEvent<HTMLFormElement> | React.FormEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    console.log("Attempting to login");
+    try {
+      if (!user.email || !user.password) throw "Invalid User/Password";
+      await loginUser(user.email, user.password);
+      alert("Login successful!");
+    } catch (error) {
+      console.error(error);
+      alert("Login failed, please try again.");
+    }
+  };
+
+  const checkIfVerified = async () => {
+    try {
+      const auth = await getAuthService();
+      if (!auth.currentUser) throw "No current user";
+      const idToken: string = await auth.currentUser.getIdToken(true);
+      await isVerified(idToken);
     } catch (error) {
       console.error(error);
     }
   };
-
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement> | React.FormEvent<HTMLButtonElement>
-  ) => {
-    e.preventDefault();
-    console.log("Attempting to login");
-    try{
-      if (!user.email || !user.password) throw 'Invalid User/Password';
-      await loginUser(user.email, user.password);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  const checkIfVerified = async () => {
-    try{
-      const auth = await getAuthService();
-      if(!auth.currentUser) throw 'No current user';
-      const idToken: string = await auth.currentUser.getIdToken(true);
-      await isVerified(idToken);
-    } catch(error) {
-      console.error(error);
-    }
-  }
 
   return (
     <div className="flex flex-col items-center justify-between">
@@ -99,7 +108,10 @@ const LoginPage: React.FC = () => {
               ></input>
             </div>
             <Button onClick={(e) => void handleLogin(e)}>Log in</Button>
-            <Button onClick={toggleLogin}> Switch to create new account menu</Button>
+            <Button onClick={toggleLogin}>
+              {" "}
+              Switch to create new account menu
+            </Button>
           </form>
         </div>
       ) : (
@@ -139,7 +151,9 @@ const LoginPage: React.FC = () => {
                 value={user.password}
               ></input>
             </div>
-            <Button onClick={(e) => void handleCreateNewAccount(e)}>Create account</Button>
+            <Button onClick={(e) => void handleCreateNewAccount(e)}>
+              Create account
+            </Button>
             <Button onClick={toggleLogin}> Switch to Login Menu </Button>
           </form>
         </div>
@@ -147,7 +161,9 @@ const LoginPage: React.FC = () => {
 
       {/* creation */}
       <div>
-        <Button onClick={() => void checkIfVerified()}>Click here to test if verified</Button>
+        <Button onClick={() => void checkIfVerified()}>
+          Click here to test if verified
+        </Button>
       </div>
     </div>
   );
