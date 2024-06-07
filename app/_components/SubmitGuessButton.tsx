@@ -100,6 +100,7 @@ function SubmitGuessButton({
             poi_id: trackingPin?.poi_id,
             uid: uid,
           };
+          console.log("data", data);
           const response: Response = await fetch(
             `${BASE_URL}/api/user_profiles/completed_poi`,
             {
@@ -116,16 +117,11 @@ function SubmitGuessButton({
             if (pin.poi_id === trackingPin?.poi_id) {
               trackingPin.is_completed = true;
             }
+            console.log(pin);
           }
-          console.log("try block");
+          console.log("response", response);
         } catch (error) {
           console.error("Error", error);
-          for (let pin of pins) {
-            if (pin.poi_id === trackingPin?.poi_id) {
-              trackingPin.is_completed = true;
-            }
-          }
-          console.log("catch block");
         }
       },
       (error) => {
