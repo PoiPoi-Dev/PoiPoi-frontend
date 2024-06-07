@@ -5,7 +5,6 @@ import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
-import Image from "next/image";
 
 interface PoiPhotoToggleProps {
   pins: Pin[];
@@ -15,14 +14,14 @@ const PoiPhotoToggle = ({ pins }: PoiPhotoToggleProps): React.JSX.Element => {
   const [trackingPin, setTrackingPin] = useState<Pin | null>(null);
   const [distanceToPin, setDistanceToPin] = useState<number>(0);
   const [isActiveState, setIsActiveState] = useState<boolean>(false);
-  const [showPhoto, setShowPhoto] = useState<boolean>(false);
+  const [showPhoto, setShowPhoto] = useState<boolean>(true);
 
   useEffect(() => {
     const id = navigator.geolocation.watchPosition((position) => {
       handleTrackingPinAndDistanceToPin(position.coords);
     });
     return () => navigator.geolocation.clearWatch(id);
-  }, []);
+  }, [pins]);
 
   useEffect(() => {
     if (!trackingPin) return;
@@ -41,6 +40,9 @@ const PoiPhotoToggle = ({ pins }: PoiPhotoToggleProps): React.JSX.Element => {
 
     // Finds the closest pin
     for (const pin of pins) {
+      if (pin.is_completed) {
+        continue;
+      }
       const pinCoordinates: Coordinates = {
         longitude: pin.search_longitude,
         latitude: pin.search_latitude,
@@ -59,24 +61,16 @@ const PoiPhotoToggle = ({ pins }: PoiPhotoToggleProps): React.JSX.Element => {
   };
 
   const isWithinSearchZone = (): boolean => {
-    console.log(trackingPin);
     if (trackingPin) return distanceToPin < trackingPin.search_radius;
     else return false;
   };
 
   return (
-    <div
-      className="fixed inset-0 flex items-center justify-center pointer-events-none"
-      style={{ bottom: "40px" }}
-    >
+    <div className="fixed inset-0 flex items-center justify-center pointer-events-none" style={{ bottom: '40px' }}>
       {isActiveState && (
-        <div
-          className={`relative flex flex-col items-center ${
-            showPhoto ? "bg-white p-4 border rounded shadow-lg" : ""
-          } pointer-events-auto`}
-        >
+        <div className={`relative flex flex-col items-center ${showPhoto ? 'bg-white p-4 border rounded shadow-lg' : ''} pointer-events-auto`}>
           {showPhoto && trackingPin && (
-            <Image
+            <img
               src={trackingPin.img_url}
               alt={trackingPin.title}
               width={300}
@@ -85,13 +79,7 @@ const PoiPhotoToggle = ({ pins }: PoiPhotoToggleProps): React.JSX.Element => {
               className="object-cover h-[460px] border-8 border-white mb-2"
             />
           )}
-          {!showPhoto && (
-            <div className="h-[460px]"></div> // Placeholder to maintain height
-          )}
-          <Button
-            className="mt-2 absolute bottom-4"
-            onClick={() => setShowPhoto(!showPhoto)}
-          >
+          <Button className="mt-2 absolute bottom-4" onClick={() => setShowPhoto(!showPhoto)}>
             {showPhoto ? "Show Map" : "Show Photo"}
           </Button>
         </div>
