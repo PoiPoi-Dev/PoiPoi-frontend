@@ -57,6 +57,8 @@ function SubmitGuessButton({
       const pinCoordinates: Coordinates = {
         longitude: pin.exact_longitude,
         latitude: pin.exact_latitude,
+        longitude: pin.exact_longitude,
+        latitude: pin.exact_latitude,
       };
       const distance: number = GetDistanceFromCoordinatesToMeters(
         userCoordinates,
@@ -72,6 +74,7 @@ function SubmitGuessButton({
   };
 
   const isWithinSearchZone = (): boolean => {
+    if (trackingPin) return distanceToPin < trackingPin.search_radius;
     if (trackingPin) return distanceToPin < trackingPin.search_radius;
     else return false;
   };

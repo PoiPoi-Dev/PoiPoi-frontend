@@ -1,8 +1,8 @@
+'use client'
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { 
   getAuth,
-  connectAuthEmulator,
 } from "firebase/auth";
 
 // Add SDKs for Firebase products that you want to use
@@ -21,13 +21,7 @@ const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
-
-//Use the command firebase emulators:start --only auth
-if (process.env.NODE_ENV === 'development') {
-  console.log("Connecting to the firebase emulator.");
-  connectAuthEmulator(auth, "http://localhost:9099");
-}
-
-export {
-  auth,
+  
+export async function getAuthService() {
+    return await auth;
 }
