@@ -40,7 +40,7 @@ const layerStyle = (
         20,
         metersToPixelsAtMaxZoom(radius, latitude),
       ],
-      "circle-color": "#007cbf",
+      "circle-color": "rgba(203, 92, 255, 0.3)",
       "circle-opacity": 0.5,
     },
     source: "",
