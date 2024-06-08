@@ -39,7 +39,7 @@ function GuessPolyline({ locationArray }: Props): JSX.Element {
           "line-cap": "round",
         }}
         paint={{
-          "line-color": "rgba(3, 170, 238, 0.5)",
+          "line-color": "rgba(0, 0, 0, 1)",
           "line-width": 5,
         }}
       />
