@@ -21,6 +21,8 @@ import {
 import useGeolocation from "../_hooks/useGeolocation";
 import FilterButton from "./FilterButton";
 import GuessPolyline from "./ui/guessPolyline";
+import { Popover, PopoverContent } from "@radix-ui/react-popover";
+import PoiPopup from "./PoiPopup";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -28,6 +30,9 @@ function MapInner() {
   // USE STATE
   const [poiData, setPoiData] = useState<Pin[]>([]);
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
+  const [guessPoiPosition, setGuessPoiPosition] = useState<
+    Coordinates | void[]
+  >([]);
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
     undefined
@@ -192,7 +197,7 @@ function MapInner() {
   // RETURN
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
-      {/* THIS SHOULD BE MOVED TO OTHER PLACE */}
+      {/* GAME UI */}
       <div className="absolute top-4 left-4 z-10 flex gap-2">
         {/* <TagFilterDropdown onFilter={handleFilter} /> */}
         <HintButton poi_id={selectedPoiId} />
@@ -237,6 +242,23 @@ function MapInner() {
             />
           );
         })}
+
+        {/* Popup */}
+        {showPopup === selectedPoiId && selectedPoiId && (
+          <div className="fixed top-0 left-0 w-screen h-screen">
+            <Popover defaultOpen>
+              <PopoverContent className="">
+                <PoiPopup
+                  id={selectedPoiId}
+                  setShowPopup={setShowPopup}
+                  payload={
+                    poiData.filter((pin) => pin.poi_id === selectedPoiId)[0]
+                  }
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        )}
 
         <GuessPolyline
           locationArray={[

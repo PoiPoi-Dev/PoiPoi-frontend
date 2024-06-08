@@ -146,21 +146,6 @@ function MarkerContainer({
               <Layer {...generateLayerStyle} />
             </Source>
           )}
-
-          {/* Popup */}
-          {showPopup === pin.poi_id && (
-            <div className="fixed top-0 left-0 w-screen h-screen">
-              <Popover defaultOpen>
-                <PopoverContent className="">
-                  <PoiPopup
-                    setShowPopup={setShowPopup}
-                    id={pin.poi_id}
-                    payload={pin}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-          )}
         </Marker>
       )}
     </>
