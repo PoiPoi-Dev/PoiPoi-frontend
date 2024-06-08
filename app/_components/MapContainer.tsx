@@ -10,12 +10,13 @@ import MapControls from "./MapControls";
 // import TagFilterDropdown from "./TagFilterDropdown";
 // import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
-import PoidexButton from "./PoidexButton";
-import PoidexModal from "./PoidexModal";
-import SubmitGuessButton from "./SubmitGuessButton";
+// import PoidexButton from "./PoidexButton";
+// import PoidexModal from "./PoidexModal";
+// import SubmitGuessButton from "./SubmitGuessButton";
 import PoiPhotoToggle from "./PoiPhotoToggle";
 import { AuthContext } from "./useContext/AuthContext";
 import { getAuthService } from "@/config/firebaseconfig";
+import GameControls from "./GameControls";
 // import { redirect } from "next/navigation";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -25,8 +26,8 @@ function MapInner() {
   const [poiData, setPoiData] = useState<Pin[]>([]);
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
-  const [showPoidex, setShowPoidex] = useState(false);
-  const [selectedPoi, setSelectedPoi] = useState<Pin | null>(null);
+  // const [showPoidex, setShowPoidex] = useState(false);
+  // const [selectedPoi, setSelectedPoi] = useState<Pin | null>(null);
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
     undefined
   );
@@ -89,14 +90,14 @@ function MapInner() {
   //   }
   // };
 
-  const handlePoiClick = (poi: Pin) => {
-    setSelectedPoi(poi);
-  };
+  // const handlePoiClick = (poi: Pin) => {
+  //   setSelectedPoi(poi);
+  // };
 
-  const handleClosePoidex = () => {
-    setShowPoidex(false);
-    setSelectedPoi(null); // Reset selectedPoi when closing PoidexModal
-  };
+  // const handleClosePoidex = () => {
+  //   setShowPoidex(false);
+  //   setSelectedPoi(null); // Reset selectedPoi when closing PoidexModal
+  // };
 
   // if (!user) {
   //   redirect("/login");
@@ -108,8 +109,9 @@ function MapInner() {
       {/* THIS SHOULD BE MOVED TO OTHER PLACE */}
       <div className="absolute top-4 left-4 z-10 flex gap-2">
         {/* <TagFilterDropdown onFilter={handleFilter} /> */}
-        <PoidexButton onClick={() => setShowPoidex(true)} />
+        {/* <PoidexButton onClick={() => setShowPoidex(true)} /> */}
         <HintButton poi_id={selectedPoiId} />
+        <GameControls pins = {poiData}/>
       </div>
       {/* MAP CANVAS */}
       <Map
@@ -158,12 +160,12 @@ function MapInner() {
           );
         })} */}
         {/* <DistanceHintButton pins={poiData} /> */}
-        <SubmitGuessButton pins={poiData} />
-
+        {/* <SubmitGuessButton pins={poiData} /> */}
+        
         <MapControls />
       </Map>
       <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
-      {showPoidex ? (
+      {/* {showPoidex ? (
         <PoidexModal
           pins={poiData}
           onClose={handleClosePoidex}
@@ -171,7 +173,7 @@ function MapInner() {
           selectedPoi={selectedPoi}
           goBack={() => setSelectedPoi(null)}
         />
-      ) : null}
+      ) : null} */}
     </div>
   );
 }
