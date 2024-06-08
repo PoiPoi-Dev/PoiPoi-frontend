@@ -54,6 +54,7 @@ function MapInner() {
       const uid: string = auth.currentUser.uid;
 
       const response = await fetch(`${BASE_URL}/api/poi/status`, {
+        credentials: "include",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,13 +65,19 @@ function MapInner() {
       setPoiData(data);
     } catch (error) {
       console.log(error);
-      setPoiData([])
+      setPoiData([]);
     }
   };
 
   const handleFetchPoiByAnonymous = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/api/poi/`);
+      const response = await fetch(`${BASE_URL}/api/poi/`, {
+      credentials: "include",
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       const data: Pin[] = (await response.json()) as Pin[];
       setPoiData(data);
     } catch (error) {
