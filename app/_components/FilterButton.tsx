@@ -3,9 +3,11 @@ import { Button } from "./ui/button";
 
 export default function FilterButton({
   filters,
+  selectedFilters,
   setSelectedFilters,
 }: {
   filters: string[];
+  selectedFilters: string[];
   setSelectedFilters: (filters: string[]) => void;
 }) {
   // USE STATE
@@ -23,13 +25,15 @@ export default function FilterButton({
               <li>
                 <Button
                   onClick={() => {
-                    setSelectedFilters(
-                      filters.includes(tag)
-                        ? filters.filter((tagInFilter) => tagInFilter !== tag)
-                        : [...filters, tag]
-                    );
+                    selectedFilters = selectedFilters.includes(tag)
+                      ? selectedFilters.filter(
+                          (tagInFilter) => tagInFilter !== tag
+                        )
+                      : [...selectedFilters, tag];
+                    setSelectedFilters(selectedFilters);
                   }}
                   style={{ borderRadius: "9999px" }}
+                  variant={selectedFilters.includes(tag) ? "default" : "ghost"}
                 >
                   {tag}
                 </Button>

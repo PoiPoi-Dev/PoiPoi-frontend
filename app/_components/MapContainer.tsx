@@ -32,7 +32,7 @@ function MapInner() {
     undefined
   );
   const [filters, setFilters] = useState<string[]>([]);
-  const [selectedFilters, setSelectedFilters] = useState<string[] | void[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
   const [userCoordinates, setUserCoordinates] = useState<Coordinates | null>(
     null
@@ -54,6 +54,7 @@ function MapInner() {
   });
 
   const user = useContext(AuthContext);
+
   // USE EFFECT
   useEffect(() => {
     user ? void handleFetchPoiByUid() : void handleFetchPoiByAnonymous();
@@ -203,14 +204,17 @@ function MapInner() {
         <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
         <FilterButton
           filters={filters}
+          selectedFilters={selectedFilters}
           setSelectedFilters={setSelectedFilters}
         />
+        {/* TEMP FOR DEVELOPMENT */}
         <li>
           {selectedFilters.length > 0
             ? `Filtered by ${selectedFilters.join(", ")}`
             : "All"}
         </li>
       </div>
+
       {/* MAP CANVAS */}
       <Map
         {...viewPort}
