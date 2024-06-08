@@ -99,7 +99,7 @@ function MapInner() {
   const handleFetchPoiByAnonymous = async () => {
     try {
       const response = await fetch(`${BASE_URL}/api/poi/`, {
-        credentials: "include",
+      credentials: "include",
         method: "GET",
         headers: {
           "Content-Type": "application/json",
