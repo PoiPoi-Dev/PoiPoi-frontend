@@ -41,15 +41,8 @@ function MapInner() {
   const [userCoordinates, setUserCoordinates] = useState<Coordinates | null>(
     null
   );
-  const [closestNotCompletedPin, setClosestNotCompletedPin] =
-    useState<Pin | null>(null);
-  const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<
-    number | null
-  >(null);
-  // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
-
-  // const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
-  // const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
+  const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
+  const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<number|null> (null);
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
   // Default camera map when user opens the app
