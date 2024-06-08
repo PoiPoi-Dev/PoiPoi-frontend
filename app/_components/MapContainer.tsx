@@ -172,7 +172,6 @@ function MapInner() {
         closestPin = pin;
       }
     }
-
     setClosestNotCompletedPin(closestPin);
   };
 
