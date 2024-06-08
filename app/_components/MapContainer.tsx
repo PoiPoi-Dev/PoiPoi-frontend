@@ -7,20 +7,20 @@ import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
 import HintButton from "./HintButton";
-// import PoiPhotoToggle from "./PoiPhotoToggle";
 import { AuthContext } from "./useContext/AuthContext";
 import { getAuthService } from "@/config/firebaseconfig";
 import GameControls from "./GameControls";
 import {
   ConvertGeolocationPositionToCoordinates,
   Coordinates,
-  // GetDistanceFromCoordinatesToMeters,
+  GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
 import useGeolocation from "../_hooks/useGeolocation";
 import FilterButton from "./FilterButton";
 import GuessPolyline from "./ui/guessPolyline";
 import PopoverCard from "./PopoverCard";
 import GuessDistanceModal from "./GuessDistanceModal";
+import PoiPhotoToggle from "./PoiPhotoToggle";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -41,11 +41,11 @@ function MapInner() {
   const [userCoordinates, setUserCoordinates] = useState<Coordinates | null>(
     null
   );
-  // const [closestNotCompletedPin, setClosestNotCompletedPin] =
-  //   useState<Pin | null>(null);
-  // const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<
-  //   number | null
-  // >(null);
+  const [closestNotCompletedPin, setClosestNotCompletedPin] =
+    useState<Pin | null>(null);
+  const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<
+    number | null
+  >(null);
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
   // Default camera map when user opens the app
@@ -65,59 +65,10 @@ function MapInner() {
     void handleFetchFilters();
   }, [user]);
 
-  // useEffect(() => {
-  //   if (!closestNotCompletedPin || !userCoordinates) return;
-  //   handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
-  // }, [closestNotCompletedPin, userCoordinates]);
-
-  //     const id = navigator.geolocation.watchPosition((position) => {
-  //       handleSetUserCoordinates(position);
-  //       if (isTrackingTheClosestPin)
-  //         handleSetClosestNotCompletedPin(position)
-  //     },
-  //     (error) => console.error(error)
-  //     // { enableHighAccuracy: true,}
-  //   );
-
-  //   return () => navigator.geolocation.clearWatch(id);
-  // }, [isTrackingTheClosestPin, poiData]);
-
-  // const handleSetUserCoordinates = (position: GeolocationPosition) => {
-  //   const userCoord:Coordinates = ConvertGeolocationPositionToCoordinates(position);
-  //   setUserCoordinates(userCoord);
-  // }
-
-  /**
-   * Sets closestNotCompletedPin to the closes pin BY POSITION
-   * Currently does not account for filters
-   * @param position
-   */
-  // const handleSetClosestNotCompletedPin = (position: GeolocationPosition) => {
-  //   const userCoordinates: Coordinates = {
-  //     longitude: position.coords.longitude,
-  //     latitude: position.coords.latitude,
-  //   };
-
-  //   let shortestDistance: number = Number.MAX_SAFE_INTEGER;
-  //   let closestPin: Pin | null = null;
-
-  //   for (const pin of poiData) {
-  //     if (pin.is_completed) continue;
-
-  //     const pinCoordinates: Coordinates = {
-  //       longitude: pin.exact_longitude,
-  //       latitude: pin.exact_latitude,
-  //     };
-
-  //     const distance: number = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
-  //     if (distance < shortestDistance) {
-  //       shortestDistance = distance;
-  //       closestPin = pin;
-  //     }
-  //   }
-
-  //   setClosestNotCompletedPin(closestPin);
-  // }
+  useEffect(() => {
+    if (!closestNotCompletedPin || !userCoordinates) return;
+    handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
+  }, [closestNotCompletedPin, userCoordinates]);
 
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
@@ -168,20 +119,20 @@ function MapInner() {
     }
   };
 
-  // const handleDistanceToClosestPin = (
-  //   userCoordinates: Coordinates,
-  //   pin: Pin
-  // ) => {
-  //   const pinCoordinates: Coordinates = {
-  //     longitude: pin.search_longitude,
-  //     latitude: pin.search_latitude,
-  //   };
-  //   const distance = GetDistanceFromCoordinatesToMeters(
-  //     userCoordinates,
-  //     pinCoordinates
-  //   );
-  //   setDistanceToTrackingPin(distance);
-  // };
+  const handleDistanceToClosestPin = (
+    userCoordinates: Coordinates,
+    pin: Pin
+  ) => {
+    const pinCoordinates: Coordinates = {
+      longitude: pin.search_longitude,
+      latitude: pin.search_latitude,
+    };
+    const distance = GetDistanceFromCoordinatesToMeters(
+      userCoordinates,
+      pinCoordinates
+    );
+    setDistanceToTrackingPin(distance);
+  };
 
   /**
    * Sets the user's coordinates
@@ -198,37 +149,38 @@ function MapInner() {
    * Currently does not account for filters
    * @param position
    */
-  // const handleSetClosestNotCompletedPin = (position: GeolocationPosition) => {
-  //   const userCoordinates: Coordinates = {
-  //     longitude: position.coords.longitude,
-  //     latitude: position.coords.latitude,
-  //   };
+  const handleSetClosestNotCompletedPin = (position: GeolocationPosition) => {
+    const userCoordinates: Coordinates = {
+      longitude: position.coords.longitude,
+      latitude: position.coords.latitude,
+    };
 
-  //   let shortestDistance: number = Number.MAX_SAFE_INTEGER;
-  //   let closestPin: Pin | null = null;
+    let shortestDistance: number = Number.MAX_SAFE_INTEGER;
+    let closestPin: Pin | null = null;
 
-  //   for (const pin of poiData) {
-  //     if (pin.is_completed) continue;
+    for (const pin of poiData) {
+      if (pin.is_completed) continue;
 
-  //     const pinCoordinates: Coordinates = {
-  //       longitude: pin.search_longitude,
-  //       latitude: pin.search_latitude,
-  //     };
+      const pinCoordinates: Coordinates = {
+        longitude: pin.exact_longitude,
+        latitude: pin.exact_latitude,
+      };
 
-  //     const distance: number = GetDistanceFromCoordinatesToMeters(
-  //       userCoordinates,
-  //       pinCoordinates
-  //     );
-  //     if (distance < shortestDistance) {
-  //       shortestDistance = distance;
-  //       closestPin = pin;
-  //     }
-  //   }
-  //   setClosestNotCompletedPin(closestPin);
-  // };
+      const distance: number = GetDistanceFromCoordinatesToMeters(
+        userCoordinates,
+        pinCoordinates
+      );
+      if (distance < shortestDistance) {
+        shortestDistance = distance;
+        closestPin = pin;
+      }
+    }
+
+    setClosestNotCompletedPin(closestPin);
+  };
 
   useGeolocation(handleSetUserCoordinates);
-  // useGeolocation(handleSetClosestNotCompletedPin);
+  useGeolocation(handleSetClosestNotCompletedPin);
 
   // RETURN
   return (
@@ -237,8 +189,13 @@ function MapInner() {
       <div className="absolute top-4 left-4 z-10 flex gap-2">
         {/* <TagFilterDropdown onFilter={handleFilter} /> */}
         <HintButton poi_id={selectedPoiId} />
-        <GameControls pins={poiData} />
-        {/* <PoiPhotoToggle pins={poiData} /> */}
+        <GameControls
+          pins={poiData}
+          trackingPin={closestNotCompletedPin}
+          userCoordinates={userCoordinates}
+          distanceToTrackingPin={distanceToTrackingPin}
+        />
+        <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
         <FilterButton
           filters={filters}
           selectedFilters={selectedFilters}
@@ -306,7 +263,6 @@ function MapInner() {
         )}
         <MapControls />
       </Map>
-
     </div>
   );
 }
