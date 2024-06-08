@@ -1,3 +1,4 @@
+import { Coordinates } from "../_utils/coordinateMath";
 import { Pin } from "../_utils/global";
 import { PoiCard } from "./PoiCard";
 import {
@@ -10,10 +11,12 @@ export default function PoiPopup({
   id,
   payload,
   setShowPopup,
+  setGuessPoiPosition,
 }: {
   id: number;
   payload: Pin;
   setShowPopup: (arg0: undefined) => void;
+  setGuessPoiPosition: (arg0: Coordinates | null) => void;
 }): JSX.Element {
   // RETURN
   return (
@@ -21,7 +24,11 @@ export default function PoiPopup({
       <Dialog defaultOpen>
         <DialogTrigger />
         <DialogContent onClick={() => setShowPopup(undefined)}>
-          <PoiCard id={id} payload={payload} />
+          <PoiCard
+            id={id}
+            payload={payload}
+            setGuessPoiPosition={setGuessPoiPosition}
+          />
         </DialogContent>
       </Dialog>
     </main>

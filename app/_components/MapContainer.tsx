@@ -30,9 +30,9 @@ function MapInner() {
   // USE STATE
   const [poiData, setPoiData] = useState<Pin[]>([]);
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
-  const [guessPoiPosition, setGuessPoiPosition] = useState<
-    Coordinates | void[]
-  >([]);
+  const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates | null>(
+    null
+  );
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
     undefined
@@ -236,7 +236,6 @@ function MapInner() {
             <MarkerContainer
               key={pin.poi_id}
               pin={pin}
-              showPopup={showPopup}
               setShowPopup={setShowPopup}
               setSelectedPoiId={setSelectedPoiId}
             />
@@ -247,10 +246,11 @@ function MapInner() {
         {showPopup === selectedPoiId && selectedPoiId && (
           <div className="fixed top-0 left-0 w-screen h-screen">
             <Popover defaultOpen>
-              <PopoverContent className="">
+              <PopoverContent>
                 <PoiPopup
                   id={selectedPoiId}
                   setShowPopup={setShowPopup}
+                  setGuessPoiPosition={setGuessPoiPosition}
                   payload={
                     poiData.filter((pin) => pin.poi_id === selectedPoiId)[0]
                   }
@@ -260,15 +260,12 @@ function MapInner() {
           </div>
         )}
 
-        <GuessPolyline
-          locationArray={[
-            [userCoordinates?.longitude, userCoordinates?.latitude],
-            [
-              closestNotCompletedPin?.search_longitude,
-              closestNotCompletedPin?.search_latitude,
-            ],
-          ]}
-        />
+        {userCoordinates && guessPoiPosition !== null && (
+          <GuessPolyline
+            userLocation={userCoordinates}
+            guessPoiLocation={guessPoiPosition}
+          />
+        )}
 
         <MapControls />
       </Map>
