@@ -123,11 +123,8 @@ function MapInner() {
     const pinCoordinates: Coordinates = {
       longitude: pin.search_longitude,
       latitude: pin.search_latitude,
-    };
-    const distance = GetDistanceFromCoordinatesToMeters(
-      userCoordinates,
-      pinCoordinates
-    );
+    }
+    const distance = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
     setDistanceToTrackingPin(distance);
   };
 
