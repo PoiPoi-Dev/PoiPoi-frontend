@@ -67,7 +67,7 @@ function MapInner() {
   }, [user]);
 
   useEffect(() => {
-    if (!closestNotCompletedPin || !userCoordinates) return;
+    if(!closestNotCompletedPin || !userCoordinates) return;
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
   }, [closestNotCompletedPin, userCoordinates]);
 
