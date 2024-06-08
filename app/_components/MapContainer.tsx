@@ -259,6 +259,7 @@ function MapInner() {
         )}
         <MapControls />
       </Map>
+
     </div>
   );
 }
