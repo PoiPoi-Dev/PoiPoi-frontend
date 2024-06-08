@@ -114,7 +114,10 @@ function MapInner() {
     }
   };
 
-  const handleDistanceToClosestPin = (userCoordinates: Coordinates, pin: Pin) => {
+  const handleDistanceToClosestPin = (
+    userCoordinates: Coordinates,
+    pin: Pin
+  ) => {
     const pinCoordinates: Coordinates = {
       longitude: pin.search_longitude,
       latitude: pin.search_latitude,
@@ -219,16 +222,16 @@ function MapInner() {
       >
         {/* FOR V1 DEVELOPMENT */}
         {poiData.map((pin: Pin): JSX.Element => {
-            return (
-              <MarkerContainer
-                key={pin.poi_id}
-                pin={pin}
-                showPopup={showPopup}
-                setShowPopup={setShowPopup}
-                setSelectedPoiId={setSelectedPoiId}
-              />
-            );
-          })}
+          return (
+            <MarkerContainer
+              key={pin.poi_id}
+              pin={pin}
+              showPopup={showPopup}
+              setShowPopup={setShowPopup}
+              setSelectedPoiId={setSelectedPoiId}
+            />
+          );
+        })}
 
         {/* V0 DEVELOPMENT w/ FILTER FEATURE */}
         {/* {sample.map((pin: Pin): JSX.Element => {
