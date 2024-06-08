@@ -23,6 +23,7 @@ import FilterButton from "./FilterButton";
 import GuessPolyline from "./ui/guessPolyline";
 import { Popover, PopoverContent } from "@radix-ui/react-popover";
 import PoiPopup from "./PoiPopup";
+import { Button } from "./ui/button";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -261,10 +262,15 @@ function MapInner() {
         )}
 
         {userCoordinates && guessPoiPosition !== null && (
-          <GuessPolyline
-            userLocation={userCoordinates}
-            guessPoiLocation={guessPoiPosition}
-          />
+          <>
+            <GuessPolyline
+              userLocation={userCoordinates}
+              guessPoiLocation={guessPoiPosition}
+            />
+            <div className="absolute bottom-6 flex w-screen justify-center items-center">
+              <Button onClick={() => setGuessPoiPosition(null)}>Next</Button>
+            </div>
+          </>
         )}
 
         <MapControls />
