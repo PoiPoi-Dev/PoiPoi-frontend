@@ -129,8 +129,8 @@ function MapInner() {
       if (pin.is_completed) continue;
    
       const pinCoordinates: Coordinates = {
-        longitude: pin.exact_longitude,
-        latitude: pin.exact_latitude,
+        longitude: pin.search_longitude,
+        latitude: pin.search_latitude,
       };
     
       const distance: number = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
