@@ -1,7 +1,7 @@
 import { Layer, Source } from "react-map-gl/maplibre";
 
 type Props = {
-  locationArray: [number, number][];
+  locationArray: [number | undefined, number | undefined][];
 };
 
 /**
@@ -13,8 +13,14 @@ type Props = {
  * @returns line element as JSX.component
  */
 function GuessPolyline({ locationArray }: Props): JSX.Element {
-  const [userLongitude, userLatitude] = locationArray[0];
-  const [guessLongitude, guessLatitude] = locationArray[1];
+  const [userLongitude, userLatitude]: [
+    number | undefined,
+    number | undefined
+  ] = locationArray[0];
+  const [guessLongitude, guessLatitude]: [
+    number | undefined,
+    number | undefined
+  ] = locationArray[1];
 
   const lineData = {
     type: "Feature",

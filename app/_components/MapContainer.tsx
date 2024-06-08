@@ -20,6 +20,7 @@ import {
 } from "../_utils/coordinateMath";
 import useGeolocation from "../_hooks/useGeolocation";
 import FilterButton from "./FilterButton";
+import GuessPolyline from "./ui/guessPolyline";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -237,32 +238,15 @@ function MapInner() {
           );
         })}
 
-        {/* V0 DEVELOPMENT w/ FILTER FEATURE */}
-        {/* {sample.map((pin: Pin): JSX.Element => {
-          return (
-            <MarkerContainer
-              key={pin.id}
-              pin={pin}
-              showPopup={showPopup}
-              setShowPopup={setShowPopup}
-              setSelectedPoiId={setSelectedPoiId}
-            />
-          );
-        })} */}
-
-        {/* {filteredPins.map((pin: Pin): JSX.Element => {
-          return (
-            <MarkerContainer
-              key={pin.id}
-              pin={pin}
-              showPopup={showPopup}
-              setShowPopup={setShowPopup}
-              setSelectedPoiId={setSelectedPoiId}
-            />
-          );
-        })} */}
-        {/* <DistanceHintButton pins={poiData} /> */}
-        {/* <SubmitGuessButton pins={poiData} /> */}
+        <GuessPolyline
+          locationArray={[
+            [userCoordinates?.longitude, userCoordinates?.latitude],
+            [
+              closestNotCompletedPin?.search_longitude,
+              closestNotCompletedPin?.search_latitude,
+            ],
+          ]}
+        />
 
         <MapControls />
       </Map>
