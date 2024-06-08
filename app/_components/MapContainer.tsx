@@ -70,6 +70,55 @@ function MapInner() {
   //   handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
   // }, [closestNotCompletedPin, userCoordinates]);
 
+  //     const id = navigator.geolocation.watchPosition((position) => {
+  //       handleSetUserCoordinates(position);
+  //       if (isTrackingTheClosestPin)
+  //         handleSetClosestNotCompletedPin(position)
+  //     },
+  //     (error) => console.error(error)
+  //     // { enableHighAccuracy: true,}
+  //   );
+
+  //   return () => navigator.geolocation.clearWatch(id);
+  // }, [isTrackingTheClosestPin, poiData]);
+
+  // const handleSetUserCoordinates = (position: GeolocationPosition) => {
+  //   const userCoord:Coordinates = ConvertGeolocationPositionToCoordinates(position);
+  //   setUserCoordinates(userCoord);
+  // }
+
+  /**
+   * Sets closestNotCompletedPin to the closes pin BY POSITION
+   * Currently does not account for filters
+   * @param position
+   */
+  // const handleSetClosestNotCompletedPin = (position: GeolocationPosition) => {
+  //   const userCoordinates: Coordinates = {
+  //     longitude: position.coords.longitude,
+  //     latitude: position.coords.latitude,
+  //   };
+
+  //   let shortestDistance: number = Number.MAX_SAFE_INTEGER;
+  //   let closestPin: Pin | null = null;
+
+  //   for (const pin of poiData) {
+  //     if (pin.is_completed) continue;
+
+  //     const pinCoordinates: Coordinates = {
+  //       longitude: pin.exact_longitude,
+  //       latitude: pin.exact_latitude,
+  //     };
+
+  //     const distance: number = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
+  //     if (distance < shortestDistance) {
+  //       shortestDistance = distance;
+  //       closestPin = pin;
+  //     }
+  //   }
+
+  //   setClosestNotCompletedPin(closestPin);
+  // }
+
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
     try {
@@ -256,6 +305,7 @@ function MapInner() {
         )}
         <MapControls />
       </Map>
+
     </div>
   );
 }
