@@ -13,9 +13,11 @@ import PoiPhotoToggle from "./PoiPhotoToggle";
 import { AuthContext } from "./useContext/AuthContext";
 import { getAuthService } from "@/config/firebaseconfig";
 import GameControls from "./GameControls";
-import { Coordinates,
+import {
+  Coordinates,
   GetDistanceFromCoordinatesToMeters,
-  } from "../_utils/coordinateMath";
+} from "../_utils/coordinateMath";
+import FilterButton from "./FilterButton";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -27,6 +29,8 @@ function MapInner() {
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
     undefined
   );
+  const [filters, setFilters] = useState<string[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<string[] | void[]>([]);
 
   // const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
   // const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
@@ -45,6 +49,7 @@ function MapInner() {
   // USE EFFECT
   useEffect(() => {
     user ? void handleFetchPoiByUid() : void handleFetchPoiByAnonymous();
+    void handleFetchFilters();
   }, [user]);
 
   // useEffect(() => {
@@ -68,7 +73,7 @@ function MapInner() {
   /**
    * Sets closestNotCompletedPin to the closes pin BY POSITION
    * Currently does not account for filters
-   * @param position 
+   * @param position
    */
   // const handleSetClosestNotCompletedPin = (position: GeolocationPosition) => {
   //   const userCoordinates: Coordinates = {
@@ -96,7 +101,7 @@ function MapInner() {
 
   //   setClosestNotCompletedPin(closestPin);
   // }
-  
+
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
     try {
@@ -115,7 +120,7 @@ function MapInner() {
       setPoiData(data);
     } catch (error) {
       console.log(error);
-      setPoiData([])
+      setPoiData([]);
     }
   };
 
@@ -126,6 +131,16 @@ function MapInner() {
       setPoiData(data);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleFetchFilters = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/tag`);
+      const data: string[] = (await response.json()) as string[];
+      setFilters(data);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -150,6 +165,15 @@ function MapInner() {
         <HintButton poi_id={selectedPoiId} />
         <GameControls pins = {poiData}/>
         <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
+        <FilterButton
+          filters={filters}
+          setSelectedFilters={setSelectedFilters}
+        />
+        <li>
+          {selectedFilters.length > 0
+            ? `Filtered by ${selectedFilters.join(", ")}`
+            : "All"}
+        </li>
       </div>
       {/* MAP CANVAS */}
       <Map
@@ -162,16 +186,16 @@ function MapInner() {
       >
         {/* FOR V1 DEVELOPMENT */}
         {poiData.map((pin: Pin): JSX.Element => {
-          return (
-            <MarkerContainer
-              key={pin.poi_id}
-              pin={pin}
-              showPopup={showPopup}
-              setShowPopup={setShowPopup}
-              setSelectedPoiId={setSelectedPoiId}
-            />
-          );
-        })}
+            return (
+              <MarkerContainer
+                key={pin.poi_id}
+                pin={pin}
+                showPopup={showPopup}
+                setShowPopup={setShowPopup}
+                setSelectedPoiId={setSelectedPoiId}
+              />
+            );
+          })}
 
         {/* V0 DEVELOPMENT w/ FILTER FEATURE */}
         {/* {sample.map((pin: Pin): JSX.Element => {
@@ -199,10 +223,10 @@ function MapInner() {
         })} */}
         {/* <DistanceHintButton pins={poiData} /> */}
         {/* <SubmitGuessButton pins={poiData} /> */}
-        
+
         <MapControls />
       </Map>
-      
+
     </div>
   );
 }
