@@ -42,7 +42,7 @@ function SubmitGuessButton({
 
   },[distanceToTrackingPin, trackingPin])
 
-  const postGuess = async (poi_id: number, distance: number) => {
+  const postGuess = async (poi_id: number, distance: number):Promise<void> => {
     try {
     const auth = await getAuthService(); //gives auth service
     if (!auth.currentUser) throw 'Not logged in'; //error
@@ -57,7 +57,6 @@ function SubmitGuessButton({
         poi_id,
         uid: uid,
       };
-      console.log("data", data);
       const response: Response = await fetch(
         `${BASE_URL}/api/user_profiles/completed_poi`,
         {
@@ -69,7 +68,8 @@ function SubmitGuessButton({
           body: JSON.stringify(data),
         }
       );
-    console.log("Response", response);
+      const { message } = await response.json() as {message: string};
+      console.log(message);
     } catch (error) {
       console.error(error);
     }
@@ -84,9 +84,6 @@ function SubmitGuessButton({
         latitude: trackingPin.exact_latitude
       }
       const distanceToPin:number = parseFloat(GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates).toFixed(3));
-  
-      console.log(`user location is lat: ${userCoordinates.latitude}, long: ${userCoordinates.longitude}`);
-      console.log(`user is ${distanceToPin}m away from the poi`);
   
       await postGuess(trackingPin.poi_id, distanceToPin);
       trackingPin.is_completed = true;
