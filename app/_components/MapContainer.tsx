@@ -45,6 +45,10 @@ function MapInner() {
   const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<number|null> (null);
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
+  // const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
+  // const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
+  // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
+
   // Default camera map when user opens the app
   const longitude: number = 139.72953967417234;
   const latitude: number = 35.66060121205606;
