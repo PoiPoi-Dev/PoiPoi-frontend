@@ -97,8 +97,8 @@ function SubmitGuessButton({
       const response: Response = await fetch(
         `${BASE_URL}/api/user_profiles/completed_poi`,
         {
-          method: "POST",
           credentials: "include",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
