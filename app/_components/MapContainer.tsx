@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useContext } from "react";
 import Map from "react-map-gl/maplibre";
-// import { sample } from "../_api/sample";
 import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
@@ -10,14 +9,10 @@ import MapControls from "./MapControls";
 // import TagFilterDropdown from "./TagFilterDropdown";
 // import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
-// import PoidexButton from "./PoidexButton";
-// import PoidexModal from "./PoidexModal";
-// import SubmitGuessButton from "./SubmitGuessButton";
 import PoiPhotoToggle from "./PoiPhotoToggle";
 import { AuthContext } from "./useContext/AuthContext";
 import { getAuthService } from "@/config/firebaseconfig";
 import GameControls from "./GameControls";
-// import { redirect } from "next/navigation";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -26,8 +21,6 @@ function MapInner() {
   const [poiData, setPoiData] = useState<Pin[]>([]);
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
-  // const [showPoidex, setShowPoidex] = useState(false);
-  // const [selectedPoi, setSelectedPoi] = useState<Pin | null>(null);
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
     undefined
   );
@@ -90,18 +83,6 @@ function MapInner() {
   //   }
   // };
 
-  // const handlePoiClick = (poi: Pin) => {
-  //   setSelectedPoi(poi);
-  // };
-
-  // const handleClosePoidex = () => {
-  //   setShowPoidex(false);
-  //   setSelectedPoi(null); // Reset selectedPoi when closing PoidexModal
-  // };
-
-  // if (!user) {
-  //   redirect("/login");
-  // } else {}
 
   // RETURN
   return (
@@ -165,15 +146,6 @@ function MapInner() {
         <MapControls />
       </Map>
       <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
-      {/* {showPoidex ? (
-        <PoidexModal
-          pins={poiData}
-          onClose={handleClosePoidex}
-          onPoiClick={handlePoiClick}
-          selectedPoi={selectedPoi}
-          goBack={() => setSelectedPoi(null)}
-        />
-      ) : null} */}
     </div>
   );
 }
