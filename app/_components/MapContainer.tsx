@@ -122,7 +122,6 @@ function MapInner() {
       latitude: pin.search_latitude,
     }
     const distance = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
-    console.log("Calculate distance", distance );
     setDistanceToTrackingPin(distance);
   };
 
