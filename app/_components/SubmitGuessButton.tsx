@@ -1,17 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { Pin } from "../_utils/global";
 import {
+  ConvertGeolocationPositionToCoordinates,
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
 
 import { getAuthService } from "@/config/firebaseconfig";
+import useGeolocation from "../_hooks/useGeolocation";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 interface SubmitGuessButtonProps {
-  pins: Pin[];
+  pins: Pin[],
+  // trackingPin: Pin | null;
+  // userCoordinates: Coordinates | null;
 }
 
 /**
@@ -22,30 +26,21 @@ interface SubmitGuessButtonProps {
 
 function SubmitGuessButton({
   pins,
+  // trackingPin,
+  // userCoordinates
 }: SubmitGuessButtonProps): React.JSX.Element {
   const [trackingPin, setTrackingPin] = useState<Pin | null>(null); //arb pin?
   const [distanceToPin, setDistanceToPin] = useState<number>(0);
   const [isActiveState, setIsActiveState] = useState<boolean>(false);
 
-  useEffect(() => {
-    const id = navigator.geolocation.watchPosition((position) => {
-      handleTrackingPinAndDistanceToPin(position.coords);
-    });
-    return () => navigator.geolocation.clearWatch(id);
-  });
-
-  useEffect(() => {
-    if (!trackingPin) return;
-    setIsActiveState(isWithinSearchZone());
-  }, [trackingPin, distanceToPin]);
+  const isWithinSearchRadius = (distance: number, pin:Pin) => {
+    return distance < pin.search_radius
+  }
 
   const handleTrackingPinAndDistanceToPin = (
-    userCoords: GeolocationCoordinates
+    position: GeolocationPosition
   ) => {
-    const userCoordinates: Coordinates = {
-      longitude: userCoords.longitude,
-      latitude: userCoords.latitude,
-    };
+    const userCoordinates: Coordinates = ConvertGeolocationPositionToCoordinates(position);
     let shortestDistance: number = Number.MAX_SAFE_INTEGER;
     let pinToTrack: Pin | null = null;
 
@@ -69,33 +64,26 @@ function SubmitGuessButton({
     }
     setTrackingPin(pinToTrack);
     setDistanceToPin(shortestDistance);
+    
+    if (!pinToTrack) return;
+    setIsActiveState(isWithinSearchRadius(shortestDistance, pinToTrack));
   };
 
-  const isWithinSearchZone = (): boolean => {
-    if (trackingPin) return distanceToPin < trackingPin.search_radius;
-    else return false;
-  };
+  useGeolocation(handleTrackingPinAndDistanceToPin);
 
-  const evaluateGuess = async (position: GeolocationPosition) => {
-    const { latitude, longitude } = position.coords;
-    console.log(`user location is lat: ${latitude}, long: ${longitude}`);
-    console.log(
-      `user is ${parseFloat(distanceToPin.toFixed(3))}m away from the poi`
-    );
-
+  const postGuess = async (poi_id: number, distance: number) => {
     try {
-      const auth = await getAuthService(); //gives auth service
-      if (!auth.currentUser) return; //error
-      const uid = auth.currentUser.uid;
-      console.log(`user id is ${uid}`);
-      const playerGuess = parseFloat(distanceToPin.toFixed(3));
-      const data: {
-        distance: number;
-        poi_id: number | undefined;
-        uid: string;
+    const auth = await getAuthService(); //gives auth service
+    if (!auth.currentUser) throw 'Not logged in'; //error
+
+    const uid = auth.currentUser.uid;
+    const data: {
+      distance: number;
+      poi_id: number | undefined;
+      uid: string;
       } = {
-        distance: playerGuess,
-        poi_id: trackingPin?.poi_id,
+        distance,
+        poi_id,
         uid: uid,
       };
       console.log("data", data);
@@ -110,13 +98,32 @@ function SubmitGuessButton({
           body: JSON.stringify(data),
         }
       );
-      // checking the tracking pin
-      for (const pin of pins) {
-        if (pin.poi_id === trackingPin?.poi_id) {
-          trackingPin.is_completed = true;
-        }
+    console.log("Response", response);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const evaluateGuess = async (position: GeolocationPosition) => {
+    try {
+    if (!trackingPin) throw 'No pin to track';
+    const userCoordinates:Coordinates = ConvertGeolocationPositionToCoordinates(position);
+    const pinCoordinates: Coordinates = {
+      longitude: trackingPin.exact_longitude,
+      latitude: trackingPin.exact_latitude
+    }
+    const distanceToPin:number = parseFloat(GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates).toFixed(3));
+
+    console.log(`user location is lat: ${userCoordinates.latitude}, long: ${userCoordinates.longitude}`);
+    console.log(`user is ${distanceToPin}m away from the poi`);
+
+    await postGuess(trackingPin.poi_id, distanceToPin);
+    // checking the tracking pin
+    for (const pin of pins) {
+      if (pin.poi_id === trackingPin?.poi_id) {
+        trackingPin.is_completed = true;
       }
-      console.log("response", response);
+    }
     } catch (error) {
       console.error("Error", error);
     }

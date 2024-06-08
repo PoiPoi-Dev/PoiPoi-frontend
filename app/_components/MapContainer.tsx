@@ -13,6 +13,9 @@ import PoiPhotoToggle from "./PoiPhotoToggle";
 import { AuthContext } from "./useContext/AuthContext";
 import { getAuthService } from "@/config/firebaseconfig";
 import GameControls from "./GameControls";
+import { Coordinates,
+  GetDistanceFromCoordinatesToMeters,
+  } from "../_utils/coordinateMath";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -24,6 +27,10 @@ function MapInner() {
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
     undefined
   );
+
+  // const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
+  // const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
+  // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
   // Default camera map when user opens the app
   const longitude: number = 139.72953967417234;
@@ -40,6 +47,56 @@ function MapInner() {
     user ? void handleFetchPoiByUid() : void handleFetchPoiByAnonymous();
   }, [user]);
 
+  // useEffect(() => {
+  //     const id = navigator.geolocation.watchPosition((position) => {
+  //       handleSetUserCoordinates(position);
+  //       if (isTrackingTheClosestPin)
+  //         handleSetClosestNotCompletedPin(position)
+  //     },
+  //     (error) => console.error(error)
+  //     // { enableHighAccuracy: true,}
+  //   );
+
+  //   return () => navigator.geolocation.clearWatch(id);
+  // }, [isTrackingTheClosestPin, poiData]);
+
+  // const handleSetUserCoordinates = (position: GeolocationPosition) => {
+  //   const userCoord:Coordinates = ConvertGeolocationPositionToCoordinates(position);
+  //   setUserCoordinates(userCoord);
+  // }
+
+  /**
+   * Sets closestNotCompletedPin to the closes pin BY POSITION
+   * Currently does not account for filters
+   * @param position 
+   */
+  // const handleSetClosestNotCompletedPin = (position: GeolocationPosition) => {
+  //   const userCoordinates: Coordinates = {
+  //     longitude: position.coords.longitude,
+  //     latitude: position.coords.latitude,
+  //   };
+
+  //   let shortestDistance: number = Number.MAX_SAFE_INTEGER;
+  //   let closestPin: Pin | null = null;
+
+  //   for (const pin of poiData) {
+  //     if (pin.is_completed) continue;
+
+  //     const pinCoordinates: Coordinates = {
+  //       longitude: pin.exact_longitude,
+  //       latitude: pin.exact_latitude,
+  //     };
+
+  //     const distance: number = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
+  //     if (distance < shortestDistance) {
+  //       shortestDistance = distance;
+  //       closestPin = pin;
+  //     }
+  //   }
+
+  //   setClosestNotCompletedPin(closestPin);
+  // }
+  
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
     try {
@@ -90,9 +147,9 @@ function MapInner() {
       {/* THIS SHOULD BE MOVED TO OTHER PLACE */}
       <div className="absolute top-4 left-4 z-10 flex gap-2">
         {/* <TagFilterDropdown onFilter={handleFilter} /> */}
-        {/* <PoidexButton onClick={() => setShowPoidex(true)} /> */}
         <HintButton poi_id={selectedPoiId} />
         <GameControls pins = {poiData}/>
+        <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
       </div>
       {/* MAP CANVAS */}
       <Map
@@ -145,7 +202,7 @@ function MapInner() {
         
         <MapControls />
       </Map>
-      <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
+      
     </div>
   );
 }

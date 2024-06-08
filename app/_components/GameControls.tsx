@@ -4,12 +4,15 @@ import SubmitGuessButton from "./SubmitGuessButton";
 
 interface GameControlsProps {
   pins: Pin[],
+  // trackingPin: Pin | null
 }
 
 const GameControls = ({pins}:GameControlsProps):React.JSX.Element => {
+  
+
   return (
     <div>
-      <SubmitGuessButton pins={pins} />
+      <SubmitGuessButton pins={pins}/>
       <Poidex pins={pins}/>
     </div>
   )
