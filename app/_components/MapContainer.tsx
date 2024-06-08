@@ -54,17 +54,10 @@ function MapInner() {
   }, [user]);
 
   useEffect(() => {
-    if(!closestNotCompletedPin) return;
-    console.log("closest pin: ", closestNotCompletedPin);
-    if (userCoordinates) {
-      handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
-    }
-  }, [closestNotCompletedPin])
+    if(!closestNotCompletedPin || !userCoordinates) return;
+    handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
+  }, [closestNotCompletedPin, userCoordinates])
   
-  useEffect(()=> {
-    console.log("Distance to tracking pin", distanceToTrackingPin);
-  },[distanceToTrackingPin])
-
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
     try {
@@ -120,7 +113,6 @@ function MapInner() {
       latitude: pin.search_latitude,
     }
     const distance = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
-    console.log("Calculate distance", distance );
     setDistanceToTrackingPin(distance);
   }
     
