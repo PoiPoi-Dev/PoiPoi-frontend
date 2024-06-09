@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Pin } from "../_utils/global";
-import {
-  Coordinates,
-  GetDistanceFromCoordinatesToMeters,
-} from "../_utils/coordinateMath";
-
+import { Coordinates, GetDistanceFromCoordinatesToMeters } from "../_utils/coordinateMath";
+import HintModal from "./HintModal"; // Import HintModal
 import { getAuthService } from "@/config/firebaseconfig";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const THRESHOLD_DISTANCE = 50; // Define the threshold distance (in meters) Currently arbitrary. Maybe it should be a percentage or defined in the schema for each POI as well.
 
 interface SubmitGuessButtonProps {
   pins: Pin[];
@@ -26,6 +24,7 @@ function SubmitGuessButton({
   const [trackingPin, setTrackingPin] = useState<Pin | null>(null); //arb pin?
   const [distanceToPin, setDistanceToPin] = useState<number>(0);
   const [isActiveState, setIsActiveState] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const id = navigator.geolocation.watchPosition((position) => {
@@ -117,6 +116,7 @@ function SubmitGuessButton({
         }
       }
       console.log("response", response);
+      setIsModalOpen(true); // Open the hint modal after the guess is evaluated
     } catch (error) {
       console.error("Error", error);
     }
@@ -138,23 +138,37 @@ function SubmitGuessButton({
     );
   };
 
+  const handleHintSubmit = (hint: string) => {
+    console.log('Hint submitted:', hint);
+    // TODO: POST hint to DB once path is created in back end
+  };
+
   const handleButtonTextRender = (): string => {
     return "Submit your answer?";
   };
 
   return (
-    <div
-      className="fixed bottom-20 left-0 w-full h-20 flex justify-center items-center"
-      style={{ visibility: isActiveState ? "visible" : "hidden" }}
-    >
-      <Button
-        className="w-full h-full"
-        disabled={!isActiveState}
-        onClick={(): void => handleSubmitGuessOnClick()}
+    <>
+      <div
+        className="fixed bottom-20 left-0 w-full h-20 flex justify-center items-center"
+        style={{ visibility: isActiveState ? "visible" : "hidden" }}
       >
-        {handleButtonTextRender()}
-      </Button>
-    </div>
+        <Button
+          className="w-full h-full"
+          disabled={!isActiveState}
+          onClick={(): void => handleSubmitGuessOnClick()}
+        >
+          {handleButtonTextRender()}
+        </Button>
+      </div>
+      <HintModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        distanceToPin={distanceToPin}
+        thresholdDistance={THRESHOLD_DISTANCE}
+        onSubmitHint={handleHintSubmit}
+      />
+    </>
   );
 }
 
