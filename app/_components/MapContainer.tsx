@@ -22,6 +22,7 @@ import PopoverCard from "./PopoverCard";
 import GuessDistanceModal from "./GuessDistanceModal";
 import PoiPhotoToggle from "./PoiPhotoToggle";
 import TrackingPinContextProvider, {TrackingPinContext} from "./useContext/TrackingPinContext";
+import MainQuest from "./MainQuest";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -67,11 +68,12 @@ function MapInner() {
     console.log(trackingPinContext?.trackingPin);
   },[trackingPinContext?.trackingPin])
 
+
   useEffect(() => {
-    if(!closestNotCompletedPin || !userCoordinates) return;
+    if (!closestNotCompletedPin || !userCoordinates) return;
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
   }, [closestNotCompletedPin, userCoordinates]);
-  
+
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
     try {
@@ -128,8 +130,11 @@ function MapInner() {
     const pinCoordinates: Coordinates = {
       longitude: pin.search_longitude,
       latitude: pin.search_latitude,
-    }
-    const distance = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
+    };
+    const distance = GetDistanceFromCoordinatesToMeters(
+      userCoordinates,
+      pinCoordinates
+    );
     setDistanceToTrackingPin(distance);
   };
 
@@ -185,15 +190,9 @@ function MapInner() {
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
       {/* GAME UI */}
-      <div className="absolute top-4 left-4 z-10 flex gap-2">
+      <div className="absolute top-0 left-0 z-50 w-full p-4 gap-4 flex flex-col">
         {/* <TagFilterDropdown onFilter={handleFilter} /> */}
         <HintButton poi_id={selectedPoiId} />
-        <GameControls
-          pins={poiData}
-          trackingPin={closestNotCompletedPin}
-          userCoordinates={userCoordinates}
-          distanceToTrackingPin={distanceToTrackingPin}
-        />
         <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
         <FilterButton
           filters={filters}
@@ -206,6 +205,22 @@ function MapInner() {
             ? `Filtered by ${selectedFilters.join(", ")}`
             : "All"}
         </li>
+        <MainQuest />
+        <div className="flex gap-2">
+          <GameControls
+            pins={poiData}
+            trackingPin={closestNotCompletedPin}
+            userCoordinates={userCoordinates}
+            distanceToTrackingPin={distanceToTrackingPin}
+          />
+          <HintButton poi_id={selectedPoiId} />
+          {/* <PoiPhotoToggle pins={poiData} /> */}
+          <FilterButton
+            filters={filters}
+            selectedFilters={selectedFilters}
+            setSelectedFilters={setSelectedFilters}
+          />
+        </div>
       </div>
 
       {/* MAP CANVAS */}
