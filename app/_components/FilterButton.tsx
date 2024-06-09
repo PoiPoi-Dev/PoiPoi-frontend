@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
 
 export default function FilterButton({
   filters,
@@ -23,7 +24,7 @@ export default function FilterButton({
           {filters.map((tag) => (
             <a key={tag} className="list-none">
               <li>
-                <Button
+                <Badge
                   onClick={() => {
                     selectedFilters = selectedFilters.includes(tag)
                       ? selectedFilters.filter(
@@ -32,11 +33,13 @@ export default function FilterButton({
                       : [...selectedFilters, tag];
                     setSelectedFilters(selectedFilters);
                   }}
-                  style={{ borderRadius: "9999px" }}
-                  variant={selectedFilters.includes(tag) ? "default" : "ghost"}
+                  style={{ borderRadius: "9999px", cursor: "pointer" }}
+                  variant={
+                    selectedFilters.includes(tag) ? "default" : "outline"
+                  }
                 >
                   {tag}
-                </Button>
+                </Badge>
               </li>
             </a>
           ))}

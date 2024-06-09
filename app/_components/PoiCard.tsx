@@ -9,6 +9,7 @@ import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
+import { Badge } from "./ui/badge";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -134,12 +135,7 @@ export function PoiCard({
         <div className="flex flex-wrap gap-2 text-sm mb-2">
           {payload.tags.map(
             (tag: string): JSX.Element => (
-              <a
-                key={tag + id}
-                className="rounded-full p-1 bg-blue-500 min-w-[80px] text-center"
-              >
-                {tag}
-              </a>
+              <Badge key={tag + id}>{tag}</Badge>
             )
           )}
         </div>
