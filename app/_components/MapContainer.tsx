@@ -286,6 +286,7 @@ function MapInner() {
             selectedPoiId={selectedPoiId}
             setShowPopup={setShowPopup}
             setGuessPoiPosition={setGuessPoiPosition}
+            userCoordinates={userCoordinates}
           />
         )}
 

@@ -8,11 +8,13 @@ const PopoverCard = ({
   selectedPoiId,
   setShowPopup,
   setGuessPoiPosition,
+  userCoordinates
 }: {
   poiData: Pin[];
   selectedPoiId: number;
   setShowPopup: (arg0: undefined) => void;
   setGuessPoiPosition: (arg0: Coordinates | null) => void;
+  userCoordinates: Coordinates | null
 }) => {
   return (
     <div className="fixed top-0 left-0 w-screen h-screen">
@@ -23,6 +25,7 @@ const PopoverCard = ({
             setShowPopup={setShowPopup}
             setGuessPoiPosition={setGuessPoiPosition}
             payload={poiData.filter((pin) => pin.poi_id === selectedPoiId)[0]}
+            userCoordinates={userCoordinates}
           />
         </PopoverContent>
       </Popover>
