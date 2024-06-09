@@ -77,7 +77,6 @@ const PoidexModal: React.FC<PoidexModalProps> = ({
                   ...selectedPoi,
                   is_completed: selectedPoi.is_completed,
                 }}
-                setGuessPoiPosition={() => null}
               />
             </div>
           </div>

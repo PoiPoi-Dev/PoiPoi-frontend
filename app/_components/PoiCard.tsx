@@ -13,8 +13,8 @@ export function PoiCard({
 }: {
   id: number;
   payload: Pin;
-  setGuessPoiPosition: (arg0: Coordinates | null) => void;
-  setShowPopup: (arg0: undefined) => void;
+  setGuessPoiPosition?: (arg0: Coordinates | null) => void;
+  setShowPopup?: (arg0: undefined) => void;
 }): JSX.Element {
   // USE STATE
   const [collect, setCollect] = useState<boolean | undefined>(
@@ -69,11 +69,12 @@ export function PoiCard({
             onClick={() => {
               if (user) {
                 setCollect(true);
-                setShowPopup(undefined);
-                setGuessPoiPosition({
-                  latitude: payload.exact_latitude,
-                  longitude: payload.exact_longitude,
-                });
+                setShowPopup && setShowPopup(undefined);
+                setGuessPoiPosition &&
+                  setGuessPoiPosition({
+                    latitude: payload.exact_latitude,
+                    longitude: payload.exact_longitude,
+                  });
                 payload.is_completed = true;
               } else {
                 alert("please login");
