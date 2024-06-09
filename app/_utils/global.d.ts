@@ -55,6 +55,6 @@ export interface User {
   password: string;
 }
 
-
-
-
+export interface Leaderboards {
+  username: string;
+}
