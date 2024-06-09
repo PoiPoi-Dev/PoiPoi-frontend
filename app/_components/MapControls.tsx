@@ -4,7 +4,7 @@ const MapControls = (): React.JSX.Element => {
   return (
     <>
       <NavigationControl position="top-right" />
-      <GeolocateControl position="top-right" trackUserLocation={true} />
+      <GeolocateControl position="bottom-right" trackUserLocation={true} />
     </>
   );
 };
