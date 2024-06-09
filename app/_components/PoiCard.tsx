@@ -9,10 +9,12 @@ export function PoiCard({
   id,
   payload,
   setGuessPoiPosition,
+  setShowPopup,
 }: {
   id: number;
   payload: Pin;
   setGuessPoiPosition: (arg0: Coordinates | null) => void;
+  setShowPopup: (arg0: undefined) => void;
 }): JSX.Element {
   // USE STATE
   const [collect, setCollect] = useState<boolean | undefined>(
@@ -44,7 +46,7 @@ export function PoiCard({
         </h1>
 
         {/* TAG */}
-        {/* <div className="flex flex-wrap gap-2 text-sm mb-2">
+        <div className="flex flex-wrap gap-2 text-sm mb-2">
           {payload.tags.map(
             (tag: string): JSX.Element => (
               <a
@@ -55,7 +57,7 @@ export function PoiCard({
               </a>
             )
           )}
-        </div> */}
+        </div>
 
         {/* COLLECT BUTTON OR DESCRIPTION */}
         {collect ? (
@@ -67,6 +69,7 @@ export function PoiCard({
             onClick={() => {
               if (user) {
                 setCollect(true);
+                setShowPopup(undefined);
                 setGuessPoiPosition({
                   latitude: payload.exact_latitude,
                   longitude: payload.exact_longitude,
@@ -77,7 +80,7 @@ export function PoiCard({
               }
             }}
           >
-            Collect
+            Guess and collect
           </Button>
         )}
       </article>

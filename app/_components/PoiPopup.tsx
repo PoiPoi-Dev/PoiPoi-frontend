@@ -28,6 +28,7 @@ export default function PoiPopup({
             id={id}
             payload={payload}
             setGuessPoiPosition={setGuessPoiPosition}
+            setShowPopup={setShowPopup}
           />
         </DialogContent>
       </Dialog>
