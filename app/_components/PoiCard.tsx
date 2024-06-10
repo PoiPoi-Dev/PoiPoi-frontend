@@ -3,28 +3,43 @@ import { Button } from "./ui/button";
 import { useContext, useState } from "react";
 import { Pin } from "../_utils/global";
 import { AuthContext } from "./useContext/AuthContext";
-import { Coordinates } from "../_utils/coordinateMath";
+import {
+  Coordinates,
+  GetDistanceFromCoordinatesToMeters,
+} from "../_utils/coordinateMath";
 
 export function PoiCard({
   id,
   payload,
   setGuessPoiPosition,
   setShowPopup,
+  userCoordinates,
 }: {
   id: number;
   payload: Pin;
   setGuessPoiPosition?: (arg0: Coordinates | null) => void;
   setShowPopup?: (arg0: undefined) => void;
+  userCoordinates?: Coordinates | null;
 }): JSX.Element {
   // USE STATE
   const [collect, setCollect] = useState<boolean | undefined>(
     payload.is_completed
   );
   const user = useContext(AuthContext);
+  const { search_latitude, search_longitude } = payload;
+  const pinCoordinates: Coordinates = {
+    latitude: search_latitude,
+    longitude: search_longitude,
+  };
 
-  // EFFECT
-
-  // FUNCTION
+  // HANDLERS FUNCTIONS
+  const handleCheckUserInSearchZone = (): boolean => {
+    if (!userCoordinates) return false;
+    return (
+      payload.search_radius <
+      GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates)
+    );
+  };
 
   // RETURN
   return (
@@ -60,12 +75,21 @@ export function PoiCard({
         </div>
 
         {/* COLLECT BUTTON OR DESCRIPTION */}
-        {collect ? (
+        {collect && userCoordinates ? (
           <p className="truncate">{payload.description}</p>
         ) : (
           <Button
             id={`${id}`}
             className="w-full mt-4 rounded-lg"
+            disabled={
+              userCoordinates
+                ? payload.search_radius <
+                  GetDistanceFromCoordinatesToMeters(
+                    userCoordinates,
+                    pinCoordinates
+                  )
+                : false
+            }
             onClick={() => {
               if (user) {
                 setCollect(true);
@@ -81,7 +105,9 @@ export function PoiCard({
               }
             }}
           >
-            Guess and collect
+            {handleCheckUserInSearchZone()
+              ? "Not in search zone"
+              : "Guess and collect"}
           </Button>
         )}
       </article>

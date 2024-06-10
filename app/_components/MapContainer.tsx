@@ -7,7 +7,6 @@ import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
 import HintButton from "./HintButton";
-// import PoiPhotoToggle from "./PoiPhotoToggle";
 import { AuthContext } from "./useContext/AuthContext";
 import { getAuthService } from "@/config/firebaseconfig";
 import GameControls from "./GameControls";
@@ -21,6 +20,7 @@ import FilterButton from "./FilterButton";
 import GuessPolyline from "./ui/guessPolyline";
 import PopoverCard from "./PopoverCard";
 import GuessDistanceModal from "./GuessDistanceModal";
+import PoiPhotoToggle from "./PoiPhotoToggle";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -62,7 +62,7 @@ function MapInner() {
   useEffect(() => {
     if(!closestNotCompletedPin || !userCoordinates) return;
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
-  }, [closestNotCompletedPin, userCoordinates])
+  }, [closestNotCompletedPin, userCoordinates]);
   
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
@@ -186,7 +186,7 @@ function MapInner() {
           userCoordinates={userCoordinates}
           distanceToTrackingPin={distanceToTrackingPin}
         />
-        {/* <PoiPhotoToggle pins={poiData} /> */}
+        <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
         <FilterButton
           filters={filters}
           selectedFilters={selectedFilters}
@@ -234,6 +234,7 @@ function MapInner() {
             selectedPoiId={selectedPoiId}
             setShowPopup={setShowPopup}
             setGuessPoiPosition={setGuessPoiPosition}
+            userCoordinates={userCoordinates}
           />
         )}
 
