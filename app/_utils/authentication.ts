@@ -5,7 +5,7 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-  // getAuth,
+  deleteUser,
 } from "firebase/auth";
 
 //Authentication Logic
@@ -41,6 +41,22 @@ const createAccount = async (email: string, password: string) : Promise<string |
   }
 };
 
+/**
+ * Deletes the currently signed in user from ONLY Google Firebase Authentication Database. 
+ * This has no interaction with the project database.
+ * @returns uuid string
+ */
+const deleteCurrentlyLoggedInUser = async (): Promise<void> => {
+  try {
+    const auth = await getAuthService();
+    const user = auth.currentUser;
+    if (!user) throw 'No user currently logged in'
+    await deleteUser(user);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 const monitorAuthState = async (): Promise<void> => {
   const auth = await getAuthService();
   onAuthStateChanged(auth, user => {
@@ -63,6 +79,7 @@ void (async () => await monitorAuthState()) ();
 export {
   loginEmailPassword,
   createAccount,
+  deleteCurrentlyLoggedInUser,
   monitorAuthState,
-  logout
+  logout,
 }
