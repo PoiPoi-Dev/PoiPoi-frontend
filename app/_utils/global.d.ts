@@ -30,11 +30,9 @@ export interface Hint {
 
 export interface MarkerContainerProps {
   pin: Pin;
-  showPopup: number | undefined;
   setShowPopup: React.Dispatch<React.SetStateAction<number | undefined>>;
   setSelectedPoiId: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
-
 
 export interface User {
   email: string;
@@ -42,6 +40,7 @@ export interface User {
   password: string;
 }
 
-
-
-
+export interface Leaderboards {
+  username: string;
+  score: number;
+}

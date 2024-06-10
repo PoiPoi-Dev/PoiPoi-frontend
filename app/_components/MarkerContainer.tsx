@@ -1,7 +1,5 @@
 import * as React from "react";
 import { Layer, Marker, Source, LayerProps } from "react-map-gl/maplibre";
-import PoiPopup from "./PoiPopup";
-import { Popover, PopoverContent } from "@radix-ui/react-popover";
 import { MarkerContainerProps } from "../_utils/global";
 import { PiSealQuestion } from "react-icons/pi";
 import { IoMdCheckmarkCircle } from "react-icons/io";
@@ -49,7 +47,6 @@ const layerStyle = (
 
 function MarkerContainer({
   pin,
-  showPopup,
   setShowPopup,
   setSelectedPoiId,
 }: MarkerContainerProps): JSX.Element {
@@ -84,21 +81,6 @@ function MarkerContainer({
         >
           {/* Pin icon */}
           <IoMdCheckmarkCircle size={48} onClick={handleClick} />
-
-          {/* Popup */}
-          {showPopup === pin.poi_id && (
-            <div className="fixed top-0 left-0 w-screen h-screen">
-              <Popover defaultOpen>
-                <PopoverContent className="">
-                  <PoiPopup
-                    setShowPopup={setShowPopup}
-                    id={pin.poi_id}
-                    payload={pin}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-          )}
         </Marker>
       ) : (
         <Marker
@@ -145,21 +127,6 @@ function MarkerContainer({
             >
               <Layer {...generateLayerStyle} />
             </Source>
-          )}
-
-          {/* Popup */}
-          {showPopup === pin.poi_id && (
-            <div className="fixed top-0 left-0 w-screen h-screen">
-              <Popover defaultOpen>
-                <PopoverContent className="">
-                  <PoiPopup
-                    setShowPopup={setShowPopup}
-                    id={pin.poi_id}
-                    payload={pin}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
           )}
         </Marker>
       )}
