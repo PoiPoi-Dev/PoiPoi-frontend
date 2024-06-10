@@ -3,26 +3,43 @@ import { Button } from "./ui/button";
 import { useContext, useState } from "react";
 import { Pin } from "../_utils/global";
 import { AuthContext } from "./useContext/AuthContext";
-import { Coordinates } from "../_utils/coordinateMath";
+import {
+  Coordinates,
+  GetDistanceFromCoordinatesToMeters,
+} from "../_utils/coordinateMath";
 
 export function PoiCard({
   id,
   payload,
   setGuessPoiPosition,
+  setShowPopup,
+  userCoordinates,
 }: {
   id: number;
   payload: Pin;
-  setGuessPoiPosition: (arg0: Coordinates | null) => void;
+  setGuessPoiPosition?: (arg0: Coordinates | null) => void;
+  setShowPopup?: (arg0: undefined) => void;
+  userCoordinates?: Coordinates | null;
 }): JSX.Element {
   // USE STATE
   const [collect, setCollect] = useState<boolean | undefined>(
     payload.is_completed
   );
   const user = useContext(AuthContext);
+  const { search_latitude, search_longitude } = payload;
+  const pinCoordinates: Coordinates = {
+    latitude: search_latitude,
+    longitude: search_longitude,
+  };
 
-  // EFFECT
-
-  // FUNCTION
+  // HANDLERS FUNCTIONS
+  const handleCheckUserInSearchZone = (): boolean => {
+    if (!userCoordinates) return false;
+    return (
+      payload.search_radius <
+      GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates)
+    );
+  };
 
   // RETURN
   return (
@@ -44,7 +61,7 @@ export function PoiCard({
         </h1>
 
         {/* TAG */}
-        {/* <div className="flex flex-wrap gap-2 text-sm mb-2">
+        <div className="flex flex-wrap gap-2 text-sm mb-2">
           {payload.tags.map(
             (tag: string): JSX.Element => (
               <a
@@ -55,29 +72,42 @@ export function PoiCard({
               </a>
             )
           )}
-        </div> */}
+        </div>
 
         {/* COLLECT BUTTON OR DESCRIPTION */}
-        {collect ? (
+        {collect && userCoordinates ? (
           <p className="truncate">{payload.description}</p>
         ) : (
           <Button
             id={`${id}`}
             className="w-full mt-4 rounded-lg"
+            disabled={
+              userCoordinates
+                ? payload.search_radius <
+                  GetDistanceFromCoordinatesToMeters(
+                    userCoordinates,
+                    pinCoordinates
+                  )
+                : false
+            }
             onClick={() => {
               if (user) {
                 setCollect(true);
-                setGuessPoiPosition({
-                  latitude: payload.exact_latitude,
-                  longitude: payload.exact_longitude,
-                });
+                setShowPopup && setShowPopup(undefined);
+                setGuessPoiPosition &&
+                  setGuessPoiPosition({
+                    latitude: payload.exact_latitude,
+                    longitude: payload.exact_longitude,
+                  });
                 payload.is_completed = true;
               } else {
                 alert("please login");
               }
             }}
           >
-            Collect
+            {handleCheckUserInSearchZone()
+              ? "Not in search zone"
+              : "Guess and collect"}
           </Button>
         )}
       </article>
