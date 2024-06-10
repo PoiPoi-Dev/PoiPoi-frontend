@@ -1,40 +1,46 @@
 import { useState } from "react";
-import { Button } from "./ui/button";
 import PoidexModal from "./PoidexModal";
 import { Pin } from "../_utils/global";
+import { BsCollectionFill } from "react-icons/bs";
+import { ButtonIconCircle } from "./ui/MenuIconCircle";
 
 interface PoidexProps {
-  pins: Pin[]
+  pins: Pin[];
 }
 
-const Poidex = ({pins}:PoidexProps):React.JSX.Element => {
+const Poidex = ({ pins }: PoidexProps): React.JSX.Element => {
   const [showPoidex, setShowPoidex] = useState<boolean>(false);
-  const [selectedPoi, setSelectedPoi] = useState<Pin | null> (null);
+  const [selectedPoi, setSelectedPoi] = useState<Pin | null>(null);
 
   const handleClosePoidex = () => {
     setShowPoidex(false);
     setSelectedPoi(null);
-  }
+  };
 
-  const handlePoiClick = (poi:Pin) => {
+  const handlePoiClick = (poi: Pin) => {
     setSelectedPoi(poi);
-  }
+  };
 
   return (
     <>
-    <Button onClick={():void => void setShowPoidex(true)}>Open Poidex</Button>
+      <ButtonIconCircle
+        text="collection"
+        onClick={(): void => void setShowPoidex(true)}
+      >
+        <BsCollectionFill size={24} />
+      </ButtonIconCircle>
 
-    {showPoidex ? (
-      <PoidexModal
+      {showPoidex ? (
+        <PoidexModal
           pins={pins}
           onClose={handleClosePoidex}
           onPoiClick={handlePoiClick}
           selectedPoi={selectedPoi}
           goBack={() => setSelectedPoi(null)}
         />
-      ) : null }    
+      ) : null}
     </>
-  )
-}
+  );
+};
 
 export default Poidex;

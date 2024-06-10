@@ -190,35 +190,29 @@ function MapInner() {
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
       {/* GAME UI */}
-      <div className="absolute top-0 left-0 z-50 w-full p-4 gap-4 flex flex-col">
-        {/* <TagFilterDropdown onFilter={handleFilter} /> */}
-        <HintButton poi_id={selectedPoiId} />
-        <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
-        <FilterButton
-          filters={filters}
-          selectedFilters={selectedFilters}
-          setSelectedFilters={setSelectedFilters}
-        />
-        {/* TEMP FOR DEVELOPMENT */}
-        <li>
-          {selectedFilters.length > 0
-            ? `Filtered by ${selectedFilters.join(", ")}`
-            : "All"}
-        </li>
-        <MainQuest />
-        <div className="flex gap-2">
+      <div className="absolute top-0 left-0 z-50 w-screen pt-4 gap-4 flex flex-col">
+        {/* HEADER CONTROLLER */}
+        <div className="flex flex-col gap-4 w-full">
+          {/* <TagFilterDropdown onFilter={handleFilter} /> */}
+          <div className="px-4">
+            <MainQuest />
+          </div>
+          <FilterButton
+            filters={filters}
+            selectedFilters={selectedFilters}
+            setSelectedFilters={setSelectedFilters}
+          />
+          <HintButton poi_id={selectedPoiId} />
+        </div>
+
+        {/* FOOTER CONTROLLER */}
+        <div className="fixed bottom-0 left-0 w-full flex gap-2 h-16 bg-white justify-center items-end">
+          <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
           <GameControls
             pins={poiData}
             trackingPin={closestNotCompletedPin}
             userCoordinates={userCoordinates}
             distanceToTrackingPin={distanceToTrackingPin}
-          />
-          <HintButton poi_id={selectedPoiId} />
-          {/* <PoiPhotoToggle pins={poiData} /> */}
-          <FilterButton
-            filters={filters}
-            selectedFilters={selectedFilters}
-            setSelectedFilters={setSelectedFilters}
           />
         </div>
       </div>

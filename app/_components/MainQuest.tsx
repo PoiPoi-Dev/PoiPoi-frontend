@@ -1,7 +1,6 @@
 import { FaLocationDot } from "react-icons/fa6";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -9,7 +8,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "./ui/drawer";
-import { Button } from "./ui/button";
+import DrawerCloseButton from "./ui/drawerCloseButton";
 
 const MainQuest = () => {
   return (
@@ -17,7 +16,7 @@ const MainQuest = () => {
       <DrawerTrigger asChild>
         <div className="z-50 bg-white rounded-full h-12 w-full flex items-center justify-center shadow-2xl gap-4 cursor-pointer">
           <FaLocationDot size={24} className="text-primary" />
-          Quest
+          Click POI to set main quest
         </div>
       </DrawerTrigger>
       <DrawerContent>
@@ -26,9 +25,7 @@ const MainQuest = () => {
           <DrawerDescription>Go find it!!</DrawerDescription>
         </DrawerHeader>
         <DrawerFooter>
-          <DrawerClose className="w-full">
-            <Button className="w-full">Close</Button>
-          </DrawerClose>
+          <DrawerCloseButton text="Close" />
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
