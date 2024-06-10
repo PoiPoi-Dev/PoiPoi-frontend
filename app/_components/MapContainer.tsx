@@ -37,10 +37,7 @@ function MapInner() {
   );
   const [filters, setFilters] = useState<string[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-
-  const [userCoordinates, setUserCoordinates] = useState<Coordinates | null>(
-    null
-  );
+  const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
   const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
   const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<number|null> (null);
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
@@ -66,7 +63,7 @@ function MapInner() {
     if(!closestNotCompletedPin || !userCoordinates) return;
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
   }, [closestNotCompletedPin, userCoordinates]);
-
+  
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
     try {
@@ -164,6 +161,7 @@ function MapInner() {
         userCoordinates,
         pinCoordinates
       );
+
       if (distance < shortestDistance) {
         shortestDistance = distance;
         closestPin = pin;
