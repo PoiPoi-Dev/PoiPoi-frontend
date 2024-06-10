@@ -42,7 +42,7 @@ function SubmitGuessButton({
 
   },[distanceToTrackingPin, trackingPin])
 
-  const postGuess = async (poi_id: number, distance: number):Promise<void> => {
+  const postGuess = async (poi_id: number, distance: number):Promise<Response|void> => {
     try {
     const auth = await getAuthService(); //gives auth service
     if (!auth.currentUser) throw 'Not logged in'; //error
@@ -68,14 +68,13 @@ function SubmitGuessButton({
           body: JSON.stringify(data),
         }
       );
-      const { message } = await response.json() as {message: string};
-      console.log(message);
+      return response;
     } catch (error) {
       console.error(error);
     }
   }
 
-  const handleSubmitGuessOnClick = async () => {
+  const handleSubmitGuessOnClick = async (trackingPin:Pin | null, userCoordinates: Coordinates | null) => {
     try {
       if (!trackingPin) throw 'No pin to track';
       if (!userCoordinates) throw 'No user coordinates'
@@ -105,7 +104,7 @@ function SubmitGuessButton({
       <Button
         className="w-full h-full"
         disabled={!isActiveState}
-        onClick={(): void => void handleSubmitGuessOnClick()}
+        onClick={(): void => void handleSubmitGuessOnClick(trackingPin, userCoordinates)}
       >
         {handleButtonTextRender()}
       </Button>
