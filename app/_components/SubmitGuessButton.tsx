@@ -74,18 +74,18 @@ function SubmitGuessButton({
     }
   }
 
-  const handleSubmitGuessOnClick = async (trackingPin:Pin | null, userCoordinates: Coordinates | null) => {
+  const handleSubmitGuessOnClick = async (pin:Pin | null, userCoordinates: Coordinates | null) => {
     try {
-      if (!trackingPin) throw 'No pin to track';
+      if (!pin) throw 'No pin to track';
       if (!userCoordinates) throw 'No user coordinates'
       const pinCoordinates: Coordinates = {
-        longitude: trackingPin.exact_longitude,
-        latitude: trackingPin.exact_latitude
+        longitude: pin.exact_longitude,
+        latitude: pin.exact_latitude
       }
       const distanceToPin:number = parseFloat(GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates).toFixed(3));
   
-      await postGuess(trackingPin.poi_id, distanceToPin);
-      trackingPin.is_completed = true;
+      await postGuess(pin.poi_id, distanceToPin);
+      pin.is_completed = true;
       setIsActiveState(false);
     } catch (error) {
       console.error("Error", error);
