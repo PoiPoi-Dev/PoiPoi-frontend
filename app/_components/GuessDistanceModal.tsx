@@ -1,3 +1,4 @@
+import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "./ui/drawer";
 import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
@@ -14,23 +15,32 @@ const GuessDistanceModal = ({
   userCoordinates: Coordinates;
 }) => {
   return (
-    <div className="absolute bottom-6 flex w-screen justify-center items-center">
-      <Button onClick={() => setGuessPoiPosition(null)}>Next</Button>
-      <p>
-        distance:
-        {GetDistanceFromCoordinatesToMeters(userCoordinates, guessPoiPosition) >
-        1000
-          ? (
-              GetDistanceFromCoordinatesToMeters(
-                userCoordinates,
-                guessPoiPosition
-              ) / 1000
-            ).toFixed(2) + "km."
-          : GetDistanceFromCoordinatesToMeters(
+    <div className="absolute bottom-60 flex w-screen justify-center items-center">
+      <Drawer>
+        <DrawerTrigger asChild>
+          <Button>Next</Button>
+        </DrawerTrigger>
+        <DrawerContent>
+          <Button onClick={() => setGuessPoiPosition(null)}>Next</Button>
+          <p>
+            distance:
+            {GetDistanceFromCoordinatesToMeters(
               userCoordinates,
               guessPoiPosition
-            ).toFixed(2) + "m."}
-      </p>
+            ) > 1000
+              ? (
+                  GetDistanceFromCoordinatesToMeters(
+                    userCoordinates,
+                    guessPoiPosition
+                  ) / 1000
+                ).toFixed(2) + "km."
+              : GetDistanceFromCoordinatesToMeters(
+                  userCoordinates,
+                  guessPoiPosition
+                ).toFixed(2) + "m."}
+          </p>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 };
