@@ -39,3 +39,8 @@ export interface User {
   displayName: string;
   password: string;
 }
+
+export interface Leaderboards {
+  username: string;
+  score: number;
+}
