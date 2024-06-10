@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useContext } from "react";
 import Map from "react-map-gl/maplibre";
-// import { sample } from "../_api/sample";
 import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
@@ -10,13 +9,14 @@ import MapControls from "./MapControls";
 // import TagFilterDropdown from "./TagFilterDropdown";
 // import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
-import PoidexButton from "./PoidexButton";
-import PoidexModal from "./PoidexModal";
-import SubmitGuessButton from "./SubmitGuessButton";
 import PoiPhotoToggle from "./PoiPhotoToggle";
 import { AuthContext } from "./useContext/AuthContext";
 import { getAuthService } from "@/config/firebaseconfig";
-// import { redirect } from "next/navigation";
+import GameControls from "./GameControls";
+import { ConvertGeolocationPositionToCoordinates, Coordinates,
+  GetDistanceFromCoordinatesToMeters,
+  } from "../_utils/coordinateMath";
+import useGeolocation from "../_hooks/useGeolocation";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -25,11 +25,14 @@ function MapInner() {
   const [poiData, setPoiData] = useState<Pin[]>([]);
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
-  const [showPoidex, setShowPoidex] = useState(false);
-  const [selectedPoi, setSelectedPoi] = useState<Pin | null>(null);
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
     undefined
   );
+
+  const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
+  const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
+  const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<number|null> (null);
+  // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
   // Default camera map when user opens the app
   const longitude: number = 139.72953967417234;
@@ -46,6 +49,11 @@ function MapInner() {
     user ? void handleFetchPoiByUid() : void handleFetchPoiByAnonymous();
   }, [user]);
 
+  useEffect(() => {
+    if(!closestNotCompletedPin || !userCoordinates) return;
+    handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
+  }, [closestNotCompletedPin, userCoordinates])
+  
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
     try {
@@ -85,6 +93,58 @@ function MapInner() {
     }
   };
 
+  const handleDistanceToClosestPin = (userCoordinates: Coordinates, pin: Pin) => {
+    const pinCoordinates: Coordinates = {
+      longitude: pin.search_longitude,
+      latitude: pin.search_latitude,
+    }
+    const distance = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
+    setDistanceToTrackingPin(distance);
+  }
+    
+  /**
+  * Sets the user's coordinates
+  * @param position 
+  */
+  const handleSetUserCoordinates = (position: GeolocationPosition) => {
+    const userCoord:Coordinates = ConvertGeolocationPositionToCoordinates(position);
+    setUserCoordinates(userCoord);
+  }
+     
+  /**
+  * Sets closestNotCompletedPin to the closes pin BY POSITION
+  * Currently does not account for filters
+  * @param position 
+  */
+  const handleSetClosestNotCompletedPin = (position: GeolocationPosition) => {
+    const userCoordinates: Coordinates = {
+      longitude: position.coords.longitude,
+      latitude: position.coords.latitude,
+    };
+  
+    let shortestDistance: number = Number.MAX_SAFE_INTEGER;
+    let closestPin: Pin | null = null;
+  
+    for (const pin of poiData) {
+      if (pin.is_completed) continue;
+   
+      const pinCoordinates: Coordinates = {
+        longitude: pin.search_longitude,
+        latitude: pin.search_latitude,
+      };
+    
+      const distance: number = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
+      if (distance < shortestDistance) {
+        shortestDistance = distance;
+        closestPin = pin;
+      }
+    }
+    setClosestNotCompletedPin(closestPin);
+  }
+     
+  useGeolocation(handleSetUserCoordinates);
+  useGeolocation(handleSetClosestNotCompletedPin);
+
   // const handleFilter = (selectedTags: string[]) => {
   //   if (selectedTags.length === 0) {
   //     setFilteredPins(sample.pin);
@@ -96,18 +156,6 @@ function MapInner() {
   //   }
   // };
 
-  const handlePoiClick = (poi: Pin) => {
-    setSelectedPoi(poi);
-  };
-
-  const handleClosePoidex = () => {
-    setShowPoidex(false);
-    setSelectedPoi(null); // Reset selectedPoi when closing PoidexModal
-  };
-
-  // if (!user) {
-  //   redirect("/login");
-  // } else {}
 
   // RETURN
   return (
@@ -115,8 +163,13 @@ function MapInner() {
       {/* THIS SHOULD BE MOVED TO OTHER PLACE */}
       <div className="absolute top-4 left-4 z-10 flex gap-2">
         {/* <TagFilterDropdown onFilter={handleFilter} /> */}
-        <PoidexButton onClick={() => setShowPoidex(true)} />
         <HintButton poi_id={selectedPoiId} />
+        <GameControls 
+        pins = {poiData} 
+        trackingPin={closestNotCompletedPin} 
+        userCoordinates={userCoordinates} 
+        distanceToTrackingPin={distanceToTrackingPin}/>
+        <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
       </div>
       {/* MAP CANVAS */}
       <Map
@@ -165,20 +218,11 @@ function MapInner() {
           );
         })} */}
         {/* <DistanceHintButton pins={poiData} /> */}
-        <SubmitGuessButton pins={poiData} />
-
+        {/* <SubmitGuessButton pins={poiData} /> */}
+        
         <MapControls />
       </Map>
-      <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
-      {showPoidex ? (
-        <PoidexModal
-          pins={poiData}
-          onClose={handleClosePoidex}
-          onPoiClick={handlePoiClick}
-          selectedPoi={selectedPoi}
-          goBack={() => setSelectedPoi(null)}
-        />
-      ) : null}
+      
     </div>
   );
 }
