@@ -42,7 +42,7 @@ function SubmitGuessButton({
 
   },[distanceToTrackingPin, trackingPin])
 
-  const postGuess = async (poi_id: number, distance: number):Promise<void> => {
+  const postGuess = async (poi_id: number, distance: number):Promise<Response|void> => {
     try {
     const auth = await getAuthService(); //gives auth service
     if (!auth.currentUser) throw 'Not logged in'; //error
@@ -68,8 +68,7 @@ function SubmitGuessButton({
           body: JSON.stringify(data),
         }
       );
-      const { message } = await response.json() as {message: string};
-      console.log(message);
+      return response;
     } catch (error) {
       console.error(error);
     }
