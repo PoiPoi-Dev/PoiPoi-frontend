@@ -116,12 +116,18 @@ function MapInner() {
     }
   };
 
-  const handleDistanceToClosestPin = (userCoordinates: Coordinates, pin: Pin) => {
+  const handleDistanceToClosestPin = (
+    userCoordinates: Coordinates,
+    pin: Pin
+  ) => {
     const pinCoordinates: Coordinates = {
       longitude: pin.search_longitude,
       latitude: pin.search_latitude,
-    }
-    const distance = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
+    };
+    const distance = GetDistanceFromCoordinatesToMeters(
+      userCoordinates,
+      pinCoordinates
+    );
     setDistanceToTrackingPin(distance);
   };
 
