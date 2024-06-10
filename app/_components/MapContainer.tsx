@@ -13,10 +13,17 @@ import PoiPhotoToggle from "./PoiPhotoToggle";
 import { AuthContext } from "./useContext/AuthContext";
 import { getAuthService } from "@/config/firebaseconfig";
 import GameControls from "./GameControls";
-import { ConvertGeolocationPositionToCoordinates, Coordinates,
+import {
+  ConvertGeolocationPositionToCoordinates,
+  Coordinates,
   GetDistanceFromCoordinatesToMeters,
-  } from "../_utils/coordinateMath";
+} from "../_utils/coordinateMath";
 import useGeolocation from "../_hooks/useGeolocation";
+import FilterButton from "./FilterButton";
+import GuessPolyline from "./ui/guessPolyline";
+import { Popover, PopoverContent } from "@radix-ui/react-popover";
+import PoiPopup from "./PoiPopup";
+import { Button } from "./ui/button";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -24,14 +31,24 @@ function MapInner() {
   // USE STATE
   const [poiData, setPoiData] = useState<Pin[]>([]);
   const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
+  const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates | null>(
+    null
+  );
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
     undefined
   );
+  const [filters, setFilters] = useState<string[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
-  const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
-  const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
-  const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<number|null> (null);
+  const [userCoordinates, setUserCoordinates] = useState<Coordinates | null>(
+    null
+  );
+  const [closestNotCompletedPin, setClosestNotCompletedPin] =
+    useState<Pin | null>(null);
+  const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<
+    number | null
+  >(null);
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
   // Default camera map when user opens the app
@@ -44,16 +61,18 @@ function MapInner() {
   });
 
   const user = useContext(AuthContext);
+
   // USE EFFECT
   useEffect(() => {
     user ? void handleFetchPoiByUid() : void handleFetchPoiByAnonymous();
+    void handleFetchFilters();
   }, [user]);
 
   useEffect(() => {
-    if(!closestNotCompletedPin || !userCoordinates) return;
+    if (!closestNotCompletedPin || !userCoordinates) return;
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
-  }, [closestNotCompletedPin, userCoordinates])
-  
+  }, [closestNotCompletedPin, userCoordinates]);
+
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
     try {
@@ -80,7 +99,7 @@ function MapInner() {
   const handleFetchPoiByAnonymous = async () => {
     try {
       const response = await fetch(`${BASE_URL}/api/poi/`, {
-      credentials: "include",
+        credentials: "include",
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -93,55 +112,76 @@ function MapInner() {
     }
   };
 
-  const handleDistanceToClosestPin = (userCoordinates: Coordinates, pin: Pin) => {
+  const handleFetchFilters = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/tag`);
+      const data: string[] = (await response.json()) as string[];
+      setFilters(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDistanceToClosestPin = (
+    userCoordinates: Coordinates,
+    pin: Pin
+  ) => {
     const pinCoordinates: Coordinates = {
       longitude: pin.search_longitude,
       latitude: pin.search_latitude,
-    }
-    const distance = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
+    };
+    const distance = GetDistanceFromCoordinatesToMeters(
+      userCoordinates,
+      pinCoordinates
+    );
     setDistanceToTrackingPin(distance);
-  }
-    
+  };
+
   /**
-  * Sets the user's coordinates
-  * @param position 
-  */
+   * Sets the user's coordinates
+   * @param position
+   */
   const handleSetUserCoordinates = (position: GeolocationPosition) => {
-    const userCoord:Coordinates = ConvertGeolocationPositionToCoordinates(position);
+    const userCoord: Coordinates =
+      ConvertGeolocationPositionToCoordinates(position);
     setUserCoordinates(userCoord);
-  }
-     
+  };
+
   /**
-  * Sets closestNotCompletedPin to the closes pin BY POSITION
-  * Currently does not account for filters
-  * @param position 
-  */
+   * Sets closestNotCompletedPin to the closes pin BY POSITION
+   * Currently does not account for filters
+   * @param position
+   */
   const handleSetClosestNotCompletedPin = (position: GeolocationPosition) => {
     const userCoordinates: Coordinates = {
       longitude: position.coords.longitude,
       latitude: position.coords.latitude,
     };
-  
+
     let shortestDistance: number = Number.MAX_SAFE_INTEGER;
     let closestPin: Pin | null = null;
-  
+
     for (const pin of poiData) {
       if (pin.is_completed) continue;
-   
+
       const pinCoordinates: Coordinates = {
         longitude: pin.search_longitude,
         latitude: pin.search_latitude,
       };
-    
-      const distance: number = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
+
+      const distance: number = GetDistanceFromCoordinatesToMeters(
+        userCoordinates,
+        pinCoordinates
+      );
+
       if (distance < shortestDistance) {
         shortestDistance = distance;
         closestPin = pin;
       }
     }
     setClosestNotCompletedPin(closestPin);
-  }
-     
+  };
+
   useGeolocation(handleSetUserCoordinates);
   useGeolocation(handleSetClosestNotCompletedPin);
 
@@ -156,21 +196,33 @@ function MapInner() {
   //   }
   // };
 
-
   // RETURN
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
-      {/* THIS SHOULD BE MOVED TO OTHER PLACE */}
+      {/* GAME UI */}
       <div className="absolute top-4 left-4 z-10 flex gap-2">
         {/* <TagFilterDropdown onFilter={handleFilter} /> */}
         <HintButton poi_id={selectedPoiId} />
-        <GameControls 
-        pins = {poiData} 
-        trackingPin={closestNotCompletedPin} 
-        userCoordinates={userCoordinates} 
-        distanceToTrackingPin={distanceToTrackingPin}/>
+        <GameControls
+          pins={poiData}
+          trackingPin={closestNotCompletedPin}
+          userCoordinates={userCoordinates}
+          distanceToTrackingPin={distanceToTrackingPin}
+        />
         <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
+        <FilterButton
+          filters={filters}
+          selectedFilters={selectedFilters}
+          setSelectedFilters={setSelectedFilters}
+        />
+        {/* TEMP FOR DEVELOPMENT */}
+        <li>
+          {selectedFilters.length > 0
+            ? `Filtered by ${selectedFilters.join(", ")}`
+            : "All"}
+        </li>
       </div>
+
       {/* MAP CANVAS */}
       <Map
         {...viewPort}
@@ -186,43 +238,61 @@ function MapInner() {
             <MarkerContainer
               key={pin.poi_id}
               pin={pin}
-              showPopup={showPopup}
               setShowPopup={setShowPopup}
               setSelectedPoiId={setSelectedPoiId}
             />
           );
         })}
 
-        {/* V0 DEVELOPMENT w/ FILTER FEATURE */}
-        {/* {sample.map((pin: Pin): JSX.Element => {
-          return (
-            <MarkerContainer
-              key={pin.id}
-              pin={pin}
-              showPopup={showPopup}
-              setShowPopup={setShowPopup}
-              setSelectedPoiId={setSelectedPoiId}
-            />
-          );
-        })} */}
+        {/* Popup */}
+        {showPopup === selectedPoiId && selectedPoiId && (
+          <div className="fixed top-0 left-0 w-screen h-screen">
+            <Popover defaultOpen>
+              <PopoverContent>
+                <PoiPopup
+                  id={selectedPoiId}
+                  setShowPopup={setShowPopup}
+                  setGuessPoiPosition={setGuessPoiPosition}
+                  payload={
+                    poiData.filter((pin) => pin.poi_id === selectedPoiId)[0]
+                  }
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        )}
 
-        {/* {filteredPins.map((pin: Pin): JSX.Element => {
-          return (
-            <MarkerContainer
-              key={pin.id}
-              pin={pin}
-              showPopup={showPopup}
-              setShowPopup={setShowPopup}
-              setSelectedPoiId={setSelectedPoiId}
+        {userCoordinates && guessPoiPosition !== null && (
+          <>
+            <GuessPolyline
+              userLocation={userCoordinates}
+              guessPoiLocation={guessPoiPosition}
             />
-          );
-        })} */}
-        {/* <DistanceHintButton pins={poiData} /> */}
-        {/* <SubmitGuessButton pins={poiData} /> */}
-        
+            <div className="absolute bottom-6 flex w-screen justify-center items-center">
+              <Button onClick={() => setGuessPoiPosition(null)}>Next</Button>
+              <p>
+                distance:
+                {GetDistanceFromCoordinatesToMeters(
+                  userCoordinates,
+                  guessPoiPosition
+                ) > 1000
+                  ? (
+                      GetDistanceFromCoordinatesToMeters(
+                        userCoordinates,
+                        guessPoiPosition
+                      ) / 1000
+                    ).toFixed(2) + "km."
+                  : GetDistanceFromCoordinatesToMeters(
+                      userCoordinates,
+                      guessPoiPosition
+                    ).toFixed(2) + "m."}
+              </p>
+            </div>
+          </>
+        )}
+
         <MapControls />
       </Map>
-      
     </div>
   );
 }
