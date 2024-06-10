@@ -6,7 +6,6 @@ import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
-import HintButton from "./HintButton";
 import { AuthContext } from "./useContext/AuthContext";
 import { getAuthService } from "@/config/firebaseconfig";
 import GameControls from "./GameControls";
@@ -193,7 +192,6 @@ function MapInner() {
       <div className="absolute top-0 left-0 z-50 w-screen pt-4 gap-4 flex flex-col">
         {/* HEADER CONTROLLER */}
         <div className="flex flex-col gap-4 w-full">
-          {/* <TagFilterDropdown onFilter={handleFilter} /> */}
           <div className="px-4">
             <MainQuest />
           </div>
@@ -202,7 +200,7 @@ function MapInner() {
             selectedFilters={selectedFilters}
             setSelectedFilters={setSelectedFilters}
           />
-          <HintButton poi_id={selectedPoiId} />
+          {/* <HintButton poi_id={selectedPoiId} /> */}
         </div>
 
         {/* FOOTER CONTROLLER */}
