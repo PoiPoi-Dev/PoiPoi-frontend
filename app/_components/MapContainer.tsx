@@ -51,11 +51,6 @@ function MapInner() {
   >(null);
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
-  const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
-  const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
-  const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<number|null> (null);
-  // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
-
   // Default camera map when user opens the app
   const longitude: number = 139.72953967417234;
   const latitude: number = 35.66060121205606;
@@ -127,48 +122,58 @@ function MapInner() {
     }
   };
 
-  const handleDistanceToClosestPin = (userCoordinates: Coordinates, pin: Pin) => {
+  const handleDistanceToClosestPin = (
+    userCoordinates: Coordinates,
+    pin: Pin
+  ) => {
     const pinCoordinates: Coordinates = {
       longitude: pin.search_longitude,
       latitude: pin.search_latitude,
-    }
-    const distance = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
+    };
+    const distance = GetDistanceFromCoordinatesToMeters(
+      userCoordinates,
+      pinCoordinates
+    );
     setDistanceToTrackingPin(distance);
-  }
-    
+  };
+
   /**
-  * Sets the user's coordinates
-  * @param position 
-  */
+   * Sets the user's coordinates
+   * @param position
+   */
   const handleSetUserCoordinates = (position: GeolocationPosition) => {
-    const userCoord:Coordinates = ConvertGeolocationPositionToCoordinates(position);
+    const userCoord: Coordinates =
+      ConvertGeolocationPositionToCoordinates(position);
     setUserCoordinates(userCoord);
-  }
-     
+  };
+
   /**
-  * Sets closestNotCompletedPin to the closes pin BY POSITION
-  * Currently does not account for filters
-  * @param position 
-  */
+   * Sets closestNotCompletedPin to the closes pin BY POSITION
+   * Currently does not account for filters
+   * @param position
+   */
   const handleSetClosestNotCompletedPin = (position: GeolocationPosition) => {
     const userCoordinates: Coordinates = {
       longitude: position.coords.longitude,
       latitude: position.coords.latitude,
     };
-  
+
     let shortestDistance: number = Number.MAX_SAFE_INTEGER;
     let closestPin: Pin | null = null;
-  
+
     for (const pin of poiData) {
       if (pin.is_completed) continue;
-   
+
       const pinCoordinates: Coordinates = {
         longitude: pin.search_longitude,
         latitude: pin.search_latitude,
       };
-    
-      const distance: number = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
-      
+
+      const distance: number = GetDistanceFromCoordinatesToMeters(
+        userCoordinates,
+        pinCoordinates
+      );
+
       if (distance < shortestDistance) {
         shortestDistance = distance;
         closestPin = pin;
@@ -176,7 +181,7 @@ function MapInner() {
     }
     setClosestNotCompletedPin(closestPin);
   };
-  
+
   useGeolocation(handleSetUserCoordinates);
   useGeolocation(handleSetClosestNotCompletedPin);
 
