@@ -203,9 +203,11 @@ function MapInner() {
           {/* <HintButton poi_id={selectedPoiId} /> */}
         </div>
 
+        {/* ISLAND CONTROLLER */}
+        <PoiPhotoToggle pins={poiData} setShowPopup={setShowPopup} setSelectedPoiId={setSelectedPoiId} showPopup={showPopup} />
+
         {/* FOOTER CONTROLLER */}
         <div className="fixed bottom-0 left-0 w-full flex gap-2 h-16 bg-white justify-center items-end">
-          <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
           <GameControls
             pins={poiData}
             trackingPin={closestNotCompletedPin}
