@@ -6,10 +6,8 @@ import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
-// import TagFilterDropdown from "./TagFilterDropdown";
-// import DistanceHintButton from "./DistanceHintButton";
 import HintButton from "./HintButton";
-import PoiPhotoToggle from "./PoiPhotoToggle";
+// import PoiPhotoToggle from "./PoiPhotoToggle";
 import { AuthContext } from "./useContext/AuthContext";
 import { getAuthService } from "@/config/firebaseconfig";
 import GameControls from "./GameControls";
@@ -21,9 +19,8 @@ import {
 import useGeolocation from "../_hooks/useGeolocation";
 import FilterButton from "./FilterButton";
 import GuessPolyline from "./ui/guessPolyline";
-import { Popover, PopoverContent } from "@radix-ui/react-popover";
-import PoiPopup from "./PoiPopup";
-import { Button } from "./ui/button";
+import PopoverCard from "./PopoverCard";
+import GuessDistanceModal from "./GuessDistanceModal";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -40,15 +37,9 @@ function MapInner() {
   );
   const [filters, setFilters] = useState<string[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-
-  const [userCoordinates, setUserCoordinates] = useState<Coordinates | null>(
-    null
-  );
-  const [closestNotCompletedPin, setClosestNotCompletedPin] =
-    useState<Pin | null>(null);
-  const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<
-    number | null
-  >(null);
+  const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
+  const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
+  const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<number|null> (null);
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
   // Default camera map when user opens the app
@@ -69,10 +60,10 @@ function MapInner() {
   }, [user]);
 
   useEffect(() => {
-    if (!closestNotCompletedPin || !userCoordinates) return;
+    if(!closestNotCompletedPin || !userCoordinates) return;
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
-  }, [closestNotCompletedPin, userCoordinates]);
-
+  }, [closestNotCompletedPin, userCoordinates])
+  
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
     try {
@@ -129,11 +120,8 @@ function MapInner() {
     const pinCoordinates: Coordinates = {
       longitude: pin.search_longitude,
       latitude: pin.search_latitude,
-    };
-    const distance = GetDistanceFromCoordinatesToMeters(
-      userCoordinates,
-      pinCoordinates
-    );
+    }
+    const distance = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
     setDistanceToTrackingPin(distance);
   };
 
@@ -185,17 +173,6 @@ function MapInner() {
   useGeolocation(handleSetUserCoordinates);
   useGeolocation(handleSetClosestNotCompletedPin);
 
-  // const handleFilter = (selectedTags: string[]) => {
-  //   if (selectedTags.length === 0) {
-  //     setFilteredPins(sample.pin);
-  //   } else {
-  //     const filtered = sample.pin.filter((pin) =>
-  //       selectedTags.every((tag) => pin.tags.includes(tag))
-  //     );
-  //     setFilteredPins(filtered);
-  //   }
-  // };
-
   // RETURN
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
@@ -209,7 +186,7 @@ function MapInner() {
           userCoordinates={userCoordinates}
           distanceToTrackingPin={distanceToTrackingPin}
         />
-        <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
+        {/* <PoiPhotoToggle pins={poiData} /> */}
         <FilterButton
           filters={filters}
           selectedFilters={selectedFilters}
@@ -233,64 +210,47 @@ function MapInner() {
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
       >
         {/* FOR V1 DEVELOPMENT */}
-        {poiData.map((pin: Pin): JSX.Element => {
-          return (
-            <MarkerContainer
-              key={pin.poi_id}
-              pin={pin}
-              setShowPopup={setShowPopup}
-              setSelectedPoiId={setSelectedPoiId}
-            />
-          );
-        })}
+        {poiData
+          .filter((pin) =>
+            selectedFilters.length === 0
+              ? true
+              : selectedFilters.every((tag) => pin.tags.includes(tag))
+          )
+          .map((pin: Pin): JSX.Element => {
+            return (
+              <MarkerContainer
+                key={pin.poi_id}
+                pin={pin}
+                setShowPopup={setShowPopup}
+                setSelectedPoiId={setSelectedPoiId}
+              />
+            );
+          })}
 
         {/* Popup */}
         {showPopup === selectedPoiId && selectedPoiId && (
-          <div className="fixed top-0 left-0 w-screen h-screen">
-            <Popover defaultOpen>
-              <PopoverContent>
-                <PoiPopup
-                  id={selectedPoiId}
-                  setShowPopup={setShowPopup}
-                  setGuessPoiPosition={setGuessPoiPosition}
-                  payload={
-                    poiData.filter((pin) => pin.poi_id === selectedPoiId)[0]
-                  }
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
+          <PopoverCard
+            poiData={poiData}
+            selectedPoiId={selectedPoiId}
+            setShowPopup={setShowPopup}
+            setGuessPoiPosition={setGuessPoiPosition}
+          />
         )}
 
+        {/* GUESS MODEL */}
         {userCoordinates && guessPoiPosition !== null && (
           <>
             <GuessPolyline
               userLocation={userCoordinates}
               guessPoiLocation={guessPoiPosition}
             />
-            <div className="absolute bottom-6 flex w-screen justify-center items-center">
-              <Button onClick={() => setGuessPoiPosition(null)}>Next</Button>
-              <p>
-                distance:
-                {GetDistanceFromCoordinatesToMeters(
-                  userCoordinates,
-                  guessPoiPosition
-                ) > 1000
-                  ? (
-                      GetDistanceFromCoordinatesToMeters(
-                        userCoordinates,
-                        guessPoiPosition
-                      ) / 1000
-                    ).toFixed(2) + "km."
-                  : GetDistanceFromCoordinatesToMeters(
-                      userCoordinates,
-                      guessPoiPosition
-                    ).toFixed(2) + "m."}
-              </p>
-            </div>
+            <GuessDistanceModal
+              guessPoiPosition={guessPoiPosition}
+              setGuessPoiPosition={setGuessPoiPosition}
+              userCoordinates={userCoordinates}
+            />
           </>
         )}
-
         <MapControls />
       </Map>
     </div>

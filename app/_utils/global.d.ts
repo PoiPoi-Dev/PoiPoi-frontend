@@ -18,7 +18,7 @@ export interface Pin {
   search_longitude: number;
   search_radius: number;
   // is_main_attraction: boolean;
-  // tags: string[];
+  tags: string[];
 }
 
 export interface Hint {
