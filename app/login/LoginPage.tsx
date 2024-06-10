@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { User } from "../_utils/global";
 import { Button } from "../_components/ui/button";
 import {
@@ -7,16 +7,18 @@ import {
   isVerified,
   loginUser,
 } from "../_actions/authenticationActions";
-// import { onAuthStateChanged } from "firebase/auth";
 import { getAuthService } from "@/config/firebaseconfig";
-// import { AuthContext } from "../_components/useContext/AuthContext"
+import { AuthContext } from "../_components/useContext/AuthContext"
 
 const LoginPage: React.FC = () => {
-  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
   const [user, setUser] = useState<User>({} as User);
+  const firebaseUser = useContext(AuthContext);
 
-  // const firebaseUser = useContext(AuthContext);
   useEffect(() => {
+    if (firebaseUser == null) {
+      setIsLogin(false);
+    }
     return () => {};
   }, []);
 
@@ -38,16 +40,13 @@ const LoginPage: React.FC = () => {
     e: React.FormEvent<HTMLFormElement> | React.FormEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    console.log("User", user, "attempting to create a new account.");
 
     try {
       if (!user.email || !user.password || !user.displayName)
         throw "Invalid User/Password/Display Name";
       await createUser(user.email, user.password, user.displayName);
-      alert("Account created successfully!");
     } catch (error) {
       console.error(error);
-      alert("Account creation failed, please try again.");
     }
   };
 
@@ -55,14 +54,12 @@ const LoginPage: React.FC = () => {
     e: React.FormEvent<HTMLFormElement> | React.FormEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    console.log("Attempting to login");
+    
     try {
       if (!user.email || !user.password) throw "Invalid User/Password";
       await loginUser(user.email, user.password);
-      alert("Login successful!");
     } catch (error) {
       console.error(error);
-      alert("Login failed, please try again.");
     }
   };
 
