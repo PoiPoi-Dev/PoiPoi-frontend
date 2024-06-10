@@ -44,6 +44,7 @@ const Leaderboard: React.FC = () => {
             <tr key={index}>
               <td>{index + 1}</td>
               <td>{player.username}</td>
+              <td>{player.score}</td>
             </tr>
           ))}
         </tbody>
