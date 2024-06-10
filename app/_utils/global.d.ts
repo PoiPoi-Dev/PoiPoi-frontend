@@ -42,4 +42,5 @@ export interface User {
 
 export interface Leaderboards {
   username: string;
+  score: number;
 }
