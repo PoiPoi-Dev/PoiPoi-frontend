@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { useContext, useState } from "react";
+import { User } from "firebase/auth";
 import { Pin } from "../_utils/global";
 import { AuthContext } from "./useContext/AuthContext";
 import { TrackingPinContext } from "./useContext/TrackingPinContext";
@@ -8,7 +9,6 @@ import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
-// import SubmitGuessButton from "./SubmitGuessButton";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -45,7 +45,7 @@ export function PoiCard({
     );
   };
 
-  const postGuess = async (pin: Pin, distance: number):Promise<Response|void> => {
+  const PostGuess = async (user: User, pin: Pin, distance: number):Promise<Response|void> => {
     try {
     if (!user) throw 'Not logged in'; //error
     if (!pin) throw 'Can not get pin';
@@ -80,23 +80,23 @@ export function PoiCard({
     }
   }
 
-  const handleSubmitGuessOnClick = async (pin:Pin | null, userCoordinates: Coordinates | null) => {
+  const handleSubmitGuessOnClick = async (user: User, pin:Pin | null, userCoordinates: Coordinates | null) => {
     try {
+      if (!user) throw 'Not logged in'
       if (!pin) throw 'No pin to track';
       if (!userCoordinates) throw 'No user coordinates'
+      
       const pinCoordinates: Coordinates = {
         longitude: pin.exact_longitude,
         latitude: pin.exact_latitude
       }
       const distanceToPin:number = parseFloat(GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates).toFixed(3));
   
-      await postGuess(payload, distanceToPin);
+      await PostGuess(user, payload, distanceToPin);
       updatePoi();
     } catch (error) {
       console.error("Error", error);
     }
-
-    
   };
 
   const updatePoi = () => {
@@ -159,8 +159,7 @@ export function PoiCard({
                     trackingPinContext.setTrackingPin(payload);
                   }
                 } else {
-                  void handleSubmitGuessOnClick(payload, userCoordinates)
-                  
+                  void handleSubmitGuessOnClick(user, payload, userCoordinates)
                   }
               } else {
                 alert("please login");

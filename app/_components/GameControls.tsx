@@ -12,9 +12,9 @@ interface GameControlsProps {
 
 const GameControls = ({
   pins,
-  trackingPin,
-  userCoordinates,
-  distanceToTrackingPin,
+  // trackingPin,             //For future use by other game controls
+  // userCoordinates,
+  // distanceToTrackingPin,
 }: GameControlsProps): React.JSX.Element => {
   return (
     <div>

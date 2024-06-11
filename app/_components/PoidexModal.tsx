@@ -77,6 +77,7 @@ const PoidexModal: React.FC<PoidexModalProps> = ({
                   ...selectedPoi,
                   is_completed: selectedPoi.is_completed,
                 }}
+                userCoordinates={null}
               />
             </div>
           </div>
