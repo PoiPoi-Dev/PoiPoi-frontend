@@ -7,6 +7,7 @@ import Poidex from "./Poidex";
 import { Coordinates } from "../_utils/coordinateMath";
 
 import { Pin } from "../_utils/global";
+import Link from "next/link";
 
 interface GameControlsProps {
   pins: Pin[];
@@ -23,15 +24,17 @@ const GameControls = ({
 GameControlsProps): React.JSX.Element => {
   return (
     <div className="flex justify-between min-w-[360px] max-w-full">
-      <ButtonIconCircle text="Menu" onClick={() => alert("leaderboard")}>
+      <ButtonIconCircle text="Map">
         <FaMapLocationDot size={24} />
       </ButtonIconCircle>
 
       <Poidex pins={pins} />
 
-      <ButtonIconCircle text="leaderboard" onClick={() => alert("leaderboard")}>
-        <MdLeaderboard size={24} />
-      </ButtonIconCircle>
+      <Link href="/leaderboard">
+        <ButtonIconCircle text="leaderboard">
+          <MdLeaderboard size={24} />
+        </ButtonIconCircle>
+      </Link>
 
       <ButtonIconCircle text="account" onClick={() => alert("account")}>
         <MdAccountCircle size={24} />
