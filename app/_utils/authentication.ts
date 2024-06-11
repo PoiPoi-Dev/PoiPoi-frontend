@@ -69,8 +69,13 @@ const monitorAuthState = async (): Promise<void> => {
 };
 
 const logout = async (): Promise<void> => {
-  const auth = await getAuthService();
-  await signOut(auth);
+  try {
+    const auth = await getAuthService();
+    if (!auth) throw "Could not get Authentication Service!"
+    await signOut(auth);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 void (async () => await monitorAuthState()) ();
