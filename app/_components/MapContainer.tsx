@@ -57,6 +57,7 @@ function MapInner() {
   const user = useContext(AuthContext);
   const trackingPinContext = useContext(TrackingPinContext);
   
+  
   // USE EFFECT
   useEffect(() => {
     user ? void handleFetchPoiByUid() : void handleFetchPoiByAnonymous();
@@ -64,8 +65,10 @@ function MapInner() {
   }, [user]);
 
   useEffect(() => {
-    console.log(trackingPinContext?.trackingPin);
-  },[trackingPinContext?.trackingPin])
+    if (!trackingPinContext) return;
+    if (!trackingPinContext.trackingPin) return;
+    console.table(trackingPinContext.trackingPin);
+  },[trackingPinContext, trackingPinContext?.trackingPin])
 
 
   useEffect(() => {
