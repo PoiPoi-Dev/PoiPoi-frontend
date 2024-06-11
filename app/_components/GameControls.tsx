@@ -22,7 +22,7 @@ const GameControls = ({
 // distanceToTrackingPin,
 GameControlsProps): React.JSX.Element => {
   return (
-    <div className="flex justify-between min-w-[320px] max-w-full">
+    <div className="flex justify-between min-w-[360px] max-w-full">
       <ButtonIconCircle text="Menu" onClick={() => alert("leaderboard")}>
         <FaMapLocationDot size={24} />
       </ButtonIconCircle>
