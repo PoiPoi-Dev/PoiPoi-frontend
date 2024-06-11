@@ -233,6 +233,7 @@ function MapInner() {
           <div className="px-4">
             <MainQuest />
           </div>
+          <Proggressbar levelAndXp={levelAndXp} />
           <FilterButton
             filters={filters}
             selectedFilters={selectedFilters}
