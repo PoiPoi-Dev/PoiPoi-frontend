@@ -25,6 +25,7 @@ import TrackingPinContextProvider, {
   TrackingPinContext,
 } from "./useContext/TrackingPinContext";
 import { levelAndXp } from "../_utils/global";
+import Proggressbar from "./Progressbar";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -225,6 +226,7 @@ function MapInner() {
       <div className="absolute top-4 left-4 z-10 flex gap-2">
         {/* <TagFilterDropdown onFilter={handleFilter} /> */}
         <HintButton poi_id={selectedPoiId} />
+        <Proggressbar />
         <GameControls
           pins={poiData}
           trackingPin={closestNotCompletedPin}
