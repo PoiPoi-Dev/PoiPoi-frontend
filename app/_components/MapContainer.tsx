@@ -80,6 +80,11 @@ function MapInner() {
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
   }, [closestNotCompletedPin, userCoordinates]);
 
+  useEffect(() => {
+    setLevelAndXp({ totalXp: 0, level: 1, xpToNextLevel: 200 });
+    void handleLevelAndXp();
+  }, []);
+
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
     try {
@@ -187,6 +192,27 @@ function MapInner() {
       }
     }
     setClosestNotCompletedPin(closestPin);
+  };
+
+  const handleLevelAndXp = async () => {
+    try {
+      const auth = await getAuthService();
+      if (!auth.currentUser) throw "No current user";
+      const uid: string = auth.currentUser.uid;
+
+      const response = await fetch(`${BASE_URL}/api/level/`, {
+        credentials: "include",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firebase_uuid: uid }),
+      });
+      const data: levelAndXp = (await response.json()) as levelAndXp;
+      setLevelAndXp(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useGeolocation(handleSetUserCoordinates);
