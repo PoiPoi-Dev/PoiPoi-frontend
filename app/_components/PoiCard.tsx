@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { useContext, useState } from "react";
 import { Pin } from "../_utils/global";
 import { AuthContext } from "./useContext/AuthContext";
+import { TrackingPinContext } from "./useContext/TrackingPinContext";
 import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
@@ -26,6 +27,7 @@ export function PoiCard({
     payload.is_completed
   );
   const user = useContext(AuthContext);
+  const trackingPinContext = useContext(TrackingPinContext);
   const { search_latitude, search_longitude } = payload;
   const pinCoordinates: Coordinates = {
     latitude: search_latitude,
@@ -36,8 +38,7 @@ export function PoiCard({
   const handleCheckUserInSearchZone = (): boolean => {
     if (!userCoordinates) return false;
     return (
-      payload.search_radius <
-      GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates)
+      GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates) < payload.search_radius
     );
   };
 
@@ -81,32 +82,30 @@ export function PoiCard({
           <Button
             id={`${id}`}
             className="w-full mt-4 rounded-lg"
-            disabled={
-              userCoordinates
-                ? payload.search_radius <
-                  GetDistanceFromCoordinatesToMeters(
-                    userCoordinates,
-                    pinCoordinates
-                  )
-                : false
-            }
+            
             onClick={() => {
               if (user) {
-                setCollect(true);
-                setShowPopup && setShowPopup(undefined);
-                setGuessPoiPosition &&
-                  setGuessPoiPosition({
-                    latitude: payload.exact_latitude,
-                    longitude: payload.exact_longitude,
-                  });
-                payload.is_completed = true;
+                if (!handleCheckUserInSearchZone()) {
+                  if (trackingPinContext) {
+                    trackingPinContext.setTrackingPin(payload);
+                  }
+                } else {
+                  setCollect(true);
+                  setShowPopup && setShowPopup(undefined);
+                  setGuessPoiPosition &&
+                    setGuessPoiPosition({
+                      latitude: payload.exact_latitude,
+                      longitude: payload.exact_longitude,
+                    });
+                  payload.is_completed = true;
+                  }
               } else {
                 alert("please login");
               }
             }}
           >
-            {handleCheckUserInSearchZone()
-              ? "Not in search zone"
+            {!handleCheckUserInSearchZone()
+              ? "Too far! Track this pin?"
               : "Guess and collect"}
           </Button>
         )}

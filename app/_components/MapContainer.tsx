@@ -21,6 +21,7 @@ import GuessPolyline from "./ui/guessPolyline";
 import PopoverCard from "./PopoverCard";
 import GuessDistanceModal from "./GuessDistanceModal";
 import PoiPhotoToggle from "./PoiPhotoToggle";
+import TrackingPinContextProvider, {TrackingPinContext} from "./useContext/TrackingPinContext";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -40,6 +41,8 @@ function MapInner() {
   const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
   const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
   const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<number|null> (null);
+  
+  
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
   // Default camera map when user opens the app
@@ -52,12 +55,17 @@ function MapInner() {
   });
 
   const user = useContext(AuthContext);
-
+  const trackingPinContext = useContext(TrackingPinContext);
+  
   // USE EFFECT
   useEffect(() => {
     user ? void handleFetchPoiByUid() : void handleFetchPoiByAnonymous();
     void handleFetchFilters();
   }, [user]);
+
+  useEffect(() => {
+    console.log(trackingPinContext?.trackingPin);
+  },[trackingPinContext?.trackingPin])
 
   useEffect(() => {
     if(!closestNotCompletedPin || !userCoordinates) return;
@@ -259,9 +267,11 @@ function MapInner() {
 }
 
 const MapContainer = () => (
-  <MapContextProvider>
-    <MapInner />
-  </MapContextProvider>
+  <TrackingPinContextProvider>
+    <MapContextProvider>
+      <MapInner />
+    </MapContextProvider>
+  </TrackingPinContextProvider>
 );
 
 export default MapContainer;
