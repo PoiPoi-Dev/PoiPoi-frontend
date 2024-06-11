@@ -7,6 +7,7 @@ interface UserProfile {
   firebase_uuid: string;
   user_id?: string;
   username: string;
+  score: number;
 }
 
 /**
