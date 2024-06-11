@@ -44,3 +44,9 @@ export interface Leaderboards {
   username: string;
   score: number;
 }
+
+export interface levelAndXp {
+  totalXp: number;
+  level: number;
+  xpToNextLevel: number;
+}

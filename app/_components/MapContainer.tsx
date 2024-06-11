@@ -20,8 +20,11 @@ import GuessPolyline from "./ui/guessPolyline";
 import PopoverCard from "./PopoverCard";
 import GuessDistanceModal from "./GuessDistanceModal";
 import PoiPhotoToggle from "./PoiPhotoToggle";
-import TrackingPinContextProvider, {TrackingPinContext} from "./useContext/TrackingPinContext";
+import TrackingPinContextProvider, {
+  TrackingPinContext,
+} from "./useContext/TrackingPinContext";
 import MainQuest from "./MainQuest";
+import { levelAndXp } from "../_utils/global";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -38,11 +41,21 @@ function MapInner() {
   );
   const [filters, setFilters] = useState<string[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
-  const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
-  const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<number|null> (null);
-  
-  
+  const [userCoordinates, setUserCoordinates] = useState<Coordinates | null>(
+    null
+  );
+  const [closestNotCompletedPin, setClosestNotCompletedPin] =
+    useState<Pin | null>(null);
+  const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<
+    number | null
+  >(null);
+
+  const [levelAndXp, setLevelAndXp] = useState<levelAndXp>({
+    totalXp: 0,
+    level: 1,
+    xpToNextLevel: 200,
+  });
+
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
   // Default camera map when user opens the app
@@ -56,7 +69,7 @@ function MapInner() {
 
   const user = useContext(AuthContext);
   const trackingPinContext = useContext(TrackingPinContext);
-  
+
   // USE EFFECT
   useEffect(() => {
     user ? void handleFetchPoiByUid() : void handleFetchPoiByAnonymous();
@@ -65,13 +78,16 @@ function MapInner() {
 
   useEffect(() => {
     console.log(trackingPinContext?.trackingPin);
-  },[trackingPinContext?.trackingPin])
-
+  }, [trackingPinContext?.trackingPin]);
 
   useEffect(() => {
     if (!closestNotCompletedPin || !userCoordinates) return;
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
   }, [closestNotCompletedPin, userCoordinates]);
+
+  useEffect(() => {
+    void handleLevelAndXp();
+  }, []);
 
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
@@ -185,6 +201,28 @@ function MapInner() {
   useGeolocation(handleSetUserCoordinates);
   useGeolocation(handleSetClosestNotCompletedPin);
 
+  // Level and exp
+  const handleLevelAndXp = async () => {
+    try {
+      const auth = await getAuthService();
+      if (!auth.currentUser) throw "No current user";
+      const uid: string = auth.currentUser.uid;
+
+      const response = await fetch(`${BASE_URL}/api/level/`, {
+        credentials: "include",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firebase_uuid: uid }),
+      });
+      const data: levelAndXp = (await response.json()) as levelAndXp;
+      setLevelAndXp(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // RETURN
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
@@ -204,7 +242,12 @@ function MapInner() {
         </div>
 
         {/* ISLAND CONTROLLER */}
-        <PoiPhotoToggle pins={poiData} setShowPopup={setShowPopup} setSelectedPoiId={setSelectedPoiId} showPopup={showPopup} />
+        <PoiPhotoToggle
+          pins={poiData}
+          setShowPopup={setShowPopup}
+          setSelectedPoiId={setSelectedPoiId}
+          showPopup={showPopup}
+        />
 
         {/* FOOTER CONTROLLER */}
         <div className="fixed bottom-0 left-0 w-full flex gap-2 h-16 bg-white justify-center items-end">
