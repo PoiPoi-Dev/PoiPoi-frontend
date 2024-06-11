@@ -1,6 +1,6 @@
 import { Pin } from "../_utils/global";
 import Poidex from "./Poidex";
-import SubmitGuessButton from "./SubmitGuessButton";
+// import SubmitGuessButton from "./SubmitGuessButton";
 import { Coordinates } from "../_utils/coordinateMath";
 
 interface GameControlsProps {
@@ -12,17 +12,17 @@ interface GameControlsProps {
 
 const GameControls = ({
   pins,
-  trackingPin,
-  userCoordinates,
-  distanceToTrackingPin,
+  // trackingPin,             //For future use by other game controls
+  // userCoordinates,
+  // distanceToTrackingPin,
 }: GameControlsProps): React.JSX.Element => {
   return (
     <div>
-      <SubmitGuessButton
-        trackingPin={trackingPin}
-        userCoordinates={userCoordinates}
-        distanceToTrackingPin={distanceToTrackingPin}
-      />
+      {/* <SubmitGuessButton
+       trackingPin={trackingPin}
+       userCoordinates={userCoordinates}
+       distanceToTrackingPin={distanceToTrackingPin}
+       /> */}
       <Poidex pins={pins} />
     </div>
   );
