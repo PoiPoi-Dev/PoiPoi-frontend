@@ -19,12 +19,14 @@ export function PoiCard({
   setGuessPoiPosition,
   setShowPopup,
   userCoordinates,
+  setScore
 }: {
   id: number;
   payload: Pin;
   setGuessPoiPosition?: (arg0: Coordinates | null) => void;
   setShowPopup?: (arg0: boolean) => void;
   userCoordinates: Coordinates | null;
+  setScore: (arg0: number|null) => void;
 }): JSX.Element {
   // USE STATE
   const [collect, setCollect] = useState<boolean | undefined>(
@@ -46,7 +48,7 @@ export function PoiCard({
     );
   };
 
-  const PostGuess = async (user: User, pin: Pin, distance: number):Promise<Response|void> => {
+  const PostGuess = async (user: User, pin: Pin, distance: number):Promise<Response|number|void> => {
     try {
     if (!user) throw 'Not logged in'; //error
     if (!pin) throw 'Can not get pin';
@@ -75,7 +77,8 @@ export function PoiCard({
           body: JSON.stringify(data),
         }
       );
-      return response;
+      const JSONresponse = response.json();
+      return JSONresponse;
     } catch (error) {
       console.error(error);
     }
@@ -93,7 +96,13 @@ export function PoiCard({
       }
       const distanceToPin:number = parseFloat(GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates).toFixed(3));
   
-      await PostGuess(user, payload, distanceToPin);
+      const score = await PostGuess(user, payload, distanceToPin);
+      if (typeof score === "number") {
+        setScore(score);
+      } else {
+        console.log('Unexpected response:', score);
+      }
+
       updatePoi();
     } catch (error) {
       console.error("Error", error);
