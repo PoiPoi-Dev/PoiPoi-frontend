@@ -153,6 +153,7 @@ export function PoiCard({
                 if (!handleCheckUserInSearchZone()) {
                   if (trackingPinContext) {
                     trackingPinContext.setTrackingPin(payload);
+                    setShowPopup && setShowPopup(false);
                   }
                 } else {
                   void handleSubmitGuessOnClick(user, payload, userCoordinates)
