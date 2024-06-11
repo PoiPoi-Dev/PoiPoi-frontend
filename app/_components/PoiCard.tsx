@@ -8,6 +8,9 @@ import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
+// import SubmitGuessButton from "./SubmitGuessButton";
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export function PoiCard({
   id,
@@ -20,7 +23,7 @@ export function PoiCard({
   payload: Pin;
   setGuessPoiPosition?: (arg0: Coordinates | null) => void;
   setShowPopup?: (arg0: undefined) => void;
-  userCoordinates?: Coordinates | null;
+  userCoordinates: Coordinates | null;
 }): JSX.Element {
   // USE STATE
   const [collect, setCollect] = useState<boolean | undefined>(
@@ -41,6 +44,72 @@ export function PoiCard({
       GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates) < payload.search_radius
     );
   };
+
+  const postGuess = async (pin: Pin, distance: number):Promise<Response|void> => {
+    try {
+    if (!user) throw 'Not logged in'; //error
+    if (!pin) throw 'Can not get pin';
+
+    const uid = user.uid;
+    const {poi_id, search_radius} = pin;
+    const data: {
+      distance: number;
+      poi_id: number | undefined;
+      uid: string;
+      search_radius: number | undefined;
+      } = {
+        distance,
+        poi_id,
+        uid: uid,
+        search_radius,
+      };
+      const response: Response = await fetch(
+        `${BASE_URL}/api/user_profiles/completed_poi`,
+        {
+          credentials: "include",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleSubmitGuessOnClick = async (pin:Pin | null, userCoordinates: Coordinates | null) => {
+    try {
+      if (!pin) throw 'No pin to track';
+      if (!userCoordinates) throw 'No user coordinates'
+      const pinCoordinates: Coordinates = {
+        longitude: pin.exact_longitude,
+        latitude: pin.exact_latitude
+      }
+      const distanceToPin:number = parseFloat(GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates).toFixed(3));
+  
+      await postGuess(payload, distanceToPin);
+      updatePoi();
+    } catch (error) {
+      console.error("Error", error);
+    }
+
+    
+  };
+
+  const updatePoi = () => {
+    setCollect(true);
+    setShowPopup && setShowPopup(undefined);
+    setGuessPoiPosition &&
+    setGuessPoiPosition({
+      latitude: payload.exact_latitude,
+      longitude: payload.exact_longitude,
+    });
+    payload.is_completed = true;
+  }
+
 
   // RETURN
   return (
@@ -83,21 +152,15 @@ export function PoiCard({
             id={`${id}`}
             className="w-full mt-4 rounded-lg"
             
-            onClick={() => {
+            onClick={():void  => {
               if (user) {
                 if (!handleCheckUserInSearchZone()) {
                   if (trackingPinContext) {
                     trackingPinContext.setTrackingPin(payload);
                   }
                 } else {
-                  setCollect(true);
-                  setShowPopup && setShowPopup(undefined);
-                  setGuessPoiPosition &&
-                    setGuessPoiPosition({
-                      latitude: payload.exact_latitude,
-                      longitude: payload.exact_longitude,
-                    });
-                  payload.is_completed = true;
+                  void handleSubmitGuessOnClick(payload, userCoordinates)
+                  
                   }
               } else {
                 alert("please login");
