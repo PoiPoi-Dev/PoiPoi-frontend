@@ -23,7 +23,7 @@ export function PoiCard({
   id: number;
   payload: Pin;
   setGuessPoiPosition?: (arg0: Coordinates | null) => void;
-  setShowPopup?: (arg0: undefined) => void;
+  setShowPopup?: (arg0: boolean) => void;
   userCoordinates: Coordinates | null;
 }): JSX.Element {
   // USE STATE
@@ -102,7 +102,7 @@ export function PoiCard({
 
   const updatePoi = () => {
     setCollect(true);
-    setShowPopup && setShowPopup(undefined);
+    setShowPopup && setShowPopup(false);
     setGuessPoiPosition &&
     setGuessPoiPosition({
       latitude: payload.exact_latitude,

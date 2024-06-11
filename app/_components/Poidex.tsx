@@ -12,11 +12,6 @@ const Poidex = ({ pins }: PoidexProps): React.JSX.Element => {
   const [showPoidex, setShowPoidex] = useState<boolean>(false);
   const [selectedPoi, setSelectedPoi] = useState<Pin | null>(null);
 
-  const handleClosePoidex = () => {
-    setShowPoidex(false);
-    setSelectedPoi(null);
-  };
-
   const handlePoiClick = (poi: Pin) => {
     setSelectedPoi(poi);
   };
@@ -33,10 +28,9 @@ const Poidex = ({ pins }: PoidexProps): React.JSX.Element => {
       {showPoidex ? (
         <PoidexModal
           pins={pins}
-          onClose={handleClosePoidex}
           onPoiClick={handlePoiClick}
           selectedPoi={selectedPoi}
-          goBack={() => setSelectedPoi(null)}
+          setShowPoidex={setShowPoidex}
         />
       ) : null}
     </>

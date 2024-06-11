@@ -57,7 +57,7 @@ function MarkerContainer({
   );
 
   const handleClick = () => {
-    setShowPopup(pin.poi_id);
+    setShowPopup(true);
     setSelectedPoiId(pin.poi_id);
   };
 

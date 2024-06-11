@@ -28,7 +28,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 function MapInner() {
   // USE STATE
   const [poiData, setPoiData] = useState<Pin[]>([]);
-  const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
   const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates | null>(
     null
   );
@@ -245,7 +245,7 @@ function MapInner() {
           })}
 
         {/* Popup */}
-        {showPopup === selectedPoiId && selectedPoiId && (
+        {showPopup && selectedPoiId && (
           <PopoverCard
             poiData={poiData}
             selectedPoiId={selectedPoiId}

@@ -8,8 +8,8 @@ import Image from "next/image";
 
 interface PoiPhotoToggleProps {
   pins: Pin[];
-  showPopup: number | undefined;
-  setShowPopup: React.Dispatch<React.SetStateAction<number | undefined>>;
+  showPopup: boolean;
+  setShowPopup: (arg0: boolean) => void;
   setSelectedPoiId: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
@@ -50,7 +50,7 @@ const PoiPhotoToggle = ({
             className="fixed right-2.5 bottom-52 object-cover w-16 h-16 border-solid border-2 border-white rounded-xl z-100"
             onClick={() => {
               setSelectedPoiId(trackingPin.poi_id);
-              setShowPopup(trackingPin.poi_id);
+              setShowPopup(true);
             }}
           />
         )}
