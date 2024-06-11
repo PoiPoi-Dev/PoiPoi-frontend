@@ -8,9 +8,12 @@ const Proggressbar: React.FC<{ levelAndXp: levelAndXp }> = ({ levelAndXp }) => {
 
   return (
     <div className="absolute top-1 right-1 z-100 flex gap-2">
-      {totalExpInLevel}
       {level}
-      <Progress />
+      <Progress
+        data-state="complete"
+        data-value={totalXp}
+        data-max={totalExpInLevel}
+      />
     </div>
   );
 };
