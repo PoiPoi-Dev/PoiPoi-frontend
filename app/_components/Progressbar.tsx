@@ -1,9 +1,15 @@
 import { Progress } from "./ui/progress";
+import { levelAndXp } from "../_utils/global";
 
-const Proggressbar: React.FC = () => {
+const Proggressbar: React.FC<{ levelAndXp: levelAndXp }> = ({ levelAndXp }) => {
+  const level: number = levelAndXp.level;
+  const totalXp: number = levelAndXp.totalXp;
+  const totalExpInLevel: number = totalXp + levelAndXp.xpToNextLevel;
+
   return (
-    <div className="absolute top-1 left-1 z-1000 flex gap-2">
-      {"hello"}
+    <div className="absolute top-1 right-1 z-100 flex gap-2">
+      {totalExpInLevel}
+      {level}
       <Progress />
     </div>
   );

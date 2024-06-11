@@ -50,7 +50,11 @@ function MapInner() {
   const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<
     number | null
   >(null);
-  const [levelAndXp, setLevelAndXp] = useState<levelAndXp | null>(null);
+  const [levelAndXp, setLevelAndXp] = useState<levelAndXp>({
+    totalXp: 0,
+    level: 1,
+    xpToNextLevel: 200,
+  });
 
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
@@ -82,7 +86,6 @@ function MapInner() {
   }, [closestNotCompletedPin, userCoordinates]);
 
   useEffect(() => {
-    setLevelAndXp({ totalXp: 0, level: 1, xpToNextLevel: 200 });
     void handleLevelAndXp();
   }, []);
 
@@ -226,7 +229,7 @@ function MapInner() {
       <div className="absolute top-4 left-4 z-10 flex gap-2">
         {/* <TagFilterDropdown onFilter={handleFilter} /> */}
         <HintButton poi_id={selectedPoiId} />
-        <Proggressbar />
+        <Proggressbar levelAndXp={levelAndXp} />
         <GameControls
           pins={poiData}
           trackingPin={closestNotCompletedPin}
