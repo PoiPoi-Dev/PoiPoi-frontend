@@ -21,7 +21,10 @@ import GuessPolyline from "./ui/guessPolyline";
 import PopoverCard from "./PopoverCard";
 import GuessDistanceModal from "./GuessDistanceModal";
 import PoiPhotoToggle from "./PoiPhotoToggle";
-import TrackingPinContextProvider, {TrackingPinContext} from "./useContext/TrackingPinContext";
+import TrackingPinContextProvider, {
+  TrackingPinContext,
+} from "./useContext/TrackingPinContext";
+import { levelAndXp } from "../_utils/global";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -38,11 +41,16 @@ function MapInner() {
   );
   const [filters, setFilters] = useState<string[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
-  const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
-  const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<number|null> (null);
-  
-  
+  const [userCoordinates, setUserCoordinates] = useState<Coordinates | null>(
+    null
+  );
+  const [closestNotCompletedPin, setClosestNotCompletedPin] =
+    useState<Pin | null>(null);
+  const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<
+    number | null
+  >(null);
+  const [levelAndXp, setLevelAndXp] = useState<levelAndXp | null>(null);
+
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
   // Default camera map when user opens the app
@@ -56,7 +64,7 @@ function MapInner() {
 
   const user = useContext(AuthContext);
   const trackingPinContext = useContext(TrackingPinContext);
-  
+
   // USE EFFECT
   useEffect(() => {
     user ? void handleFetchPoiByUid() : void handleFetchPoiByAnonymous();
@@ -65,13 +73,13 @@ function MapInner() {
 
   useEffect(() => {
     console.log(trackingPinContext?.trackingPin);
-  },[trackingPinContext?.trackingPin])
+  }, [trackingPinContext?.trackingPin]);
 
   useEffect(() => {
-    if(!closestNotCompletedPin || !userCoordinates) return;
+    if (!closestNotCompletedPin || !userCoordinates) return;
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
   }, [closestNotCompletedPin, userCoordinates]);
-  
+
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
     try {
@@ -128,8 +136,11 @@ function MapInner() {
     const pinCoordinates: Coordinates = {
       longitude: pin.search_longitude,
       latitude: pin.search_latitude,
-    }
-    const distance = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
+    };
+    const distance = GetDistanceFromCoordinatesToMeters(
+      userCoordinates,
+      pinCoordinates
+    );
     setDistanceToTrackingPin(distance);
   };
 
