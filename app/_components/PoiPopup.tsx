@@ -16,7 +16,7 @@ export default function PoiPopup({
 }: {
   id: number;
   payload: Pin;
-  setShowPopup: (arg0: undefined) => void;
+  setShowPopup: (arg0: boolean) => void;
   setGuessPoiPosition: (arg0: Coordinates | null) => void;
   userCoordinates: Coordinates | null
 }): JSX.Element {
@@ -25,7 +25,7 @@ export default function PoiPopup({
     <main className="flex h-screen flex-col items-center justify-between">
       <Dialog defaultOpen>
         <DialogTrigger />
-        <DialogContent onClick={() => setShowPopup(undefined)}>
+        <DialogContent onClick={() => setShowPopup(false)}>
           <PoiCard
             id={id}
             payload={payload}

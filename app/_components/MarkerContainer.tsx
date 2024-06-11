@@ -38,8 +38,8 @@ const layerStyle = (
         20,
         metersToPixelsAtMaxZoom(radius, latitude),
       ],
-      "circle-color": "rgba(203, 92, 255, 0.3)",
-      "circle-opacity": 0.5,
+      "circle-color": "rgba(255, 216, 61, 0.3)",
+      "circle-opacity": 1,
     },
     source: "",
   };
@@ -57,9 +57,14 @@ function MarkerContainer({
   );
 
   const handleClick = () => {
-    setShowPopup(pin.poi_id);
+    setShowPopup(true);
     setSelectedPoiId(pin.poi_id);
   };
+
+  const styleTop: number = 0;
+  const styleLeft: number = 0;
+  const styleOpacity: number = 1;
+  const styleZIndex: number = 40;
 
   return (
     <>
@@ -71,16 +76,20 @@ function MarkerContainer({
           rotationAlignment="map"
           style={{
             position: "absolute",
-            top: 0,
-            left: 0,
-            opacity: 1,
-            zIndex: 50,
+            top: styleTop,
+            left: styleLeft,
+            opacity: styleOpacity,
+            zIndex: styleZIndex,
           }}
           offset={[0, 0]}
           anchor="center"
         >
           {/* Pin icon */}
-          <IoMdCheckmarkCircle size={48} onClick={handleClick} />
+          <IoMdCheckmarkCircle
+            size={48}
+            className="text-primary"
+            onClick={handleClick}
+          />
         </Marker>
       ) : (
         <Marker
@@ -90,32 +99,19 @@ function MarkerContainer({
           rotationAlignment="map"
           style={{
             position: "absolute",
-            top: 0,
-            left: 0,
-            opacity: 1,
-            zIndex: 50,
+            top: styleTop,
+            left: styleLeft,
+            opacity: styleOpacity,
+            zIndex: styleZIndex,
           }}
           offset={[0, 0]}
           anchor="center"
         >
           {/* Pin icon */}
-          <PiSealQuestion size={32} onClick={handleClick} />
-
-          {/* Exact Pin (For dev) **THIS SHOULD BE DELETED LATER** */}
-          <Marker
-            key={pin.exact_latitude}
-            longitude={pin.exact_longitude}
-            latitude={pin.exact_latitude}
-            rotationAlignment="map"
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              opacity: 1,
-              zIndex: 50,
-            }}
-            offset={[0, 0]}
-            anchor="center"
+          <PiSealQuestion
+            size={32}
+            className="text-primary"
+            onClick={handleClick}
           />
 
           {/* Seach Zone Radius */}

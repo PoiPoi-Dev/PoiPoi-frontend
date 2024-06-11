@@ -6,12 +6,15 @@ import { Coordinates, GetDistanceFromCoordinatesToMeters } from '../_utils/coord
 interface HintModalProps {
   pin: Pin | null;
   userCoord: Coordinates | null | undefined;
+  onClose: () => void; // Close handler passed from PoiCard
 }
 
-const HintModal = ({ pin, userCoord }: HintModalProps) => {
+const HintModal = ({ pin, userCoord, onClose }: HintModalProps) => {
   const [hint, setHint] = useState('');
   const dialogRef = useRef<HTMLDialogElement>(null);
   const thresholdDistance = 50; // Threshold distance for allowing hints
+
+  console.log("Step 5: HintModal component rendered"); // Add this log
 
   // Ensure distance is only calculated when userCoord and pin are defined
   const distanceToPin = GetDistanceFromCoordinatesToMeters(
@@ -20,16 +23,23 @@ const HintModal = ({ pin, userCoord }: HintModalProps) => {
   );
 
   const isCloseEnough = distanceToPin <= thresholdDistance;
+  console.log("Step 6: Distance to pin calculated:", distanceToPin);
 
   useEffect(() => {
-    dialogRef.current?.showModal();
-  }, [pin?.is_completed]);
+    console.log("Step 7: HintModal useEffect called");
+    if (dialogRef.current) {
+      dialogRef.current.showModal();
+      console.log("Step 8: Modal opened");
+    }
+  }, []);
 
   const handleSubmit = () => {
     // Implement your POST request logic here
     console.log('Hint submitted:', hint);
     setHint('');
     dialogRef.current?.close();
+    console.log("Step 9: Modal closed after submitting hint");
+    onClose();
   };
 
   return (
@@ -48,7 +58,11 @@ const HintModal = ({ pin, userCoord }: HintModalProps) => {
             <Button onClick={handleSubmit} className="mr-2">
               Submit Hint
             </Button>
-            <Button onClick={() => dialogRef.current?.close()}>Close</Button>
+            <Button onClick={() => {
+              dialogRef.current?.close();
+              console.log("Step 10: Modal closed via close button");
+              onClose();
+            }}>Close</Button>
           </div>
         </>
       ) : (
@@ -56,7 +70,11 @@ const HintModal = ({ pin, userCoord }: HintModalProps) => {
           <h2>Nice try! We'll still give you some points but try and get closer next time!</h2>
           <p>(You'll even be able to leave a hint if you're close enough!)</p>
           <div className="mt-4 flex justify-end">
-            <Button onClick={() => dialogRef.current?.close()}>Close</Button>
+            <Button onClick={() => {
+              dialogRef.current?.close();
+              console.log("Step 11: Modal closed via close button (not close enough)");
+              onClose();
+            }}>Close</Button>
           </div>
         </>
       )}

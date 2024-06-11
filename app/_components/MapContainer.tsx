@@ -6,7 +6,6 @@ import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
-import HintButton from "./HintButton";
 import { AuthContext } from "./useContext/AuthContext";
 import { getAuthService } from "@/config/firebaseconfig";
 import GameControls from "./GameControls";
@@ -21,14 +20,16 @@ import GuessPolyline from "./ui/guessPolyline";
 import PopoverCard from "./PopoverCard";
 import GuessDistanceModal from "./GuessDistanceModal";
 import PoiPhotoToggle from "./PoiPhotoToggle";
+import ImportantPinContextProvider, {ImportantPinContext} from "./useContext/ImportantPinContext";
+import MainQuest from "./MainQuest";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 function MapInner() {
   // USE STATE
   const [poiData, setPoiData] = useState<Pin[]>([]);
-  const [showPopup, setShowPopup] = useState<number | undefined>(undefined);
-  const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates | null>(
+  const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates| null>(
     null
   );
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
@@ -40,6 +41,8 @@ function MapInner() {
   const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
   const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
   const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<number|null> (null);
+  
+  
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
   // Default camera map when user opens the app
@@ -52,7 +55,8 @@ function MapInner() {
   });
 
   const user = useContext(AuthContext);
-
+  const importantPinContext = useContext(ImportantPinContext);
+  
   // USE EFFECT
   useEffect(() => {
     user ? void handleFetchPoiByUid() : void handleFetchPoiByAnonymous();
@@ -60,10 +64,15 @@ function MapInner() {
   }, [user]);
 
   useEffect(() => {
-    if(!closestNotCompletedPin || !userCoordinates) return;
+    console.log(importantPinContext?.trackingPin);
+  },[importantPinContext?.trackingPin])
+
+
+  useEffect(() => {
+    if (!closestNotCompletedPin || !userCoordinates) return;
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
   }, [closestNotCompletedPin, userCoordinates]);
-  
+
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
     try {
@@ -120,8 +129,11 @@ function MapInner() {
     const pinCoordinates: Coordinates = {
       longitude: pin.search_longitude,
       latitude: pin.search_latitude,
-    }
-    const distance = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
+    };
+    const distance = GetDistanceFromCoordinatesToMeters(
+      userCoordinates,
+      pinCoordinates
+    );
     setDistanceToTrackingPin(distance);
   };
 
@@ -177,27 +189,32 @@ function MapInner() {
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
       {/* GAME UI */}
-      <div className="absolute top-4 left-4 z-10 flex gap-2">
-        {/* <TagFilterDropdown onFilter={handleFilter} /> */}
-        <HintButton poi_id={selectedPoiId} />
-        <GameControls
-          pins={poiData}
-          trackingPin={closestNotCompletedPin}
-          userCoordinates={userCoordinates}
-          distanceToTrackingPin={distanceToTrackingPin}
-        />
-        <PoiPhotoToggle pins={poiData} /> {/* Integrate the new component */}
-        <FilterButton
-          filters={filters}
-          selectedFilters={selectedFilters}
-          setSelectedFilters={setSelectedFilters}
-        />
-        {/* TEMP FOR DEVELOPMENT */}
-        <li>
-          {selectedFilters.length > 0
-            ? `Filtered by ${selectedFilters.join(", ")}`
-            : "All"}
-        </li>
+      <div className="absolute top-0 left-0 z-50 w-screen pt-4 gap-4 flex flex-col">
+        {/* HEADER CONTROLLER */}
+        <div className="flex flex-col gap-4 w-full">
+          <div className="px-4">
+            <MainQuest />
+          </div>
+          <FilterButton
+            filters={filters}
+            selectedFilters={selectedFilters}
+            setSelectedFilters={setSelectedFilters}
+          />
+          {/* <HintButton poi_id={selectedPoiId} /> */}
+        </div>
+
+        {/* ISLAND CONTROLLER */}
+        <PoiPhotoToggle pins={poiData} setShowPopup={setShowPopup} setSelectedPoiId={setSelectedPoiId} showPopup={showPopup} />
+
+        {/* FOOTER CONTROLLER */}
+        <div className="fixed bottom-0 left-0 w-full flex gap-2 h-16 bg-white justify-center items-end">
+          <GameControls
+            pins={poiData}
+            trackingPin={closestNotCompletedPin}
+            userCoordinates={userCoordinates}
+            distanceToTrackingPin={distanceToTrackingPin}
+          />
+        </div>
       </div>
 
       {/* MAP CANVAS */}
@@ -228,7 +245,7 @@ function MapInner() {
           })}
 
         {/* Popup */}
-        {showPopup === selectedPoiId && selectedPoiId && (
+        {showPopup && selectedPoiId && (
           <PopoverCard
             poiData={poiData}
             selectedPoiId={selectedPoiId}
@@ -259,9 +276,11 @@ function MapInner() {
 }
 
 const MapContainer = () => (
-  <MapContextProvider>
-    <MapInner />
-  </MapContextProvider>
+  <ImportantPinContextProvider>
+    <MapContextProvider>
+      <MapInner />
+    </MapContextProvider>
+  </ImportantPinContextProvider>
 );
 
 export default MapContainer;

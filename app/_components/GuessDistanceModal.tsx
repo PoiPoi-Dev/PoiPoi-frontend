@@ -1,8 +1,12 @@
+import { useContext, useEffect, useRef, useState } from "react";
+import { Drawer, DrawerContent, DrawerTrigger } from "./ui/drawer";
 import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
 import { Button } from "./ui/button";
+import { ImportantPinContext } from "./useContext/ImportantPinContext";
+import { Pin } from "../_utils/global";
 
 const GuessDistanceModal = ({
   guessPoiPosition,
@@ -13,24 +17,100 @@ const GuessDistanceModal = ({
   setGuessPoiPosition: (arg0: Coordinates | null) => void;
   userCoordinates: Coordinates;
 }) => {
+  const importantPinContext = useContext(ImportantPinContext);
+  const [distanceToPin, setDistancePin] = useState<number>(0);
+  const [hint, setHint] = useState<string>(''); // State to manage hint input
+  const drawerRef = useRef<HTMLButtonElement>(null); // Ref for the Done button
+  const thresholdDistance = 20;
+
+  useEffect(() => {
+    if (!importantPinContext) return;
+    if (!importantPinContext.guessedPin) return;
+    handleDistanceToPin(importantPinContext.guessedPin, userCoordinates);
+  }, [importantPinContext?.guessedPin]);
+
+  const handleDistanceToPin = (guessedPin: Pin, userCoordinates: Coordinates) => {
+    const pinCoordinates: Coordinates = {
+      longitude: guessedPin.exact_longitude,
+      latitude: guessedPin.exact_latitude,
+    };
+
+    const distance = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
+    setDistancePin(distance);
+  };
+
+  const handleSubmitHint = async () => {
+    const hintData = {
+      poi_id: importantPinContext?.guessedPin?.poi_id,
+      content: hint,
+    };
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posthint`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(hintData),
+    });
+
+    if (response.status === 201) {
+      alert('Hint submitted successfully! Now get out there and find more POIS!');
+      drawerRef.current?.click(); // Simulate clicking the Done button
+    } else {
+      const responseData = await response.json();
+      alert(`Failed to submit hint: ${responseData.message || 'Unknown error'}`);
+    }
+  };
+
   return (
-    <div className="absolute bottom-6 flex w-screen justify-center items-center">
-      <Button onClick={() => setGuessPoiPosition(null)}>Next</Button>
-      <p>
-        distance:
-        {GetDistanceFromCoordinatesToMeters(userCoordinates, guessPoiPosition) >
-        1000
-          ? (
-              GetDistanceFromCoordinatesToMeters(
-                userCoordinates,
-                guessPoiPosition
-              ) / 1000
-            ).toFixed(2) + "km."
-          : GetDistanceFromCoordinatesToMeters(
+    <div className="absolute bottom-60 flex w-screen justify-center items-center">
+      <Drawer>
+        <DrawerTrigger asChild>
+          <Button>Next</Button>
+        </DrawerTrigger>
+        <DrawerContent>
+          <Button ref={drawerRef} onClick={() => setGuessPoiPosition(null)}>Done</Button>
+          <p>
+            distance:
+            {GetDistanceFromCoordinatesToMeters(
               userCoordinates,
               guessPoiPosition
-            ).toFixed(2) + "m."}
-      </p>
+            ) > 1000
+              ? (
+                  GetDistanceFromCoordinatesToMeters(
+                    userCoordinates,
+                    guessPoiPosition
+                  ) / 1000
+                ).toFixed(2) + "km."
+              : GetDistanceFromCoordinatesToMeters(
+                  userCoordinates,
+                  guessPoiPosition
+                ).toFixed(2) + "m."}
+          </p>
+          {distanceToPin < thresholdDistance ? (
+            <>
+              <h2>Nice Guessing! How about leaving a hint for someone else?</h2>
+              <p>(Be sure to be helpful! But don't just give it away!)</p>
+              <input
+                type="text"
+                value={hint} // Use state value for input
+                onChange={(e) => setHint(e.target.value)} // Update state on change
+                className="border p-2 mt-2 w-full"
+              />
+              <div className="mt-4 flex justify-end">
+                <Button onClick={handleSubmitHint} className="mr-2">
+                  Submit Hint
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <h2>Nice try! We'll still give you some points but try and get closer next time!</h2>
+              <p>(You'll even be able to leave a hint if you're close enough!)</p>
+            </>
+          )}
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 };

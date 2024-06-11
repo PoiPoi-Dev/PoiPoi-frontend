@@ -48,10 +48,12 @@ function SubmitGuessButton({
       distance: number;
       poi_id: number | undefined;
       uid: string;
+      search_radius: number | undefined;
       } = {
         distance,
         poi_id,
         uid: uid,
+        search_radius: trackingPin?.search_radius,
       };
       const response: Response = await fetch(
         `${BASE_URL}/api/user_profiles/completed_poi`,
@@ -88,10 +90,6 @@ function SubmitGuessButton({
     }
   };
 
-  const handleButtonTextRender = (): string => {
-    return "Submit your answer?";
-  };
-
   return (
     <div
       className="fixed bottom-20 left-0 w-full h-20 flex justify-center items-center"
@@ -102,7 +100,7 @@ function SubmitGuessButton({
         disabled={!isActiveState}
         onClick={(): void => void handleSubmitGuessOnClick(trackingPin, userCoordinates)}
       >
-        {handleButtonTextRender()}
+        Submit your answer?
       </Button>
     </div>
   );

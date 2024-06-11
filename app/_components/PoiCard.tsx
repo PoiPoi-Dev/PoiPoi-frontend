@@ -1,13 +1,17 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { useContext, useState } from "react";
+import { User } from "firebase/auth";
 import { Pin } from "../_utils/global";
 import { AuthContext } from "./useContext/AuthContext";
+import { ImportantPinContext } from "./useContext/ImportantPinContext";
 import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
-import HintModal from "./HintModal";
+import { Badge } from "./ui/badge";
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export function PoiCard({
   id,
@@ -19,14 +23,15 @@ export function PoiCard({
   id: number;
   payload: Pin;
   setGuessPoiPosition?: (arg0: Coordinates | null) => void;
-  setShowPopup?: (arg0: undefined) => void;
-  userCoordinates?: Coordinates | null;
+  setShowPopup?: (arg0: boolean) => void;
+  userCoordinates: Coordinates | null;
 }): JSX.Element {
   // USE STATE
   const [collect, setCollect] = useState<boolean | undefined>(
     payload.is_completed
   );
   const user = useContext(AuthContext);
+  const importantPinContext = useContext(ImportantPinContext);
   const { search_latitude, search_longitude } = payload;
   const pinCoordinates: Coordinates = {
     latitude: search_latitude,
@@ -37,10 +42,78 @@ export function PoiCard({
   const handleCheckUserInSearchZone = (): boolean => {
     if (!userCoordinates) return false;
     return (
-      payload.search_radius <
-      GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates)
+      GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates) < payload.search_radius
     );
   };
+
+  const PostGuess = async (user: User, pin: Pin, distance: number):Promise<Response|void> => {
+    try {
+    if (!user) throw 'Not logged in'; //error
+    if (!pin) throw 'Can not get pin';
+
+    const uid = user.uid;
+    const {poi_id, search_radius} = pin;
+    const data: {
+      distance: number;
+      poi_id: number | undefined;
+      uid: string;
+      search_radius: number | undefined;
+      } = {
+        distance,
+        poi_id,
+        uid: uid,
+        search_radius,
+      };
+      const response: Response = await fetch(
+        `${BASE_URL}/api/user_profiles/completed_poi`,
+        {
+          credentials: "include",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleSubmitGuessOnClick = async (user: User, pin:Pin | null, userCoordinates: Coordinates | null) => {
+    try {
+      if (!user) throw 'Not logged in'
+      if (!pin) throw 'No pin to track';
+      if (!userCoordinates) throw 'No user coordinates'
+      
+      const pinCoordinates: Coordinates = {
+        longitude: pin.exact_longitude,
+        latitude: pin.exact_latitude
+      }
+      const distanceToPin:number = parseFloat(GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates).toFixed(3));
+  
+      await PostGuess(user, payload, distanceToPin);
+      updatePoi();
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
+  const updatePoi = () => {
+    setCollect(true);
+    setShowPopup && setShowPopup(false);
+    setGuessPoiPosition &&
+    setGuessPoiPosition({
+      latitude: payload.exact_latitude,
+      longitude: payload.exact_longitude,
+    });
+    payload.is_completed = true;
+    if (!importantPinContext) return;
+    if (!importantPinContext.setGuessedPin) return;
+    importantPinContext.setGuessedPin(payload);
+  }
+
 
   // RETURN
   return (
@@ -65,12 +138,7 @@ export function PoiCard({
         <div className="flex flex-wrap gap-2 text-sm mb-2">
           {payload.tags.map(
             (tag: string): JSX.Element => (
-              <a
-                key={tag + id}
-                className="rounded-full p-1 bg-blue-500 min-w-[80px] text-center"
-              >
-                {tag}
-              </a>
+              <Badge key={tag + id}>{tag}</Badge>
             )
           )}
         </div>
@@ -82,37 +150,27 @@ export function PoiCard({
           <Button
             id={`${id}`}
             className="w-full mt-4 rounded-lg"
-            disabled={
-              userCoordinates
-                ? payload.search_radius <
-                  GetDistanceFromCoordinatesToMeters(
-                    userCoordinates,
-                    pinCoordinates
-                  )
-                : false
-            }
-            onClick={() => {
+            
+            onClick={():void  => {
               if (user) {
-                setCollect(true);
-                setShowPopup && setShowPopup(undefined);
-                setGuessPoiPosition &&
-                  setGuessPoiPosition({
-                    latitude: payload.exact_latitude,
-                    longitude: payload.exact_longitude,
-                  });
-                payload.is_completed = true;
+                if (!handleCheckUserInSearchZone()) {
+                  if (importantPinContext) {
+                    importantPinContext.setTrackingPin(payload);
+                  }
+                } else {
+                  void handleSubmitGuessOnClick(user, payload, userCoordinates)
+                  }
               } else {
                 alert("please login");
               }
             }}
           >
-            {handleCheckUserInSearchZone()
-              ? "Not in search zone"
+            {!handleCheckUserInSearchZone()
+              ? "Too far! Track this pin?"
               : "Guess and collect"}
           </Button>
         )}
       </article>
-          <HintModal pin = {payload} userCoord={userCoordinates}></HintModal>
     </section>
   );
 }
