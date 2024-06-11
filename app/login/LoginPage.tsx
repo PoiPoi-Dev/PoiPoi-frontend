@@ -83,8 +83,10 @@ const LoginPage: React.FC = () => {
   const renderSignOutLayout = ():React.JSX.Element => {
     return (
       <>
-      Would you like to sign out?
-      <Button onClick={(): void => void handleLogout()}>Sign out</Button>
+        Would you like to sign out?
+        <div>
+          <Button onClick={(): void => void handleLogout()}>Sign out</Button>
+        </div>
       </>
     )
   }
@@ -176,7 +178,7 @@ const LoginPage: React.FC = () => {
 
   const renderLoginWindow = (status: number) => {
     return (
-      <div className="absolute bg-white border rounded shadow-lg mt-2 p-2 top-[100px] left-0 z-[1000]">
+      <div className="bg-white border rounded shadow-lg mt-2 p-2">
         {
           (status === 2) ? renderSignOutLayout()
           : (status === 1) ?  renderSignInWindow()
