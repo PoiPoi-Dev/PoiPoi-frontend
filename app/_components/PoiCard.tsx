@@ -2,7 +2,6 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { useContext, useState } from "react";
 import { User } from "firebase/auth";
-import { User } from "firebase/auth";
 import { Pin } from "../_utils/global";
 import { AuthContext } from "./useContext/AuthContext";
 import { ImportantPinContext } from "./useContext/ImportantPinContext";
@@ -10,9 +9,6 @@ import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
-import { Badge } from "./ui/badge";
-
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 import { Badge } from "./ui/badge";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -27,8 +23,6 @@ export function PoiCard({
   id: number;
   payload: Pin;
   setGuessPoiPosition?: (arg0: Coordinates | null) => void;
-  setShowPopup?: (arg0: boolean) => void;
-  userCoordinates: Coordinates | null;
   setShowPopup?: (arg0: boolean) => void;
   userCoordinates: Coordinates | null;
 }): JSX.Element {
@@ -145,7 +139,6 @@ export function PoiCard({
           {payload.tags.map(
             (tag: string): JSX.Element => (
               <Badge key={tag + id}>{tag}</Badge>
-              <Badge key={tag + id}>{tag}</Badge>
             )
           )}
         </div>
@@ -157,8 +150,6 @@ export function PoiCard({
           <Button
             id={`${id}`}
             className="w-full mt-4 rounded-lg"
-            
-            onClick={():void  => {
             
             onClick={():void  => {
               if (user) {
@@ -174,8 +165,6 @@ export function PoiCard({
               }
             }}
           >
-            {!handleCheckUserInSearchZone()
-              ? "Too far! Track this pin?"
             {!handleCheckUserInSearchZone()
               ? "Too far! Track this pin?"
               : "Guess and collect"}

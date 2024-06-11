@@ -43,8 +43,6 @@ function MapInner() {
   const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<number|null> (null);
   
   
-  
-  
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
   // Default camera map when user opens the app
@@ -136,11 +134,6 @@ function MapInner() {
       userCoordinates,
       pinCoordinates
     );
-    };
-    const distance = GetDistanceFromCoordinatesToMeters(
-      userCoordinates,
-      pinCoordinates
-    );
     setDistanceToTrackingPin(distance);
   };
 
@@ -222,32 +215,6 @@ function MapInner() {
             distanceToTrackingPin={distanceToTrackingPin}
           />
         </div>
-      <div className="absolute top-0 left-0 z-50 w-screen pt-4 gap-4 flex flex-col">
-        {/* HEADER CONTROLLER */}
-        <div className="flex flex-col gap-4 w-full">
-          <div className="px-4">
-            <MainQuest />
-          </div>
-          <FilterButton
-            filters={filters}
-            selectedFilters={selectedFilters}
-            setSelectedFilters={setSelectedFilters}
-          />
-          {/* <HintButton poi_id={selectedPoiId} /> */}
-        </div>
-
-        {/* ISLAND CONTROLLER */}
-        <PoiPhotoToggle pins={poiData} setShowPopup={setShowPopup} setSelectedPoiId={setSelectedPoiId} showPopup={showPopup} />
-
-        {/* FOOTER CONTROLLER */}
-        <div className="fixed bottom-0 left-0 w-full flex gap-2 h-16 bg-white justify-center items-end">
-          <GameControls
-            pins={poiData}
-            trackingPin={closestNotCompletedPin}
-            userCoordinates={userCoordinates}
-            distanceToTrackingPin={distanceToTrackingPin}
-          />
-        </div>
       </div>
 
       {/* MAP CANVAS */}
@@ -278,7 +245,6 @@ function MapInner() {
           })}
 
         {/* Popup */}
-        {showPopup && selectedPoiId && (
         {showPopup && selectedPoiId && (
           <PopoverCard
             poiData={poiData}
