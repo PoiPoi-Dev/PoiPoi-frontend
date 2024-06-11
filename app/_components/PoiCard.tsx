@@ -7,6 +7,7 @@ import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
+import HintModal from "./HintModal";
 
 export function PoiCard({
   id,
@@ -111,6 +112,7 @@ export function PoiCard({
           </Button>
         )}
       </article>
+          <HintModal pin = {payload} userCoord={userCoordinates}></HintModal>
     </section>
   );
 }

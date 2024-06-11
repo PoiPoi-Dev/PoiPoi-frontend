@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Pin } from "../_utils/global";
 import { Coordinates, GetDistanceFromCoordinatesToMeters } from "../_utils/coordinateMath";
-import HintModal from "./HintModal"; // Import HintModal
 import { getAuthService } from "@/config/firebaseconfig";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-const THRESHOLD_DISTANCE = 50; // Define the threshold distance (in meters) Currently arbitrary. Maybe it should be a percentage or defined in the schema for each POI as well.
 
 interface SubmitGuessButtonProps {
   trackingPin: Pin | null;
