@@ -132,7 +132,6 @@ export function PoiCard({
     userCoordinates: Coordinates | null
   ) => {
     try {
-      console.log("handleGetHintOnClick accessed");
       if (!user) throw "Not logged in";
       if (!pin) throw "No pin to track";
       if (!userCoordinates) throw "No user coordinates";
@@ -147,7 +146,7 @@ export function PoiCard({
   const GetHints = async (user: User, pin: Pin): Promise<Response | void> => {
     try {
       if (!user) throw "Not logged in"; //error
-      if (!pin) throw "Can not get pin";
+      if (!pin) throw "Can not get hint";
 
       const { poi_id } = pin;
       const response: Response = await fetch(`${BASE_URL}/api/hints/${poi_id}`);
@@ -167,7 +166,7 @@ export function PoiCard({
         arrayOfContent.push(data[i].content);
       }
       console.log(arrayOfContent);
-      return response;
+      //return response;
     } catch (error) {
       console.error(error);
     }
@@ -218,7 +217,6 @@ export function PoiCard({
                     }
                   } else {
                     //display hint from poi id here
-                    console.log("hint button pressed!");
                     void handleGetHintOnClick(user, payload, userCoordinates);
                   }
                 } else {
