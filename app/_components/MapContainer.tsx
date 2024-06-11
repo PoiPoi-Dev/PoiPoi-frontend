@@ -25,6 +25,7 @@ import TrackingPinContextProvider, {
 } from "./useContext/TrackingPinContext";
 import MainQuest from "./MainQuest";
 import { levelAndXp } from "../_utils/global";
+import Progressbar from "./Progressbar";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -51,9 +52,9 @@ function MapInner() {
   >(null);
 
   const [levelAndXp, setLevelAndXp] = useState<levelAndXp>({
-    totalXp: 0,
+    totalXp: 150,
     level: 1,
-    xpToNextLevel: 200,
+    xpToNextLevel: 50,
   });
 
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
@@ -233,7 +234,7 @@ function MapInner() {
           <div className="px-4">
             <MainQuest />
           </div>
-          <Proggressbar levelAndXp={levelAndXp} />
+          <Progressbar levelAndXp={levelAndXp} />
           <FilterButton
             filters={filters}
             selectedFilters={selectedFilters}

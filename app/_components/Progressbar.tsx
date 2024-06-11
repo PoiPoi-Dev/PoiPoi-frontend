@@ -3,17 +3,15 @@ import { levelAndXp } from "../_utils/global";
 
 const Proggressbar: React.FC<{ levelAndXp: levelAndXp }> = ({ levelAndXp }) => {
   const level: number = levelAndXp.level;
-  const totalXp: number = levelAndXp.totalXp;
-  const totalExpInLevel: number = totalXp + levelAndXp.xpToNextLevel;
+  const currentUserXp: number = levelAndXp.totalXp;
+  const totalExpInLevel: number = currentUserXp + levelAndXp.xpToNextLevel;
+  const percentage: number = (currentUserXp / totalExpInLevel) * 100;
+  console.log(percentage);
 
   return (
-    <div className="absolute top-1 right-1 z-100 flex gap-2">
-      {level}
-      <Progress
-        data-state="complete"
-        data-value={totalXp}
-        data-max={totalExpInLevel}
-      />
+    <div className="fixed bot-12 left-1 z-100 flex gap-2">
+      <p>lvl: {level}</p>
+      <Progress className="w-40" value={percentage} />
     </div>
   );
 };
