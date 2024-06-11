@@ -1,6 +1,7 @@
 import { MdLeaderboard } from "react-icons/md";
 import { MdAccountCircle } from "react-icons/md";
 import { ButtonIconCircle } from "./ui/MenuIconCircle";
+import { FaMapLocationDot } from "react-icons/fa6";
 import Poidex from "./Poidex";
 // import SubmitGuessButton from "./SubmitGuessButton";
 import { Coordinates } from "../_utils/coordinateMath";
@@ -16,17 +17,16 @@ interface GameControlsProps {
 
 const GameControls = ({
   pins,
-  // trackingPin,             //For future use by other game controls
-  // userCoordinates,
-  // distanceToTrackingPin,
-}: GameControlsProps): React.JSX.Element => {
+}: // trackingPin,             //For future use by other game controls
+// userCoordinates,
+// distanceToTrackingPin,
+GameControlsProps): React.JSX.Element => {
   return (
-    <div>
-      {/* <SubmitGuessButton
-       trackingPin={trackingPin}
-       userCoordinates={userCoordinates}
-       distanceToTrackingPin={distanceToTrackingPin}
-       /> */}
+    <div className="flex justify-between min-w-[320px] max-w-full">
+      <ButtonIconCircle text="Menu" onClick={() => alert("leaderboard")}>
+        <FaMapLocationDot size={24} />
+      </ButtonIconCircle>
+
       <Poidex pins={pins} />
 
       <ButtonIconCircle text="leaderboard" onClick={() => alert("leaderboard")}>
