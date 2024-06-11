@@ -9,6 +9,7 @@ import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
+import { Badge } from "./ui/badge";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -22,7 +23,7 @@ export function PoiCard({
   id: number;
   payload: Pin;
   setGuessPoiPosition?: (arg0: Coordinates | null) => void;
-  setShowPopup?: (arg0: undefined) => void;
+  setShowPopup?: (arg0: boolean) => void;
   userCoordinates: Coordinates | null;
 }): JSX.Element {
   // USE STATE
@@ -101,7 +102,7 @@ export function PoiCard({
 
   const updatePoi = () => {
     setCollect(true);
-    setShowPopup && setShowPopup(undefined);
+    setShowPopup && setShowPopup(false);
     setGuessPoiPosition &&
     setGuessPoiPosition({
       latitude: payload.exact_latitude,
@@ -134,12 +135,7 @@ export function PoiCard({
         <div className="flex flex-wrap gap-2 text-sm mb-2">
           {payload.tags.map(
             (tag: string): JSX.Element => (
-              <a
-                key={tag + id}
-                className="rounded-full p-1 bg-blue-500 min-w-[80px] text-center"
-              >
-                {tag}
-              </a>
+              <Badge key={tag + id}>{tag}</Badge>
             )
           )}
         </div>

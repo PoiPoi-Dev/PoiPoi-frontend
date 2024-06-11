@@ -94,10 +94,6 @@ function SubmitGuessButton({
     }
   };
 
-  const handleButtonTextRender = (): string => {
-    return "Submit your answer?";
-  };
-
   return (
     <div
       className="fixed bottom-20 left-0 w-full h-20 flex justify-center items-center"
@@ -108,7 +104,7 @@ function SubmitGuessButton({
         disabled={!isActiveState}
         onClick={(): void => void handleSubmitGuessOnClick(trackingPin, userCoordinates)}
       >
-        {handleButtonTextRender()}
+        Submit your answer?
       </Button>
     </div>
   );

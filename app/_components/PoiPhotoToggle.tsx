@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Button } from "./ui/button";
 import { Pin } from "../_utils/global";
 import {
   Coordinates,
@@ -9,25 +8,55 @@ import Image from "next/image";
 
 interface PoiPhotoToggleProps {
   pins: Pin[];
+  showPopup: boolean;
+  setShowPopup: (arg0: boolean) => void;
+  setSelectedPoiId: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
-const PoiPhotoToggle = ({ pins }: PoiPhotoToggleProps): React.JSX.Element => {
+const PoiPhotoToggle = ({
+  pins,
+  showPopup,
+  setShowPopup,
+  setSelectedPoiId,
+}: PoiPhotoToggleProps): React.JSX.Element => {
+  // USE STATE
   const [trackingPin, setTrackingPin] = useState<Pin | null>(null);
   const [distanceToPin, setDistanceToPin] = useState<number>(0);
   const [isActiveState, setIsActiveState] = useState<boolean>(false);
-  const [showPhoto, setShowPhoto] = useState<boolean>(true);
 
+  // USE EFFECT
   useEffect(() => {
     const id = navigator.geolocation.watchPosition((position) => {
       handleTrackingPinAndDistanceToPin(position.coords);
     });
     return () => navigator.geolocation.clearWatch(id);
-  }, [pins]);
+  }, [pins, trackingPin?.is_completed]);
 
   useEffect(() => {
     if (!trackingPin) return;
     setIsActiveState(isWithinSearchZone());
   }, [trackingPin, distanceToPin]);
+
+  // HANDLER FUNCTION
+  const handleRenderPhoto = () => {
+    return showPopup ? null : (
+      <div className="relative flex flex-col items-center">
+        {trackingPin && isActiveState && (
+          <Image
+            src={trackingPin.img_url}
+            alt={trackingPin.title}
+            width={300}
+            height={400}
+            className="fixed right-2.5 bottom-52 object-cover w-16 h-16 border-solid border-2 border-white rounded-xl z-100"
+            onClick={() => {
+              setSelectedPoiId(trackingPin.poi_id);
+              setShowPopup(true);
+            }}
+          />
+        )}
+      </div>
+    );
+  };
 
   const handleTrackingPinAndDistanceToPin = (
     userCoords: GeolocationCoordinates
@@ -66,37 +95,8 @@ const PoiPhotoToggle = ({ pins }: PoiPhotoToggleProps): React.JSX.Element => {
     else return false;
   };
 
-  return (
-    <div
-      className="fixed inset-0 flex items-end justify-center pointer-events-none z-50 bottom-0 pb-40"
-      style={{ bottom: "40px" }}
-    >
-      {isActiveState && (
-        <div
-          className={`relative flex flex-col items-center ${
-            showPhoto ? "bg-white p-4 border rounded shadow-lg" : ""
-          } pointer-events-auto`}
-        >
-          {showPhoto && trackingPin && (
-            <Image
-              src={trackingPin.img_url}
-              alt={trackingPin.title}
-              width={300}
-              height={400}
-              sizes="(max-width: 300px) 100vw, 300px"
-              className="object-cover h-[460px] border-8 border-white mb-2"
-            />
-          )}
-          <Button
-            className="mt-2 absolute bottom-0 z-[999]"
-            onClick={() => setShowPhoto(!showPhoto)}
-          >
-            {showPhoto ? "Show Map" : "Show Photo"}
-          </Button>
-        </div>
-      )}
-    </div>
-  );
+  // RETURN
+  return <>{isActiveState ? handleRenderPhoto() : null}</>;
 };
 
 export default PoiPhotoToggle;

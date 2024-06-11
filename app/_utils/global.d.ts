@@ -30,7 +30,7 @@ export interface Hint {
 
 export interface MarkerContainerProps {
   pin: Pin;
-  setShowPopup: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setShowPopup: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedPoiId: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
