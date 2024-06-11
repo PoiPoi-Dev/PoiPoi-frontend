@@ -12,7 +12,7 @@ const PopoverCard = ({
 }: {
   poiData: Pin[];
   selectedPoiId: number;
-  setShowPopup?: (arg0: boolean) => void;
+  setShowPopup: (arg0: boolean) => void;
   setGuessPoiPosition?: (arg0: Coordinates | null) => void;
   userCoordinates?: Coordinates | null;
 }) => {

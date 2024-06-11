@@ -1,4 +1,4 @@
-import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "./ui/drawer";
+import { Drawer, DrawerContent, DrawerTrigger } from "./ui/drawer";
 import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
@@ -21,7 +21,7 @@ const GuessDistanceModal = ({
           <Button>Next</Button>
         </DrawerTrigger>
         <DrawerContent>
-          <Button onClick={() => setGuessPoiPosition(null)}>Next</Button>
+          <Button onClick={() => setGuessPoiPosition(null)}>Done</Button>
           <p>
             distance:
             {GetDistanceFromCoordinatesToMeters(

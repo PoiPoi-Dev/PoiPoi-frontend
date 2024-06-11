@@ -10,11 +10,6 @@ interface PoidexProps {
 
 const Poidex = ({ pins }: PoidexProps): React.JSX.Element => {
   const [showPoidex, setShowPoidex] = useState<boolean>(false);
-  const [selectedPoi, setSelectedPoi] = useState<Pin | null>(null);
-
-  const handlePoiClick = (poi: Pin) => {
-    setSelectedPoi(poi);
-  };
 
   return (
     <>
@@ -28,8 +23,6 @@ const Poidex = ({ pins }: PoidexProps): React.JSX.Element => {
       {showPoidex ? (
         <PoidexModal
           pins={pins}
-          onPoiClick={handlePoiClick}
-          selectedPoi={selectedPoi}
           setShowPoidex={setShowPoidex}
         />
       ) : null}
