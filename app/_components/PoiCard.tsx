@@ -138,7 +138,7 @@ export function PoiCard({
       if (!pin) throw "No pin to track";
       if (!userCoordinates) throw "No user coordinates";
 
-      await GetHints(user, payload);
+      await getHints(user, payload);
       updatePoiHint();
     } catch (error) {
       console.error("Error", error);
@@ -150,7 +150,7 @@ export function PoiCard({
   };
 
   //get hints
-  const GetHints = async (user: User, pin: Pin): Promise<Response | void> => {
+  const getHints = async (user: User, pin: Pin): Promise<Response | void> => {
     try {
       if (!user) throw "Not logged in"; //error
       if (!pin) throw "Can not get hint";
@@ -168,9 +168,9 @@ export function PoiCard({
         user_id: number;
         hint_id: number;
       }[];
-      const arrayOfContent: string[] = [];
+      const arrayOfContent: string[] = new Array(data.length);
       for (let i = 0; i < data.length; i++) {
-        arrayOfContent.push(data[i].content);
+        arrayOfContent[i] = data[i].content;
       }
       setHints(arrayOfContent);
       //return response;
@@ -216,17 +216,17 @@ export function PoiCard({
               id={`${id}`}
               className="w-full mt-4 rounded-lg"
               onClick={(): void => {
-                if (user) {
-                  if (!handleCheckUserInSearchZone()) {
-                    if (trackingPinContext) {
-                      trackingPinContext.setTrackingPin(payload);
-                      setShowPopup && setShowPopup(false);
-                    }
-                  } else {
-                    void handleGetHintOnClick(user, payload, userCoordinates);
+                if (!user) {
+                  alert("please login");
+                  return;
+                }
+                if (!handleCheckUserInSearchZone()) {
+                  if (trackingPinContext) {
+                    trackingPinContext.setTrackingPin(payload);
+                    setShowPopup && setShowPopup(false);
                   }
                 } else {
-                  alert("please login");
+                  void handleGetHintOnClick(user, payload, userCoordinates);
                 }
               }}
             >
@@ -248,21 +248,17 @@ export function PoiCard({
               id={`${id}`}
               className="w-full mt-4 rounded-lg"
               onClick={(): void => {
-                if (user) {
-                  if (!handleCheckUserInSearchZone()) {
-                    if (trackingPinContext) {
-                      trackingPinContext.setTrackingPin(payload);
-                      setShowPopup && setShowPopup(false);
-                    }
-                  } else {
-                    void handleSubmitGuessOnClick(
-                      user,
-                      payload,
-                      userCoordinates
-                    );
+                if (!user) {
+                  alert("please login");
+                  return;
+                }
+                if (!handleCheckUserInSearchZone()) {
+                  if (trackingPinContext) {
+                    trackingPinContext.setTrackingPin(payload);
+                    setShowPopup && setShowPopup(false);
                   }
                 } else {
-                  alert("please login");
+                  void handleSubmitGuessOnClick(user, payload, userCoordinates);
                 }
               }}
             >
