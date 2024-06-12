@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Pin } from "../_utils/global";
-import {
-  Coordinates,
-  GetDistanceFromCoordinatesToMeters,
-} from "../_utils/coordinateMath";
-
+import { Coordinates, GetDistanceFromCoordinatesToMeters } from "../_utils/coordinateMath";
 import { getAuthService } from "@/config/firebaseconfig";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
