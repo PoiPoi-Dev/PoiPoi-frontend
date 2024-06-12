@@ -39,7 +39,7 @@ export function PoiCard({
   };
   //hint useStates
   const [isOpen, setIsOpen] = useState(false);
-  const [hints, setHints] = useState<string[]>([]);
+  const [hints, setHints] = useState<string[] | undefined[]>([]);
   // HANDLERS FUNCTIONS
   const handleCheckUserInSearchZone = (): boolean => {
     if (!userCoordinates) return false;
@@ -168,7 +168,7 @@ export function PoiCard({
         user_id: number;
         hint_id: number;
       }[];
-      const arrayOfContent: string[] = new Array(data.length);
+      const arrayOfContent: string[] |undefined[] = new Array(data.length);
       for (let i = 0; i < data.length; i++) {
         arrayOfContent[i] = data[i].content;
       }
