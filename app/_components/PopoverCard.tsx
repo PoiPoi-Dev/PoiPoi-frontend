@@ -8,13 +8,15 @@ const PopoverCard = ({
   selectedPoiId,
   setShowPopup,
   userCoordinates,
-  setScore
+  setScore,
+  setCheckLevel,
 }: {
   poiData: Pin[];
   selectedPoiId: number;
   setShowPopup: (arg0: boolean) => void;
   userCoordinates?: Coordinates | null;
-  setScore: (arg0: number|null) => void;
+  setScore: (arg0: number | null) => void;
+  setCheckLevel: (arg0: boolean) => void;
 }) => {
   return (
     <div className="fixed top-0 left-0 w-screen h-screen">
@@ -27,6 +29,7 @@ const PopoverCard = ({
               payload={poiData.filter((pin) => pin.poi_id === selectedPoiId)[0]}
               userCoordinates={userCoordinates}
               setScore={setScore}
+              setCheckLevel={setCheckLevel}
             />
           )}
         </PopoverContent>

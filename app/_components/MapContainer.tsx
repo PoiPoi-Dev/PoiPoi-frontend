@@ -68,6 +68,7 @@ function MapInner() {
     totalXp: 0,
     xpToNextLevel: 200,
   });
+  const [checkLevel, setCheckLevel] = useState<boolean>(false);
   const [userCoordinatesAtMomentOfGuess, setUserGuessCoord] = useState<Coordinates | null>(null);
 
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
@@ -99,6 +100,12 @@ function MapInner() {
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
   }, [closestNotCompletedPin, userCoordinates]);
 
+  //after each guess
+  useEffect(() => {
+    void handleLevelAndXp();
+  }, [checkLevel]);
+
+  //NOTE: upon first load, we should refacor BE so that the Data gets send when loggin in.
   useEffect(() => {
     if (!importantPinContext?.guessedPin) {
       setUserGuessCoord(null)
@@ -108,6 +115,12 @@ function MapInner() {
     setUserGuessCoord(currentUserCoordinates)
   },[importantPinContext?.guessedPin]);
 
+  //after each guess
+  useEffect(() => {
+    void handleLevelAndXp();
+  }, [checkLevel]);
+
+  //NOTE: upon first load, we should refacor BE so that the Data gets send when loggin in.
   useEffect(() => {
     void handleLevelAndXp();
   }, []);
@@ -260,6 +273,7 @@ function MapInner() {
           {/* <HintButton poi_id={selectedPoiId} /> */}
         </div>
 
+        {/* Progressbar */}
         <Progressbar levelAndXp={levelAndXp} />
 
         {/* ISLAND CONTROLLER */}
@@ -315,6 +329,7 @@ function MapInner() {
         {/* Popup */}
         {showPopup && selectedPoiId && (
           <PopoverCard
+            setCheckLevel={setCheckLevel}
             poiData={poiData}
             selectedPoiId={selectedPoiId}
             setShowPopup={setShowPopup}

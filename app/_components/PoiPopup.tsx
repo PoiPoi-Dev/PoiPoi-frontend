@@ -12,13 +12,15 @@ export default function PoiPopup({
   payload,
   setShowPopup,
   userCoordinates,
-  setScore
+  setScore,
+  setCheckLevel,
 }: {
   id: number;
   payload: Pin;
   setShowPopup: (arg0: boolean) => void;
   userCoordinates: Coordinates | null;
-  setScore: (arg0: number|null) => void;
+  setScore: (arg0: number | null) => void;
+  setCheckLevel: (arg0: boolean) => void;
 }): JSX.Element {
   // RETURN
   return (
@@ -32,6 +34,7 @@ export default function PoiPopup({
             setShowPopup={setShowPopup}
             userCoordinates={userCoordinates}
             setScore={setScore}
+            setCheckLevel={setCheckLevel}
           />
         </DialogContent>
       </Dialog>
