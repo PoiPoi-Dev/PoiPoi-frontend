@@ -10,6 +10,7 @@ import {
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
 import { Badge } from "./ui/badge";
+import { Toaster, toast } from "sonner";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -168,7 +169,7 @@ export function PoiCard({
         user_id: number;
         hint_id: number;
       }[];
-      const arrayOfContent: string[] |undefined[] = new Array(data.length);
+      const arrayOfContent: string[] | undefined[] = new Array(data.length);
       for (let i = 0; i < data.length; i++) {
         arrayOfContent[i] = data[i].content;
       }
@@ -212,6 +213,7 @@ export function PoiCard({
           <p className="truncate">{payload.description}</p>
         ) : (
           <div>
+            <Toaster></Toaster>
             <Button
               id={`${id}`}
               className="w-full mt-4 rounded-lg"
@@ -226,7 +228,9 @@ export function PoiCard({
                     setShowPopup && setShowPopup(false);
                   }
                 } else {
+                  //may be empty bc still fetching from handleGetHintOnClick
                   void handleGetHintOnClick(user, payload, userCoordinates);
+                  toast(hints);
                 }
               }}
             >
@@ -234,7 +238,7 @@ export function PoiCard({
                 ? "Hints only available within zone"
                 : "Hint"}
             </Button>
-            {isOpen && (
+            {/* {isOpen && (
               <div className="absolute bg-white border rounded shadow-lg mt-2 p-2 z-10 top-0">
                 {hints.map((hint, index) => (
                   <div key={index} className="flex items-center space-x-2">
@@ -243,7 +247,13 @@ export function PoiCard({
                   </div>
                 ))}
               </div>
-            )}
+            )} */}
+            {/* <>
+              <Toaster></Toaster>
+              <button onClick={() => toast("My first toast")}>
+                Give me a toast
+              </button>
+            </> */}
             <Button
               id={`${id}`}
               className="w-full mt-4 rounded-lg"
