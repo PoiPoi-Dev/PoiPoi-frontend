@@ -19,7 +19,7 @@ const GuessDistanceModal = ({
 }) => {
   const importantPinContext = useContext(ImportantPinContext);
   const [distanceToPin, setDistancePin] = useState<number>(0);
-  const [hint, setHint] = useState<string>(''); // State to manage hint input
+  const [hint, setHint] = useState<string>(''); 
   const drawerRef = useRef<HTMLButtonElement>(null); // Ref for the Done button
   const thresholdDistance = 20;
 
@@ -101,8 +101,8 @@ const GuessDistanceModal = ({
               <p>{`(Be sure to be helpful! But don't just give it away!)`}</p>
               <input
                 type="text"
-                value={hint} // Use state value for input
-                onChange={(e) => setHint(e.target.value)} // Update state on change
+                value={hint} 
+                onChange={(e) => setHint(e.target.value)}
                 className="border p-2 mt-2 w-full"
               />
               <div className="mt-4 flex justify-end">
