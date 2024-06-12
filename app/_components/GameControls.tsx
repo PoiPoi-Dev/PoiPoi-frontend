@@ -7,6 +7,7 @@ import Poidex from "./Poidex";
 import { Coordinates } from "../_utils/coordinateMath";
 
 import { Pin } from "../_utils/global";
+import Link from "next/link";
 
 interface GameControlsProps {
   pins: Pin[];
@@ -22,20 +23,26 @@ const GameControls = ({
 // distanceToTrackingPin,
 GameControlsProps): React.JSX.Element => {
   return (
-    <div className="flex justify-between min-w-[320px] max-w-full">
-      <ButtonIconCircle text="Menu" onClick={() => alert("leaderboard")}>
-        <FaMapLocationDot size={24} />
-      </ButtonIconCircle>
+    <div className="flex justify-between min-w-[360px] max-w-full">
+      <Link href={"/map"}>
+        <ButtonIconCircle text="Map">
+          <FaMapLocationDot size={24} />
+        </ButtonIconCircle>
+      </Link>
 
       <Poidex pins={pins} />
 
-      <ButtonIconCircle text="leaderboard" onClick={() => alert("leaderboard")}>
-        <MdLeaderboard size={24} />
-      </ButtonIconCircle>
+      <Link href="/leaderboard">
+        <ButtonIconCircle text="leaderboard">
+          <MdLeaderboard size={24} />
+        </ButtonIconCircle>
+      </Link>
 
-      <ButtonIconCircle text="account" onClick={() => alert("account")}>
-        <MdAccountCircle size={24} />
-      </ButtonIconCircle>
+      <Link href={"/login"}>
+        <ButtonIconCircle text="account" onClick={() => alert("account")}>
+          <MdAccountCircle size={24} />
+        </ButtonIconCircle>
+      </Link>
     </div>
   );
 };

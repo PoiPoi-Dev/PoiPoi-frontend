@@ -202,10 +202,15 @@ function MapInner() {
         </div>
 
         {/* ISLAND CONTROLLER */}
-        <PoiPhotoToggle pins={poiData} setShowPopup={setShowPopup} setSelectedPoiId={setSelectedPoiId} showPopup={showPopup} />
+        <PoiPhotoToggle
+          pins={poiData}
+          setShowPopup={setShowPopup}
+          setSelectedPoiId={setSelectedPoiId}
+          showPopup={showPopup}
+        />
 
         {/* FOOTER CONTROLLER */}
-        <div className="fixed bottom-0 left-0 w-full flex gap-2 h-16 bg-white justify-center items-end">
+        <div className="fixed bottom-0 left-0 w-full flex gap-2 h-16 bg-white rounded-t-3xl justify-center items-end">
           <GameControls
             pins={poiData}
             trackingPin={closestNotCompletedPin}

@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center rounded-full justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center rounded-full justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors  shadow-xl disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -44,7 +44,9 @@ const ButtonIconCircle = React.forwardRef<HTMLButtonElement, ButtonProps>(
           ref={ref}
           {...props}
         />
-        {text ? <span className="text-xs">{text}</span> : null}
+        {text ? (
+          <span className="text-xs uppercase font-medium">{text}</span>
+        ) : null}
       </div>
     );
   }
