@@ -12,10 +12,12 @@ const GuessDistanceModal = ({
   guessPoiPosition,
   setGuessPoiPosition,
   userCoordinates,
+  score,
 }: {
   guessPoiPosition: Coordinates;
   setGuessPoiPosition: (arg0: Coordinates | null) => void;
   userCoordinates: Coordinates;
+  score: number|null;
 }) => {
   const importantPinContext = useContext(ImportantPinContext);
   const [distanceToPin, setDistancePin] = useState<number>(0);
@@ -43,6 +45,7 @@ const GuessDistanceModal = ({
       poi_id: importantPinContext?.guessedPin?.poi_id,
       content: hint,
     };
+    console.log(hintData)
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posthint`, {
@@ -75,11 +78,9 @@ const GuessDistanceModal = ({
         <DrawerTrigger asChild>
           <Button>Next</Button>
         </DrawerTrigger>
-        <DrawerContent>
-          <Button ref={drawerRef} onClick={() => setGuessPoiPosition(null)}>Done</Button>
+       
           <p>
-            distance:
-            {GetDistanceFromCoordinatesToMeters(
+          You guessed {GetDistanceFromCoordinatesToMeters(
               userCoordinates,
               guessPoiPosition
             ) > 1000
@@ -88,13 +89,13 @@ const GuessDistanceModal = ({
                     userCoordinates,
                     guessPoiPosition
                   ) / 1000
-                ).toFixed(2) + "km."
+                ).toFixed(2) + "km"
               : GetDistanceFromCoordinatesToMeters(
                   userCoordinates,
                   guessPoiPosition
-                ).toFixed(2) + "m."}
-          </p>
-          {distanceToPin < thresholdDistance ? (
+                ).toFixed(2) + "m"} away from the picture and your score is {score}! Good job!</p>
+        <DrawerContent>
+        {distanceToPin < thresholdDistance ? (
             <>
               <h2>{`Nice Guessing! How about leaving a hint for someone else?`}</h2>
               <p>{`(Be sure to be helpful! But don't just give it away!)`}</p>
@@ -116,6 +117,7 @@ const GuessDistanceModal = ({
               <p>{`(You'll be able to leave a hint if you're close enough!)`}</p>
             </>
           )}
+          <Button ref={drawerRef} onClick={() => setGuessPoiPosition(null)}>Done</Button>
         </DrawerContent>
       </Drawer>
     </div>

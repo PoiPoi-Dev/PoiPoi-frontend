@@ -12,13 +12,15 @@ export default function PoiPopup({
   payload,
   setShowPopup,
   setGuessPoiPosition,
-  userCoordinates
+  userCoordinates,
+  setScore
 }: {
   id: number;
   payload: Pin;
   setShowPopup: (arg0: boolean) => void;
   setGuessPoiPosition: (arg0: Coordinates | null) => void;
-  userCoordinates: Coordinates | null
+  userCoordinates: Coordinates | null;
+  setScore: (arg0: number|null) => void;
 }): JSX.Element {
   // RETURN
   return (
@@ -32,6 +34,7 @@ export default function PoiPopup({
             setGuessPoiPosition={setGuessPoiPosition}
             setShowPopup={setShowPopup}
             userCoordinates={userCoordinates}
+            setScore={setScore}
           />
         </DialogContent>
       </Dialog>

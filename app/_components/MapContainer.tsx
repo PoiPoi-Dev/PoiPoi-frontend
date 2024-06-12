@@ -41,7 +41,8 @@ function MapInner() {
   const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
   const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
   const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<number|null> (null);
-  
+
+  const [score, setScore] = useState<number|null>(null);
   
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
@@ -252,6 +253,7 @@ function MapInner() {
             setShowPopup={setShowPopup}
             setGuessPoiPosition={setGuessPoiPosition}
             userCoordinates={userCoordinates}
+            setScore={setScore}
           />
         )}
 
@@ -266,6 +268,7 @@ function MapInner() {
               guessPoiPosition={guessPoiPosition}
               setGuessPoiPosition={setGuessPoiPosition}
               userCoordinates={userCoordinates}
+              score={score}
             />
           </>
         )}
