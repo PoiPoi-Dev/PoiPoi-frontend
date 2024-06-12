@@ -37,7 +37,9 @@ export function PoiCard({
     latitude: search_latitude,
     longitude: search_longitude,
   };
-
+  //hint useStates
+  const [isOpen, setIsOpen] = useState(false);
+  const [hints, setHints] = useState<string[]>([]);
   // HANDLERS FUNCTIONS
   const handleCheckUserInSearchZone = (): boolean => {
     if (!userCoordinates) return false;
@@ -137,9 +139,14 @@ export function PoiCard({
       if (!userCoordinates) throw "No user coordinates";
 
       await GetHints(user, payload);
+      updatePoiHint();
     } catch (error) {
       console.error("Error", error);
     }
+  };
+  //update POI but for hints?
+  const updatePoiHint = () => {
+    setIsOpen(!isOpen);
   };
 
   //get hints
@@ -166,6 +173,7 @@ export function PoiCard({
         arrayOfContent.push(data[i].content);
       }
       console.log(arrayOfContent);
+      setHints(arrayOfContent);
       //return response;
     } catch (error) {
       console.error(error);
@@ -216,7 +224,6 @@ export function PoiCard({
                       setShowPopup && setShowPopup(false);
                     }
                   } else {
-                    //display hint from poi id here
                     void handleGetHintOnClick(user, payload, userCoordinates);
                   }
                 } else {
@@ -225,9 +232,19 @@ export function PoiCard({
               }}
             >
               {!handleCheckUserInSearchZone()
-                ? "Too far! Track this pin?"
+                ? "Hints only available within zone"
                 : "Hint"}
             </Button>
+            {isOpen && (
+              <div className="absolute bg-white border rounded shadow-lg mt-2 p-2 z-10 top-0">
+                {hints.map((hint, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <span>{index + 1}</span>
+                    <p>{hint}</p>
+                  </div>
+                ))}
+              </div>
+            )}
             <Button
               id={`${id}`}
               className="w-full mt-4 rounded-lg"
