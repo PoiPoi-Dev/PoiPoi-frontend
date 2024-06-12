@@ -32,10 +32,6 @@ const LoginPage: React.FC = () => {
     return () => {};
   }, [firebaseUser]);
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
   const handleInputChange = (e: {
     target: { name: string; value: string };
   }) => {
