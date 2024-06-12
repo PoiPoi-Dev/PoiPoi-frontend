@@ -1,73 +1,36 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { Leaderboards } from "../_utils/global";
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "../_components/ui/table";
-import FooterMenu from "../_components/FooterMenu";
+import { getLeaderboardData } from "../_utils/fetchLeaderboard";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+export default async function LeaderboardServer() {
+  const LeaderbaordData: Leaderboards[] | undefined =
+    await getLeaderboardData();
 
-const Leaderboard: React.FC = () => {
-  const [leaderboard, setLeaderboard] = useState<Leaderboards[]>([]);
-
-  useEffect(() => {
-    return () => {
-      void getLeaderboard();
-    };
-  }, []);
-
-  const getLeaderboard = async () => {
-    try {
-      const response = await fetch(`${baseUrl}/api/leaderboards`, {
-        credentials: "include",
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const resData: Leaderboards[] = (await response.json()) as Leaderboards[];
-      setLeaderboard(resData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  if (!LeaderbaordData) {
+    alert("Leaderboard currently unavailble");
+    return;
+  }
 
   return (
     <>
-      {/* LEADERBOARD */}
-      <div className="animate-fade fade-in">
-        <h1 className="text-center text-2xl font-bold text-primary bg-secondary py-4 my-0">
-          Leaderboard
-        </h1>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Rank</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Score</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {leaderboard.map((player, index) => (
-              <TableRow key={index}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{player.username}</TableCell>
-                <TableCell>{player.score}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* MENU */}
-      <FooterMenu variant="leaderboard" />
+      <h2>Leaderboard</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {LeaderbaordData.map((player, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{player.username}</td>
+              <td>{player.score}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </>
   );
-};
-
-export default Leaderboard;
+}
