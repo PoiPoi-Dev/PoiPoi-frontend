@@ -7,6 +7,8 @@ import {
 import { Button } from "./ui/button";
 import { ImportantPinContext } from "./useContext/ImportantPinContext";
 import { Pin } from "../_utils/global";
+import { Input } from "./ui/input";
+import { Label } from "@radix-ui/react-label";
 
 const GuessDistanceModal = ({
   guessPoiPosition,
@@ -17,11 +19,11 @@ const GuessDistanceModal = ({
   guessPoiPosition: Coordinates;
   setGuessPoiPosition: (arg0: Coordinates | null) => void;
   userCoordinates: Coordinates;
-  score: number|null;
+  score: number | null;
 }) => {
   const importantPinContext = useContext(ImportantPinContext);
   const [distanceToPin, setDistancePin] = useState<number>(0);
-  const [hint, setHint] = useState<string>(''); 
+  const [hint, setHint] = useState<string>("");
   const drawerRef = useRef<HTMLButtonElement>(null); // Ref for the Done button
   const thresholdDistance = 20;
 
@@ -30,13 +32,19 @@ const GuessDistanceModal = ({
     handleDistanceToPin(importantPinContext.guessedPin, userCoordinates);
   }, [importantPinContext?.guessedPin]);
 
-  const handleDistanceToPin = (guessedPin: Pin, userCoordinates: Coordinates) => {
+  const handleDistanceToPin = (
+    guessedPin: Pin,
+    userCoordinates: Coordinates
+  ) => {
     const pinCoordinates: Coordinates = {
       longitude: guessedPin.exact_longitude,
       latitude: guessedPin.exact_latitude,
     };
 
-    const distance = GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates);
+    const distance = GetDistanceFromCoordinatesToMeters(
+      userCoordinates,
+      pinCoordinates
+    );
     setDistancePin(distance);
   };
 
@@ -45,23 +53,30 @@ const GuessDistanceModal = ({
       poi_id: importantPinContext?.guessedPin?.poi_id,
       content: hint,
     };
-    console.log(hintData)
+    console.log(hintData);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posthint`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(hintData),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posthint`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(hintData),
+        }
+      );
 
       if (response.status === 201) {
-        alert('Hint submitted successfully! Now get out there and find more POIS!');
+        alert(
+          "Hint submitted successfully! Now get out there and find more POIS!"
+        );
         drawerRef.current?.click(); // Simulate clicking the Done button
       } else {
-        const responseData = await response.json() as { message?: string };
-        alert(`Failed to submit hint: ${responseData.message || 'Unknown error'}`);
+        const responseData = (await response.json()) as { message?: string };
+        alert(
+          `Failed to submit hint: ${responseData.message || "Unknown error"}`
+        );
       }
     } catch (error) {
       alert(`Error submitting hint: ${(error as Error).message}`);
@@ -73,51 +88,95 @@ const GuessDistanceModal = ({
   };
 
   return (
-    <div className="absolute bottom-60 flex w-screen justify-center items-center">
+    <div className="fixed bottom-40 flex w-screen justify-center items-center z-50">
       <Drawer>
-        <DrawerTrigger asChild>
-          <Button>Next</Button>
-        </DrawerTrigger>
-       
-          <p>
-          You guessed {GetDistanceFromCoordinatesToMeters(
-              userCoordinates,
-              guessPoiPosition
-            ) > 1000
-              ? (
-                  GetDistanceFromCoordinatesToMeters(
+        <div className="w-1/2 bg-white p-4 rounded-2xl">
+          <p className="mb-4">
+            You guessed{" "}
+            <span className="text-primary font-semibold">
+              {GetDistanceFromCoordinatesToMeters(
+                userCoordinates,
+                guessPoiPosition
+              ) > 1000
+                ? (
+                    GetDistanceFromCoordinatesToMeters(
+                      userCoordinates,
+                      guessPoiPosition
+                    ) / 1000
+                  ).toFixed(2) + "km"
+                : GetDistanceFromCoordinatesToMeters(
                     userCoordinates,
                     guessPoiPosition
-                  ) / 1000
-                ).toFixed(2) + "km"
-              : GetDistanceFromCoordinatesToMeters(
-                  userCoordinates,
-                  guessPoiPosition
-                ).toFixed(2) + "m"} away from the picture and your score is {score}! Good job!</p>
+                  ).toFixed(2) + "m"}{" "}
+            </span>
+            away from the picture and your score is{" "}
+            <span className="text-primary font-semibold">{score}</span>! Good
+            job!
+          </p>
+          <DrawerTrigger asChild>
+            <Button className="w-full">Next</Button>
+          </DrawerTrigger>
+        </div>
         <DrawerContent>
-        {distanceToPin < thresholdDistance ? (
-            <>
-              <h2>{`Nice Guessing! How about leaving a hint for someone else?`}</h2>
-              <p>{`(Be sure to be helpful! But don't just give it away!)`}</p>
-              <input
+          {distanceToPin < thresholdDistance ? (
+            <div className="p-4">
+              <p className="my-2">
+                Nice Guessing! How about leaving a hint for someone else? Be
+                sure to be helpful! But don&apos;t just give it away!
+              </p>
+              <Label htmlFor="hint">Your hint: </Label>
+              <Input
+                id="hint"
                 type="text"
-                value={hint} 
+                placeholder="Leave a Hint"
+                value={hint}
                 onChange={(e) => setHint(e.target.value)}
                 className="border p-2 mt-2 w-full"
               />
-              <div className="mt-4 flex justify-end">
-                <Button onClick={handleSubmitClick} className="mr-2">
+              <Input
+                type="text"
+                value={hint}
+                onChange={(e) => setHint(e.target.value)}
+              />
+              <div className="flex flex-col gap-4 mt-4 justify-end">
+                <Button
+                  ref={drawerRef}
+                  onClick={() => {
+                    handleSubmitClick;
+                    setGuessPoiPosition(null);
+                  }}
+                  className="w-full"
+                >
                   Submit Hint
                 </Button>
+                <Button
+                  variant={"link"}
+                  ref={drawerRef}
+                  onClick={() => {
+                    setGuessPoiPosition(null);
+                  }}
+                  className="w-full"
+                >
+                  Maybe next time
+                </Button>
               </div>
-            </>
+            </div>
           ) : (
-            <>
+            <div className="p-4">
               <h2>{`Good effort! Try to get within 20 meters next time!`}</h2>
               <p>{`(You'll be able to leave a hint if you're close enough!)`}</p>
-            </>
+              <Button
+                variant={"link"}
+                ref={drawerRef}
+                onClick={() => {
+                  setGuessPoiPosition(null);
+                }}
+                className="w-full"
+              >
+                Close
+              </Button>
+            </div>
           )}
-          <Button ref={drawerRef} onClick={() => setGuessPoiPosition(null)}>Done</Button>
         </DrawerContent>
       </Drawer>
     </div>
