@@ -39,27 +39,35 @@ export function PoiCard({
     latitude: search_latitude,
     longitude: search_longitude,
   };
-
+  //hint useStates
+  const [isOpen, setIsOpen] = useState(false);
+  const [hints, setHints] = useState<string[] | undefined[]>([]);
   // HANDLERS FUNCTIONS
   const handleCheckUserInSearchZone = (): boolean => {
     if (!userCoordinates) return false;
     return (
-      GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates) < payload.search_radius
+      GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates) <
+      payload.search_radius
     );
   };
+  
+  const PostGuess = async (
+    user: User,
+    pin: Pin,
+    distance: number
+  ): Promise<Response | void> => {
 
-  const PostGuess = async (user: User, pin: Pin, distance: number):Promise<Response|number|void> => {
     try {
-    if (!user) throw 'Not logged in'; //error
-    if (!pin) throw 'Can not get pin';
+      if (!user) throw "Not logged in"; //error
+      if (!pin) throw "Can not get pin";
 
-    const uid = user.uid;
-    const {poi_id, search_radius} = pin;
-    const data: {
-      distance: number;
-      poi_id: number | undefined;
-      uid: string;
-      search_radius: number | undefined;
+      const uid = user.uid;
+      const { poi_id, search_radius } = pin;
+      const data: {
+        distance: number;
+        poi_id: number | undefined;
+        uid: string;
+        search_radius: number | undefined;
       } = {
         distance,
         poi_id,
@@ -82,14 +90,18 @@ export function PoiCard({
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
-  const handleSubmitGuessOnClick = async (user: User, pin:Pin | null, userCoordinates: Coordinates | null) => {
+  const handleSubmitGuessOnClick = async (
+    user: User,
+    pin: Pin | null,
+    userCoordinates: Coordinates | null
+  ) => {
     try {
-      if (!user) throw 'Not logged in'
-      if (!pin) throw 'No pin to track';
-      if (!userCoordinates) throw 'No user coordinates'
-      
+      if (!user) throw "Not logged in";
+      if (!pin) throw "No pin to track";
+      if (!userCoordinates) throw "No user coordinates";
+
       const pinCoordinates: Coordinates = {
         longitude: pin.exact_longitude,
         latitude: pin.exact_latitude
@@ -102,7 +114,7 @@ export function PoiCard({
       } else {
         console.log('Unexpected response:', score);
       }
-
+      
       updatePoi();
     } catch (error) {
       console.error("Error", error);
@@ -113,13 +125,64 @@ export function PoiCard({
     setCollect(true);
     setShowPopup && setShowPopup(false);
     setGuessPoiPosition &&
-    setGuessPoiPosition({
-      latitude: payload.exact_latitude,
-      longitude: payload.exact_longitude,
-    });
+      setGuessPoiPosition({
+        latitude: payload.exact_latitude,
+        longitude: payload.exact_longitude,
+      });
     payload.is_completed = true;
-  }
+  };
 
+  //handle hints
+  const handleGetHintOnClick = async (
+    user: User,
+    pin: Pin | null,
+    userCoordinates: Coordinates | null
+  ) => {
+    try {
+      if (!user) throw "Not logged in";
+      if (!pin) throw "No pin to track";
+      if (!userCoordinates) throw "No user coordinates";
+
+      await getHints(user, payload);
+      updatePoiHint();
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+  //update POI but for hints?
+  const updatePoiHint = () => {
+    setIsOpen(!isOpen);
+  };
+
+  //get hints
+  const getHints = async (user: User, pin: Pin): Promise<Response | void> => {
+    try {
+      if (!user) throw "Not logged in"; //error
+      if (!pin) throw "Can not get hint";
+
+      const { poi_id } = pin;
+      const response: Response = await fetch(`${BASE_URL}/api/hints/${poi_id}`);
+      const data: {
+        content: string;
+        poi_id: number;
+        user_id: number;
+        hint_id: number;
+      }[] = (await response.json()) as {
+        content: string;
+        poi_id: number;
+        user_id: number;
+        hint_id: number;
+      }[];
+      const arrayOfContent: string[] |undefined[] = new Array(data.length);
+      for (let i = 0; i < data.length; i++) {
+        arrayOfContent[i] = data[i].content;
+      }
+      setHints(arrayOfContent);
+      //return response;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   // RETURN
   return (
@@ -153,28 +216,62 @@ export function PoiCard({
         {collect && userCoordinates ? (
           <p className="truncate">{payload.description}</p>
         ) : (
-          <Button
-            id={`${id}`}
-            className="w-full mt-4 rounded-lg"
-            
-            onClick={():void  => {
-              if (user) {
+          <div>
+            <Button
+              id={`${id}`}
+              className="w-full mt-4 rounded-lg"
+              onClick={(): void => {
+                if (!user) {
+                  alert("please login");
+                  return;
+                }
                 if (!handleCheckUserInSearchZone()) {
                   if (trackingPinContext) {
                     trackingPinContext.setTrackingPin(payload);
+                    setShowPopup && setShowPopup(false);
                   }
                 } else {
-                  void handleSubmitGuessOnClick(user, payload, userCoordinates)
+                  void handleGetHintOnClick(user, payload, userCoordinates);
+                }
+              }}
+            >
+              {!handleCheckUserInSearchZone()
+                ? "Hints only available within zone"
+                : "Hint"}
+            </Button>
+            {isOpen && (
+              <div className="absolute bg-white border rounded shadow-lg mt-2 p-2 z-10 top-0">
+                {hints.map((hint, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <span>{index + 1}</span>
+                    <p>{hint}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+            <Button
+              id={`${id}`}
+              className="w-full mt-4 rounded-lg"
+              onClick={(): void => {
+                if (!user) {
+                  alert("please login");
+                  return;
+                }
+                if (!handleCheckUserInSearchZone()) {
+                  if (trackingPinContext) {
+                    trackingPinContext.setTrackingPin(payload);
+                    setShowPopup && setShowPopup(false);
                   }
-              } else {
-                alert("please login");
-              }
-            }}
-          >
-            {!handleCheckUserInSearchZone()
-              ? "Too far! Track this pin?"
-              : "Guess and collect"}
-          </Button>
+                } else {
+                  void handleSubmitGuessOnClick(user, payload, userCoordinates);
+                }
+              }}
+            >
+              {!handleCheckUserInSearchZone()
+                ? "Too far! Track this pin?"
+                : "Guess and Collect"}
+            </Button>
+          </div>
         )}
       </article>
     </section>
