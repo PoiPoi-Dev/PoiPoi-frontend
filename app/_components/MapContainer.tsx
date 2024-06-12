@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useContext } from "react";
-import Map from "react-map-gl/maplibre";
+import Map, {LngLatBoundsLike} from "react-map-gl/maplibre";
 import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
@@ -222,6 +222,26 @@ function MapInner() {
 
       {/* MAP CANVAS */}
       <Map
+        maxPitch={0}
+        minZoom={5}
+        maxZoom={20}
+        maxBounds={[
+              138.48056992365008,  //west
+              34.652402922398274,  //south
+              140.62550,  //east
+              36.45363   //north
+            ] as LngLatBoundsLike}
+        // initialViewState={{
+        //   bounds:[
+        //     138.48056992365008,  //west
+        //     34.652402922398274,  //south
+        //     140.62550,  //east
+        //     36.45363   //north
+        //   ] as LngLatBoundsLike,
+        //   fitBoundsOptions: {
+        //     minZoom: 17,
+        //   }
+        // }}
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
         style={{ width: "100vw", height: "100vh" }}
