@@ -39,7 +39,7 @@ GameControlsProps): React.JSX.Element => {
       </Link>
 
       <Link href={"/login"}>
-        <ButtonIconCircle text="account" onClick={() => alert("account")}>
+        <ButtonIconCircle text="account">
           <MdAccountCircle size={24} />
         </ButtonIconCircle>
       </Link>
