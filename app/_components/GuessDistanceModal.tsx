@@ -45,21 +45,29 @@ const GuessDistanceModal = ({
       content: hint,
     };
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posthint`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(hintData),
-    });
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posthint`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(hintData),
+      });
 
-    if (response.status === 201) {
-      alert('Hint submitted successfully! Now get out there and find more POIS!');
-      drawerRef.current?.click(); // Simulate clicking the Done button
-    } else {
-      const responseData = await response.json();
-      alert(`Failed to submit hint: ${responseData.message || 'Unknown error'}`);
+      if (response.status === 201) {
+        alert('Hint submitted successfully! Now get out there and find more POIS!');
+        drawerRef.current?.click(); // Simulate clicking the Done button
+      } else {
+        const responseData = await response.json() as { message?: string };
+        alert(`Failed to submit hint: ${responseData.message || 'Unknown error'}`);
+      }
+    } catch (error) {
+      alert(`Error submitting hint: ${(error as Error).message}`);
     }
+  };
+
+  const handleSubmitClick = () => {
+    handleSubmitHint().catch(console.error);
   };
 
   return (
@@ -89,8 +97,8 @@ const GuessDistanceModal = ({
           </p>
           {distanceToPin < thresholdDistance ? (
             <>
-              <h2>Nice Guessing! How about leaving a hint for someone else?</h2>
-              <p>(Be sure to be helpful! But don't just give it away!)</p>
+              <h2>{`Nice Guessing! How about leaving a hint for someone else?`}</h2>
+              <p>{`(Be sure to be helpful! But don't just give it away!)`}</p>
               <input
                 type="text"
                 value={hint} // Use state value for input
@@ -98,15 +106,15 @@ const GuessDistanceModal = ({
                 className="border p-2 mt-2 w-full"
               />
               <div className="mt-4 flex justify-end">
-                <Button onClick={handleSubmitHint} className="mr-2">
+                <Button onClick={handleSubmitClick} className="mr-2">
                   Submit Hint
                 </Button>
               </div>
             </>
           ) : (
             <>
-              <h2>Nice try! We'll still give you some points but try and get closer next time!</h2>
-              <p>(You'll even be able to leave a hint if you're close enough!)</p>
+              <h2>{`Good effort! Try to get within 20 meters next time!`}</h2>
+              <p>{`(You'll be able to leave a hint if you're close enough!)`}</p>
             </>
           )}
         </DrawerContent>
