@@ -213,7 +213,7 @@ export function PoiCard({
           <p className="truncate">{payload.description}</p>
         ) : (
           <div>
-            <Toaster></Toaster>
+            <Toaster position="top-center" closeButton />
             <Button
               id={`${id}`}
               className="w-full mt-4 rounded-lg"
@@ -248,12 +248,7 @@ export function PoiCard({
                 ))}
               </div>
             )} */}
-            {/* <>
-              <Toaster></Toaster>
-              <button onClick={() => toast("My first toast")}>
-                Give me a toast
-              </button>
-            </> */}
+
             <Button
               id={`${id}`}
               className="w-full mt-4 rounded-lg"
