@@ -26,10 +26,16 @@ const config = {
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
+          100: "hsl(var(--primary-100))",
+          300: "hsl(var(--primary-300))",
+          500: "hsl(var(--primary-500))",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
+          100: "hsl(var(--secondary-100))",
+          300: "hsl(var(--secondary-300))",
+          500: "hsl(var(--secondary-500))",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
