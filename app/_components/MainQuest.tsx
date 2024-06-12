@@ -25,10 +25,6 @@ const MainQuest = ({closestNotCompletedPin: closestPin}:MainQuestProps) => {
   const {current: map} = useMap();
 
   useEffect(() => {
-    console.log(pinToPanTo);
-  },[pinToPanTo])
-
-  useEffect(() => {
     if (!trackingPinContext || !trackingPinContext.trackingPin){
       setIsTracking(false);
       setPinToPanTo(closestPin);
