@@ -19,14 +19,12 @@ export function PoiCard({
   setGuessPoiPosition,
   setShowPopup,
   userCoordinates,
-  setScore,
 }: {
   id: number;
   payload: Pin;
   setGuessPoiPosition?: (arg0: Coordinates | null) => void;
   setShowPopup?: (arg0: boolean) => void;
   userCoordinates: Coordinates | null;
-  setScore: (arg0: number | null) => void;
 }): JSX.Element {
   // USE STATE
   const [collect, setCollect] = useState<boolean | undefined>(
@@ -84,8 +82,7 @@ export function PoiCard({
           body: JSON.stringify(data),
         }
       );
-      const JSONresponse = response.json() as Promise<Response>;
-      return JSONresponse;
+      return response;
     } catch (error) {
       console.error(error);
     }
@@ -112,13 +109,7 @@ export function PoiCard({
         ).toFixed(3)
       );
 
-      const score = await PostGuess(user, payload, distanceToPin);
-      if (typeof score === "number") {
-        setScore(score);
-      } else {
-        console.log("Unexpected response:", score);
-      }
-
+      await PostGuess(user, payload, distanceToPin);
       updatePoi();
     } catch (error) {
       console.error("Error", error);
@@ -177,7 +168,7 @@ export function PoiCard({
         user_id: number;
         hint_id: number;
       }[];
-      const arrayOfContent: string[] | undefined[] = new Array(data.length);
+      const arrayOfContent: string[] |undefined[] = new Array(data.length);
       for (let i = 0; i < data.length; i++) {
         arrayOfContent[i] = data[i].content;
       }
