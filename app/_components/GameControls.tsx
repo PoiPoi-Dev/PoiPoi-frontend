@@ -24,9 +24,11 @@ const GameControls = ({
 GameControlsProps): React.JSX.Element => {
   return (
     <div className="flex justify-between min-w-[360px] max-w-full">
-      <ButtonIconCircle text="Map">
-        <FaMapLocationDot size={24} />
-      </ButtonIconCircle>
+      <Link href={"/map"}>
+        <ButtonIconCircle text="Map">
+          <FaMapLocationDot size={24} />
+        </ButtonIconCircle>
+      </Link>
 
       <Poidex pins={pins} />
 
@@ -36,9 +38,11 @@ GameControlsProps): React.JSX.Element => {
         </ButtonIconCircle>
       </Link>
 
-      <ButtonIconCircle text="account" onClick={() => alert("account")}>
-        <MdAccountCircle size={24} />
-      </ButtonIconCircle>
+      <Link href={"/login"}>
+        <ButtonIconCircle text="account" onClick={() => alert("account")}>
+          <MdAccountCircle size={24} />
+        </ButtonIconCircle>
+      </Link>
     </div>
   );
 };
