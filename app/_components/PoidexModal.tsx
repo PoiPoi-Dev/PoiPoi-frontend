@@ -1,88 +1,114 @@
 import * as React from "react";
 import { Pin } from "../_utils/global";
-import { PoiCard } from "./PoiCard"; // Importing PoiCard
 import Image from "next/image";
+import { Popover, PopoverContent } from "./ui/popover";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { useState } from "react";
+import { MdArrowBackIosNew } from "react-icons/md";
+import { BiSolidNavigation } from "react-icons/bi";
 
 interface PoidexModalProps {
   pins: Pin[];
-  onClose: () => void;
-  onPoiClick: (poi: Pin) => void;
-  selectedPoi: Pin | null;
-  goBack: () => void;
+  setShowPoidex: (arg0: boolean) => void;
 }
 
-const PoidexModal: React.FC<PoidexModalProps> = ({
-  pins,
-  onClose,
-  onPoiClick,
-  selectedPoi,
-  goBack,
-}) => {
+const PoidexModal: React.FC<PoidexModalProps> = ({ pins, setShowPoidex }) => {
+  const [showBigImage, setShowBigImage] = useState<boolean>(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black opacity-50"></div>
-      <dialog
-        open
-        className="relative bg-white rounded-lg overflow-hidden p-4"
-        style={{ width: selectedPoi ? "60%" : "80%", maxWidth: "1000px" }}
-      >
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 text-black bg-red-500 rounded-full p-2 z-50"
-        >
-          Close
-        </button>
-        {!selectedPoi ? (
-          <>
-            <div className="w-full text-center mb-4">
-              <h1 className="text-2xl font-bold">POIDEX</h1>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              {pins.map((pin) => (
-                <div
-                  key={pin.poi_id}
-                  onClick={pin.is_completed ? () => onPoiClick(pin) : undefined}
-                  className={`flex flex-col items-center  ${
-                    pin.is_completed
-                      ? "cursor-pointer"
-                      : "opacity-50 cursor-not-allowed"
-                  }`}
-                >
-                  <Image
-                    src={pin.is_completed ? pin.img_url : "/UnknownIcon.png"}
-                    alt={pin.title}
-                    width={100}
-                    height={100}
-                    className="w-full h-auto max-h-32 object-contain"
-                  />
-                  <h2 className="text-center mt-2">
-                    {pin.is_completed ? pin.title : "???"}
-                  </h2>
-                </div>
-              ))}
-            </div>
-          </>
-        ) : (
-          <div className="flex flex-col items-center">
-            <button
-              onClick={goBack}
-              className="fixed top-2 right-2 text-black bg-blue-500 rounded-full p-2 z-50"
+    <main className="fixed flex h-screen flex-col items-center justify-between">
+      <Popover defaultOpen>
+        <PopoverContent>
+          <Dialog defaultOpen>
+            <DialogTrigger />
+            <DialogContent
+              onClick={() => {
+                setShowPoidex(false);
+                setSelectedId(null);
+                setShowBigImage(false);
+              }}
             >
-              Back
-            </button>
-            <div className="z-[9999] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-              <PoiCard
-                id={selectedPoi.poi_id}
-                payload={{
-                  ...selectedPoi,
-                  is_completed: selectedPoi.is_completed,
-                }}
-              />
-            </div>
-          </div>
-        )}
-      </dialog>
-    </div>
+              <dialog
+                open
+                className="flex-col bg-white rounded-2xl overflow-hidden p-4 mx-auto fixed isolate z-[999] items-center justify-center h-[600px] w-[350px] max-h-[800px]"
+              >
+                {/* HEADER */}
+                {!showBigImage && (
+                  <div className="w-full text-center mb-4">
+                    <h1 className="text-2xl font-bold mt-0">POIDEX</h1>
+                  </div>
+                )}
+
+                {/* FLEX-WRAP */}
+                <div
+                  className={`${
+                    !selectedId && "grid grid-cols-3 pb-10 grid-flow-row gap-4"
+                  } flex-grow max-h-full flex-1 overflow-y-scroll no-scrollbar`}
+                >
+                  {pins.map((pin) => (
+                    <div
+                      key={pin.poi_id}
+                      className={`flex flex-col items-center w-30 h-40  ${
+                        pin.is_completed
+                          ? "cursor-pointer"
+                          : "opacity-50 cursor-not-allowed"
+                      } ${
+                        selectedId && selectedId !== pin.poi_id
+                          ? "hidden"
+                          : "w-full h-full"
+                      }`}
+                    >
+                      {showBigImage && (
+                        <div className="flex w-full justify-between items-center mb-4">
+                          <MdArrowBackIosNew
+                            size={24}
+                            className="text-primary"
+                            onClick={() => {
+                              setShowBigImage(false);
+                              setSelectedId(null);
+                            }}
+                          />
+                          <h2 className="w-full text-center text-lg font-semibold truncate text-ellipsis">
+                            {pin.title}
+                          </h2>
+                          <BiSolidNavigation
+                            size={24}
+                            className="text-primary"
+                          />
+                        </div>
+                      )}
+
+                      <Image
+                        src={
+                          pin.is_completed ? pin.img_url : "/UnknownIcon.png"
+                        }
+                        alt={pin.title}
+                        width={600}
+                        height={600}
+                        className={`w-full min-h-28 flex-1 object-cover ${
+                          showBigImage && "rounded-lg shadow-xl"
+                        }`}
+                        onClick={() => {
+                          setShowBigImage(() => true);
+                          setSelectedId(() => pin.poi_id);
+                        }}
+                      />
+
+                      {!showBigImage && (
+                        <h2 className="w-full text-center mt-2 line-clamp-2 overflow-hidden">
+                          {pin.is_completed ? pin.title : "???"}
+                        </h2>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </dialog>
+            </DialogContent>
+          </Dialog>
+        </PopoverContent>
+      </Popover>
+    </main>
   );
 };
 

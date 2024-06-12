@@ -18,7 +18,7 @@ export interface Pin {
   search_longitude: number;
   search_radius: number;
   // is_main_attraction: boolean;
-  // tags: string[];
+  tags: string[];
 }
 
 export interface Hint {
@@ -30,31 +30,19 @@ export interface Hint {
 
 export interface MarkerContainerProps {
   pin: Pin;
-  showPopup: number | undefined;
-  setShowPopup: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setShowPopup: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedPoiId: React.Dispatch<React.SetStateAction<number | undefined>>;
-}
-
-export interface Poi {
-  poi_id: number;
-  title: string;
-  description: string;
-  img_url: string;
-  creator_id: number;
-  poi_latitude: number;
-  poi_longitude: number;
-  collection_radius: number;
-  search_latitude: number;
-  search_longitude: number;
-  search_radius: number;
 }
 
 export interface User {
   email: string;
-  displayName: string;
+  creatingEmail: string;
   password: string;
+  creatingPassword: string;
+  displayName: string;
 }
 
-
-
-
+export interface Leaderboards {
+  username: string;
+  score: number;
+}

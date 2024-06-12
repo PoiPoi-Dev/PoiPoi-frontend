@@ -24,3 +24,12 @@ export function GetDistanceFromCoordinatesToMeters(
   const distance = earthRadius * c;
   return distance;
 }
+
+export function ConvertGeolocationPositionToCoordinates(position:GeolocationPosition):Coordinates {
+  const coordinates:Coordinates = {
+    longitude: position.coords.longitude,
+    latitude: position.coords.latitude,
+  }
+  return coordinates;
+}
+

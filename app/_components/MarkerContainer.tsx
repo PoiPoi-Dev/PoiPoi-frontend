@@ -1,7 +1,5 @@
 import * as React from "react";
 import { Layer, Marker, Source, LayerProps } from "react-map-gl/maplibre";
-import PoiPopup from "./PoiPopup";
-import { Popover, PopoverContent } from "@radix-ui/react-popover";
 import { MarkerContainerProps } from "../_utils/global";
 import { PiSealQuestion } from "react-icons/pi";
 import { IoMdCheckmarkCircle } from "react-icons/io";
@@ -40,8 +38,8 @@ const layerStyle = (
         20,
         metersToPixelsAtMaxZoom(radius, latitude),
       ],
-      "circle-color": "rgba(203, 92, 255, 0.3)",
-      "circle-opacity": 0.5,
+      "circle-color": "rgba(255, 216, 61, 0.3)",
+      "circle-opacity": 1,
     },
     source: "",
   };
@@ -49,7 +47,6 @@ const layerStyle = (
 
 function MarkerContainer({
   pin,
-  showPopup,
   setShowPopup,
   setSelectedPoiId,
 }: MarkerContainerProps): JSX.Element {
@@ -60,9 +57,14 @@ function MarkerContainer({
   );
 
   const handleClick = () => {
-    setShowPopup(pin.poi_id);
+    setShowPopup(true);
     setSelectedPoiId(pin.poi_id);
   };
+
+  const styleTop: number = 0;
+  const styleLeft: number = 0;
+  const styleOpacity: number = 1;
+  const styleZIndex: number = 40;
 
   return (
     <>
@@ -74,31 +76,20 @@ function MarkerContainer({
           rotationAlignment="map"
           style={{
             position: "absolute",
-            top: 0,
-            left: 0,
-            opacity: 1,
-            zIndex: 50,
+            top: styleTop,
+            left: styleLeft,
+            opacity: styleOpacity,
+            zIndex: styleZIndex,
           }}
           offset={[0, 0]}
           anchor="center"
         >
           {/* Pin icon */}
-          <IoMdCheckmarkCircle size={48} onClick={handleClick} />
-
-          {/* Popup */}
-          {showPopup === pin.poi_id && (
-            <div className="fixed top-0 left-0 w-screen h-screen">
-              <Popover defaultOpen>
-                <PopoverContent className="">
-                  <PoiPopup
-                    setShowPopup={setShowPopup}
-                    id={pin.poi_id}
-                    payload={pin}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-          )}
+          <IoMdCheckmarkCircle
+            size={48}
+            className="text-primary"
+            onClick={handleClick}
+          />
         </Marker>
       ) : (
         <Marker
@@ -108,32 +99,19 @@ function MarkerContainer({
           rotationAlignment="map"
           style={{
             position: "absolute",
-            top: 0,
-            left: 0,
-            opacity: 1,
-            zIndex: 50,
+            top: styleTop,
+            left: styleLeft,
+            opacity: styleOpacity,
+            zIndex: styleZIndex,
           }}
           offset={[0, 0]}
           anchor="center"
         >
           {/* Pin icon */}
-          <PiSealQuestion size={32} onClick={handleClick} />
-
-          {/* Exact Pin (For dev) **THIS SHOULD BE DELETED LATER** */}
-          <Marker
-            key={pin.exact_latitude}
-            longitude={pin.exact_longitude}
-            latitude={pin.exact_latitude}
-            rotationAlignment="map"
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              opacity: 1,
-              zIndex: 50,
-            }}
-            offset={[0, 0]}
-            anchor="center"
+          <PiSealQuestion
+            size={32}
+            className="text-primary"
+            onClick={handleClick}
           />
 
           {/* Seach Zone Radius */}
@@ -145,21 +123,6 @@ function MarkerContainer({
             >
               <Layer {...generateLayerStyle} />
             </Source>
-          )}
-
-          {/* Popup */}
-          {showPopup === pin.poi_id && (
-            <div className="fixed top-0 left-0 w-screen h-screen">
-              <Popover defaultOpen>
-                <PopoverContent className="">
-                  <PoiPopup
-                    setShowPopup={setShowPopup}
-                    id={pin.poi_id}
-                    payload={pin}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
           )}
         </Marker>
       )}

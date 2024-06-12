@@ -1,5 +1,9 @@
 "use client";
-import { createAccount, loginEmailPassword } from "../_utils/authentication";
+import { createAccount, 
+  loginEmailPassword, 
+  deleteCurrentlyLoggedInUser,
+  logout, 
+} from "../_utils/authentication";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -7,6 +11,7 @@ interface UserProfile {
   firebase_uuid: string;
   user_id?: string;
   username: string;
+  score: number;
 }
 
 /**
@@ -35,7 +40,11 @@ export async function createUser(
     });
     const resData = (await response.json()) as UserProfile;
     console.log(resData);
+    alert("Account created successfully!");
   } catch (error) {
+    alert("Account creation failed, please try again.");
+    try{ await deleteCurrentlyLoggedInUser(); 
+    } catch (error) {console.error(error);}
     console.log(error);
   }
 }
@@ -48,8 +57,23 @@ export async function createUser(
 export async function loginUser(email: string, password: string) {
   try {
     const uuid = await loginEmailPassword(email, password);
-    console.log("Log in: " + uuid);
+    if (!uuid) throw 'Could not find user';
+    alert("Login successful!");
+    } catch (error) {
+    alert("Login failed!");
+    console.error(error);
+  }
+}
+
+/**
+ * Logs the user out from the app.
+ */
+export async function logoutUser(): Promise<void> {
+  try {
+    await logout();
+    alert("Logout successful!");
   } catch (error) {
+    alert("Logout failed!");
     console.error(error);
   }
 }
