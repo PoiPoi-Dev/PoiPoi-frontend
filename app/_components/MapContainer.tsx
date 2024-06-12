@@ -20,7 +20,7 @@ import GuessPolyline from "./ui/guessPolyline";
 import PopoverCard from "./PopoverCard";
 import GuessDistanceModal from "./GuessDistanceModal";
 import PoiPhotoToggle from "./PoiPhotoToggle";
-import TrackingPinContextProvider, {TrackingPinContext} from "./useContext/TrackingPinContext";
+import ImportantPinContextProvider, {ImportantPinContext} from "./useContext/ImportantPinContext";
 import MainQuest from "./MainQuest";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -29,7 +29,7 @@ function MapInner() {
   // USE STATE
   const [poiData, setPoiData] = useState<Pin[]>([]);
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates | null>(
+  const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates| null>(
     null
   );
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
@@ -56,8 +56,7 @@ function MapInner() {
   });
 
   const user = useContext(AuthContext);
-  const trackingPinContext = useContext(TrackingPinContext);
-  
+  const importantPinContext = useContext(ImportantPinContext);
   
   // USE EFFECT
   useEffect(() => {
@@ -66,10 +65,8 @@ function MapInner() {
   }, [user]);
 
   useEffect(() => {
-    if (!trackingPinContext) return;
-    if (!trackingPinContext.trackingPin) return;
-    console.table(trackingPinContext.trackingPin);
-  },[trackingPinContext, trackingPinContext?.trackingPin])
+    console.log(importantPinContext?.trackingPin);
+  },[importantPinContext?.trackingPin])
 
 
   useEffect(() => {
@@ -282,11 +279,11 @@ function MapInner() {
 }
 
 const MapContainer = () => (
-  <TrackingPinContextProvider>
+  <ImportantPinContextProvider>
     <MapContextProvider>
       <MapInner />
     </MapContextProvider>
-  </TrackingPinContextProvider>
+  </ImportantPinContextProvider>
 );
 
 export default MapContainer;
