@@ -7,7 +7,7 @@ import { ButtonIconCircle } from "./ui/MenuIconCircle";
 export default function FooterMenu({
   variant,
 }: {
-  variant: "map" | "collection" | "leaderboard" | "account";
+  variant: "map" | "collection" | "leaderboard" | "account" | "none";
 }) {
   return (
     <div className="fixed bottom-0 left-0 w-full flex gap-2 h-16 bg-white rounded-t-3xl justify-center items-end">

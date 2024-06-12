@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import FooterMenu from "./_components/FooterMenu";
 
 export default function Home(): JSX.Element {
   // RETURN
   return (
-    <main className="text-white flex min-h-screen flex-col items-center justify-start p-24">
+    <main className="text-primary bg-gray-200 flex min-h-screen flex-col items-center justify-start p-24">
+      <h1>Got lost?</h1>
       <Link
         href="/map"
-        className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-slate-400 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+        className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-white hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -24,7 +26,7 @@ export default function Home(): JSX.Element {
       </Link>
       <Link
         href="/login"
-        className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-slate-400 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+        className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-white hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -40,7 +42,7 @@ export default function Home(): JSX.Element {
       </Link>
       <Link
         href="/leaderboard"
-        className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-slate-400 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+        className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-white hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -54,6 +56,8 @@ export default function Home(): JSX.Element {
           Scores of all the active Players!
         </p>
       </Link>
+
+      <FooterMenu variant="none" />
     </main>
   );
 }
