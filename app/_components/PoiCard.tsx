@@ -172,7 +172,6 @@ export function PoiCard({
       for (let i = 0; i < data.length; i++) {
         arrayOfContent.push(data[i].content);
       }
-      console.log(arrayOfContent);
       setHints(arrayOfContent);
       //return response;
     } catch (error) {
