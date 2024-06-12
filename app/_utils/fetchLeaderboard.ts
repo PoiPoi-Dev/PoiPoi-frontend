@@ -1,0 +1,16 @@
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+import { Leaderboards } from "./global";
+
+export async function getLeaderboardData() {
+  try {
+    const response = await fetch(`${baseUrl}/api/leaderboards`, {
+      credentials: "include",
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    const resData: Leaderboards[] = (await response.json()) as Leaderboards[];
+    return resData;
+  } catch (error) {
+    alert(error);
+  }
+}
