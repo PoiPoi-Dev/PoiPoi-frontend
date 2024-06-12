@@ -1,8 +1,8 @@
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 import { Leaderboards } from "./global";
 
 export async function getLeaderboardData() {
   try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
     const response = await fetch(`${baseUrl}/api/leaderboards`, {
       credentials: "include",
       method: "GET",
