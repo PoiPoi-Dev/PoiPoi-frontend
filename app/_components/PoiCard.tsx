@@ -192,35 +192,44 @@ export function PoiCard({
 
   // RETURN
   return (
-    <section className="relative top-0 flex flex-col bg-gray-300 w-[300px] min-h-[600px] max-h-full rounded-2xl overflow-hidden border-solid border-white border-4 z-[999]">
+    <section className="relative top-0 flex flex-col bg-gray-300 w-[300px] h-[640px] rounded-2xl overflow-hidden border-solid border-white border-4 z-[999]">
       {/* IMAGE */}
       <Image
         src={payload.img_url}
         alt={payload.title}
         width={300}
         height={400}
-        sizes="(max-width: 300px) 100vw, 300px"
         priority
-        className="object-cover h-[460px]"
+        className={`object-cover ${
+          collect
+            ? "min-h-[400px] max-h-[400px]"
+            : "min-h-[500px] max-h-[500px]"
+        }`}
       />
 
-      <article className="flex-auto max-h-full w-full p-2">
-        <h1 className="text-2xl font-bold text-black p-0 m-0 mb-2">
-          {payload.title}
-        </h1>
+      <article className="flex flex-col w-full h-full p-2 overflow-y-scroll no-scrollbar">
+        <div className="h-fit w-full whitespace-nowrap overflow-x-scroll no-scrollbar">
+          <h1 className="text-2xl w-full align-baseline font-bold text-black p-0 m-0 mb-2">
+            {payload.title}
+          </h1>
+        </div>
 
         {/* TAG */}
-        <div className="flex flex-wrap gap-2 text-sm mb-2">
-          {payload.tags.map(
-            (tag: string): JSX.Element => (
-              <Badge key={tag + id}>{tag}</Badge>
-            )
-          )}
-        </div>
+        {payload.tags.length > 0 && (
+          <div className="flex w-full whitespace-nowrap overflow-x-scroll no-scrollbar h-[30px] gap-2 text-sm mb-2">
+            {payload.tags.map(
+              (tag: string): JSX.Element => (
+                <Badge key={tag + id}>{tag}</Badge>
+              )
+            )}
+          </div>
+        )}
 
         {/* COLLECT BUTTON OR DESCRIPTION */}
         {collect && userCoordinates ? (
-          <p className="truncate">{payload.description}</p>
+          <p className="h-auto flex-1 overflow-y-scroll no-scrollbar">
+            {payload.description}
+          </p>
         ) : (
         <div>
           <Button
