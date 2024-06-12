@@ -195,9 +195,6 @@ function MapInner() {
       <div className="absolute top-0 left-0 z-50 w-screen pt-4 gap-4 flex flex-col">
         {/* HEADER CONTROLLER */}
         <div className="flex flex-col gap-4 w-full">
-          <div className="px-4">
-            <MainQuest />
-          </div>
           <FilterButton
             filters={filters}
             selectedFilters={selectedFilters}
@@ -272,7 +269,8 @@ function MapInner() {
             />
           </>
         )}
-        <MapControls />
+        <MainQuest closestNotCompletedPin={closestNotCompletedPin}/>
+        <MapControls/>
       </Map>
     </div>
   );
