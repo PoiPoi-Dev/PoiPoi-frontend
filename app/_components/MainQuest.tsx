@@ -11,7 +11,7 @@ import { FaLocationDot } from "react-icons/fa6";
 // } from "./ui/drawer";
 // import DrawerCloseButton from "./ui/drawerCloseButton";
 import { Pin } from "../_utils/global";
-import { TrackingPinContext } from "./useContext/TrackingPinContext";
+import { ImportantPinContext } from "./useContext/ImportantPinContext";
 import { useMap } from "react-map-gl/maplibre";
 
 interface MainQuestProps {
@@ -19,12 +19,13 @@ interface MainQuestProps {
 }
 
 const MainQuest = ({closestNotCompletedPin: closestPin}:MainQuestProps) => {
-  const trackingPinContext = useContext(TrackingPinContext);
+  const trackingPinContext = useContext(ImportantPinContext);
   const [pinToPanTo, setPinToPanTo] = useState<Pin|null>(null);
   const [isTracking, setIsTracking] = useState<boolean>(false);
   const {current: map} = useMap();
 
   useEffect(() => {
+    console.log(trackingPinContext?.trackingPin);
     if (!trackingPinContext || !trackingPinContext.trackingPin){
       setIsTracking(false);
       setPinToPanTo(closestPin);

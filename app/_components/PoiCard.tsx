@@ -240,6 +240,7 @@ export function PoiCard({
             
               if (importantPinContext) {
                 importantPinContext.setTrackingPin(payload);
+                setShowPopup && setShowPopup(false);
               }
             }}
             
@@ -266,6 +267,7 @@ export function PoiCard({
             
               if (importantPinContext) {
                 importantPinContext.setTrackingPin(payload);
+                setShowPopup && setShowPopup(false);
               }
             }}
             >

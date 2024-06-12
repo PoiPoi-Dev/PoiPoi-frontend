@@ -1,12 +1,12 @@
 import { useEffect, useContext } from "react";
 import { NavigationControl, GeolocateControl, useMap } from "react-map-gl/maplibre";
-import {TrackingPinContext} from "./useContext/TrackingPinContext";
+import {ImportantPinContext} from "./useContext/ImportantPinContext";
 import { Pin } from "../_utils/global";
 
 
 const MapControls = (): React.JSX.Element => {
 
-  const trackingPinContext = useContext(TrackingPinContext);
+  const trackingPinContext = useContext(ImportantPinContext);
   const {current: map} = useMap();
 
   useEffect(() => {
