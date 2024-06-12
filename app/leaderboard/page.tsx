@@ -1,5 +1,4 @@
 import Leaderboard from "./Leaderboard";
-("use client");
 
 export default function Home(): JSX.Element {
   return (
