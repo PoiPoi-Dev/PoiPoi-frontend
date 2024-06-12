@@ -2,10 +2,10 @@ import { Leaderboards } from "../_utils/global";
 import { getLeaderboardData } from "../_utils/fetchLeaderboard";
 
 export default async function LeaderboardServer() {
-  const LeaderbaordData: Leaderboards[] | undefined =
+  const LeaderboardData: Leaderboards[] | undefined =
     await getLeaderboardData();
 
-  if (!LeaderbaordData) {
+  if (!LeaderboardData) {
     alert("Leaderboard currently unavailble");
     return;
   }
@@ -22,7 +22,7 @@ export default async function LeaderboardServer() {
           </tr>
         </thead>
         <tbody>
-          {LeaderbaordData.map((player, index) => (
+          {LeaderboardData.map((player, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
               <td>{player.username}</td>
