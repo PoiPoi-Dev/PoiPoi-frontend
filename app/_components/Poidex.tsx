@@ -15,16 +15,14 @@ const Poidex = ({ pins }: PoidexProps): React.JSX.Element => {
     <>
       <ButtonIconCircle
         text="collection"
+        variant={showPoidex ? "secondary" : "default"}
         onClick={(): void => void setShowPoidex(true)}
       >
         <BsCollectionFill size={24} />
       </ButtonIconCircle>
 
       {showPoidex ? (
-        <PoidexModal
-          pins={pins}
-          setShowPoidex={setShowPoidex}
-        />
+        <PoidexModal pins={pins} setShowPoidex={setShowPoidex} />
       ) : null}
     </>
   );

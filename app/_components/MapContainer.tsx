@@ -20,7 +20,7 @@ import GuessPolyline from "./ui/guessPolyline";
 import PopoverCard from "./PopoverCard";
 import GuessDistanceModal from "./GuessDistanceModal";
 import PoiPhotoToggle from "./PoiPhotoToggle";
-import TrackingPinContextProvider, {TrackingPinContext} from "./useContext/TrackingPinContext";
+import ImportantPinContextProvider, {ImportantPinContext} from "./useContext/ImportantPinContext";
 import MainQuest from "./MainQuest";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -40,7 +40,7 @@ function MapInner() {
   // USE STATE
   const [poiData, setPoiData] = useState<Pin[]>([]);
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates | null>(
+  const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates| null>(
     null
   );
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
@@ -52,7 +52,8 @@ function MapInner() {
   const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
   const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
   const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<number|null> (null);
-  
+
+  const [score, setScore] = useState<number|null>(null);
   
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
@@ -66,8 +67,7 @@ function MapInner() {
   });
 
   const user = useContext(AuthContext);
-  const trackingPinContext = useContext(TrackingPinContext);
-  
+  const importantPinContext = useContext(ImportantPinContext);
   
   // USE EFFECT
   useEffect(() => {
@@ -76,10 +76,8 @@ function MapInner() {
   }, [user]);
 
   useEffect(() => {
-    if (!trackingPinContext) return;
-    if (!trackingPinContext.trackingPin) return;
-    console.table(trackingPinContext.trackingPin);
-  },[trackingPinContext, trackingPinContext?.trackingPin])
+    console.log(importantPinContext?.trackingPin);
+  },[importantPinContext?.trackingPin])
 
 
   useEffect(() => {
@@ -206,9 +204,6 @@ function MapInner() {
       <div className="absolute top-0 left-0 z-50 w-screen pt-4 gap-4 flex flex-col">
         {/* HEADER CONTROLLER */}
         <div className="flex flex-col gap-4 w-full">
-          <div className="px-4">
-            <MainQuest />
-          </div>
           <FilterButton
             filters={filters}
             selectedFilters={selectedFilters}
@@ -218,10 +213,15 @@ function MapInner() {
         </div>
 
         {/* ISLAND CONTROLLER */}
-        <PoiPhotoToggle pins={poiData} setShowPopup={setShowPopup} setSelectedPoiId={setSelectedPoiId} showPopup={showPopup} />
+        <PoiPhotoToggle
+          pins={poiData}
+          setShowPopup={setShowPopup}
+          setSelectedPoiId={setSelectedPoiId}
+          showPopup={showPopup}
+        />
 
         {/* FOOTER CONTROLLER */}
-        <div className="fixed bottom-0 left-0 w-full flex gap-2 h-16 bg-white justify-center items-end">
+        <div className="fixed bottom-0 left-0 w-full flex gap-2 h-16 bg-white rounded-t-3xl justify-center items-end">
           <GameControls
             pins={poiData}
             trackingPin={closestNotCompletedPin}
@@ -270,6 +270,7 @@ function MapInner() {
             setShowPopup={setShowPopup}
             setGuessPoiPosition={setGuessPoiPosition}
             userCoordinates={userCoordinates}
+            setScore={setScore}
           />
         )}
 
@@ -284,21 +285,23 @@ function MapInner() {
               guessPoiPosition={guessPoiPosition}
               setGuessPoiPosition={setGuessPoiPosition}
               userCoordinates={userCoordinates}
+              score={score}
             />
           </>
         )}
-        <MapControls />
+        <MainQuest closestNotCompletedPin={closestNotCompletedPin}/>
+        <MapControls/>
       </Map>
     </div>
   );
 }
 
 const MapContainer = () => (
-  <TrackingPinContextProvider>
+  <ImportantPinContextProvider>
     <MapContextProvider>
       <MapInner />
     </MapContextProvider>
-  </TrackingPinContextProvider>
+  </ImportantPinContextProvider>
 );
 
 export default MapContainer;
