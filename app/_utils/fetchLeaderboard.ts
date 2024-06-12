@@ -9,6 +9,7 @@ export async function getLeaderboardData() {
       headers: { "Content-Type": "application/json" },
     });
     const resData: Leaderboards[] = (await response.json()) as Leaderboards[];
+    console.log(resData);
     return resData;
   } catch (error) {
     alert(error);
