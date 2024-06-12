@@ -1,7 +1,16 @@
 import { Leaderboards } from "../_utils/global";
 import { getLeaderboardData } from "../_utils/fetchLeaderboard";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "../_components/ui/table";
+import FooterMenu from "../_components/FooterMenu";
 
-export default async function LeaderboardServer() {
+export default async function Leaderboard() {
   const LeaderboardData: Leaderboards[] | undefined =
     await getLeaderboardData();
 
@@ -12,25 +21,33 @@ export default async function LeaderboardServer() {
 
   return (
     <>
-      <h2>Leaderboard</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Name</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          {LeaderboardData.map((player, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{player.username}</td>
-              <td>{player.score}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* LEADERBOARD */}
+      <div className="animate-fade fade-in">
+        <h1 className="text-center text-2xl font-bold text-primary bg-secondary py-4 my-0">
+          Leaderboard
+        </h1>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Rank</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Score</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {LeaderboardData.map((player, index) => (
+              <TableRow key={index}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{player.username}</TableCell>
+                <TableCell>{player.score}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* MENU */}
+      <FooterMenu variant="leaderboard" />
     </>
   );
 }
