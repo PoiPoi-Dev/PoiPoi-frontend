@@ -62,11 +62,11 @@ const MainQuest = ({closestNotCompletedPin: closestPin}:MainQuestProps) => {
   }
 
   return (
-      <div className ="fixed top-20" onClick={() => {
+      <div className="box h-fit w-screen" onClick={() => {
         if (pinToPanTo)
           handlePanMapToTrackingPin(pinToPanTo)
       }}>
-        <div className="z-50 bg-white rounded-full h-12 w-full flex items-center justify-center shadow-2xl gap-4 cursor-pointer">
+        <div className="fixed top-4 left-4 z-50 bg-white rounded-full h-12 w-auto px-5 mx-auto flex items-center justify-center shadow-2xl gap-4 cursor-pointer">
           <FaLocationDot size={24} className="text-primary" />
           {(!pinToPanTo) ? 
             "No pin to go to!"
