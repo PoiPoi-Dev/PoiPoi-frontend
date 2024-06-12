@@ -10,7 +10,7 @@ export default function FilterButton({
   setSelectedFilters: (filters: string[]) => void;
 }) {
   return (
-    <div className="flex gap-2 overflow-x-scroll no-scrollbar px-4">
+    <div className="fixed top-20 flex gap-2 overflow-x-scroll no-scrollbar px-4">
       {filters.map((tag) => (
         <a key={tag} className="list-none">
           <li>
