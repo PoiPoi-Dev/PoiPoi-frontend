@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useContext } from "react";
 import Map, { LngLatBoundsLike } from "react-map-gl/maplibre";
-import { Pin } from "../_utils/global";
+import { Pin, levelAndXp } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
@@ -24,6 +24,7 @@ import ImportantPinContextProvider, {
   ImportantPinContext,
 } from "./useContext/ImportantPinContext";
 import MainQuest from "./MainQuest";
+import Progressbar from "./LevelProrgressbar";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -34,6 +35,7 @@ const mapMaxBounds: LngLatBoundsLike = [
   139.93502, //East
   35.84602, //North
 ];
+
 const mapMaxZoom = 20;
 const mapMinZoom = 10;
 const mapMaxPitch = 0;
@@ -61,6 +63,11 @@ function MapInner() {
   >(null);
 
   const [score, setScore] = useState<number | null>(null);
+  const [levelAndXp, setLevelAndXp] = useState<levelAndXp>({
+    level: 1,
+    totalXp: 0,
+    xpToNextLevel: 200,
+  });
   const [userCoordinatesAtMomentOfGuess, setUserGuessCoord] = useState<Coordinates | null>(null);
 
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
@@ -100,6 +107,10 @@ function MapInner() {
     const currentUserCoordinates:Coordinates = userCoordinates;
     setUserGuessCoord(currentUserCoordinates)
   },[importantPinContext?.guessedPin]);
+
+  useEffect(() => {
+    void handleLevelAndXp();
+  }, []);
 
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
@@ -213,6 +224,27 @@ function MapInner() {
   useGeolocation(handleSetUserCoordinates);
   useGeolocation(handleSetClosestNotCompletedPin);
 
+  const handleLevelAndXp = async () => {
+    try {
+      const auth = await getAuthService();
+      if (!auth.currentUser) throw "No current user";
+      const uid: string = auth.currentUser.uid;
+
+      const response = await fetch(`${BASE_URL}/api/level/`, {
+        credentials: "include",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firebase_uuid: uid }),
+      });
+      const data: levelAndXp = (await response.json()) as levelAndXp;
+      setLevelAndXp(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // RETURN
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
@@ -227,6 +259,8 @@ function MapInner() {
           />
           {/* <HintButton poi_id={selectedPoiId} /> */}
         </div>
+
+        <Progressbar levelAndXp={levelAndXp} />
 
         {/* ISLAND CONTROLLER */}
         <PoiPhotoToggle
