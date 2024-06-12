@@ -25,12 +25,16 @@ import MainQuest from "./MainQuest";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
+//Map Settings
 const mapMaxBounds: LngLatBoundsLike = [
   139.47995,  //West
-  35.53915,  //South
-  139.91529,  //East
-  35.78940 //North
+  35.52205,  //South
+  139.93502,  //East
+  35.84602 //North
   ];
+const mapMaxZoom = 20;
+const mapMinZoom = 10;
+const mapMaxPitch = 0;
 
 function MapInner() {
   // USE STATE
@@ -229,9 +233,9 @@ function MapInner() {
 
       {/* MAP CANVAS */}
       <Map
-        maxPitch={0}
-        minZoom={11}
-        maxZoom={20}
+        maxPitch={mapMaxPitch}
+        minZoom={mapMinZoom}
+        maxZoom={mapMaxZoom}
         maxBounds={mapMaxBounds}
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
