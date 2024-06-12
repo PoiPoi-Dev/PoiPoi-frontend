@@ -24,8 +24,7 @@ const GuessDistanceModal = ({
   const thresholdDistance = 20;
 
   useEffect(() => {
-    if (!importantPinContext) return;
-    if (!importantPinContext.guessedPin) return;
+    if (!importantPinContext || !importantPinContext.guessedPin) return;
     handleDistanceToPin(importantPinContext.guessedPin, userCoordinates);
   }, [importantPinContext?.guessedPin]);
 

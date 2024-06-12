@@ -109,8 +109,7 @@ export function PoiCard({
       longitude: payload.exact_longitude,
     });
     payload.is_completed = true;
-    if (!importantPinContext) return;
-    if (!importantPinContext.setGuessedPin) return;
+    if (!importantPinContext || !importantPinContext.guessedPin) return;
     importantPinContext.setGuessedPin(payload);
   }
 
@@ -151,19 +150,22 @@ export function PoiCard({
             id={`${id}`}
             className="w-full mt-4 rounded-lg"
             
-            onClick={():void  => {
-              if (user) {
-                if (!handleCheckUserInSearchZone()) {
-                  if (importantPinContext) {
-                    importantPinContext.setTrackingPin(payload);
-                  }
-                } else {
-                  void handleSubmitGuessOnClick(user, payload, userCoordinates)
-                  }
-              } else {
+            onClick={(): void => {
+              if (!user) {
                 alert("please login");
+                return;
+              }
+            
+              if (handleCheckUserInSearchZone()) {
+                void handleSubmitGuessOnClick(user, payload, userCoordinates);
+                return;
+              }
+            
+              if (importantPinContext) {
+                importantPinContext.setTrackingPin(payload);
               }
             }}
+            
           >
             {!handleCheckUserInSearchZone()
               ? "Too far! Track this pin?"
