@@ -23,6 +23,7 @@ const PoiPhotoToggle = ({
   const [trackingPin, setTrackingPin] = useState<Pin | null>(null);
   const [distanceToPin, setDistanceToPin] = useState<number>(0);
   const [isActiveState, setIsActiveState] = useState<boolean>(false);
+  const [imgError, setImgError] = useState<boolean>(false);
 
   // USE EFFECT
   useEffect(() => {
@@ -41,7 +42,7 @@ const PoiPhotoToggle = ({
   const handleRenderPhoto = () => {
     return showPopup ? null : (
       <div className="relative flex flex-col items-center">
-        {trackingPin && isActiveState && (
+        {!imgError && trackingPin && isActiveState && (
           <Image
             src={trackingPin.img_url}
             alt={trackingPin.title}
@@ -52,7 +53,13 @@ const PoiPhotoToggle = ({
               setSelectedPoiId(trackingPin.poi_id);
               setShowPopup(true);
             }}
+            onError={() => setImgError(true)}
           />
+        )}
+        {imgError && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-200 text-gray-500">
+            Image not available
+          </div>
         )}
       </div>
     );

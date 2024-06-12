@@ -37,27 +37,33 @@ export function PoiCard({
     latitude: search_latitude,
     longitude: search_longitude,
   };
+  const [imgError, setImgError] = useState<boolean>(false);
 
   // HANDLERS FUNCTIONS
   const handleCheckUserInSearchZone = (): boolean => {
     if (!userCoordinates) return false;
     return (
-      GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates) < payload.search_radius
+      GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates) <
+      payload.search_radius
     );
   };
 
-  const PostGuess = async (user: User, pin: Pin, distance: number):Promise<Response|void> => {
+  const PostGuess = async (
+    user: User,
+    pin: Pin,
+    distance: number
+  ): Promise<Response | void> => {
     try {
-    if (!user) throw 'Not logged in'; //error
-    if (!pin) throw 'Can not get pin';
+      if (!user) throw "Not logged in"; //error
+      if (!pin) throw "Can not get pin";
 
-    const uid = user.uid;
-    const {poi_id, search_radius} = pin;
-    const data: {
-      distance: number;
-      poi_id: number | undefined;
-      uid: string;
-      search_radius: number | undefined;
+      const uid = user.uid;
+      const { poi_id, search_radius } = pin;
+      const data: {
+        distance: number;
+        poi_id: number | undefined;
+        uid: string;
+        search_radius: number | undefined;
       } = {
         distance,
         poi_id,
@@ -79,20 +85,29 @@ export function PoiCard({
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
-  const handleSubmitGuessOnClick = async (user: User, pin:Pin | null, userCoordinates: Coordinates | null) => {
+  const handleSubmitGuessOnClick = async (
+    user: User,
+    pin: Pin | null,
+    userCoordinates: Coordinates | null
+  ) => {
     try {
-      if (!user) throw 'Not logged in'
-      if (!pin) throw 'No pin to track';
-      if (!userCoordinates) throw 'No user coordinates'
-      
+      if (!user) throw "Not logged in";
+      if (!pin) throw "No pin to track";
+      if (!userCoordinates) throw "No user coordinates";
+
       const pinCoordinates: Coordinates = {
         longitude: pin.exact_longitude,
-        latitude: pin.exact_latitude
-      }
-      const distanceToPin:number = parseFloat(GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates).toFixed(3));
-  
+        latitude: pin.exact_latitude,
+      };
+      const distanceToPin: number = parseFloat(
+        GetDistanceFromCoordinatesToMeters(
+          userCoordinates,
+          pinCoordinates
+        ).toFixed(3)
+      );
+
       await PostGuess(user, payload, distanceToPin);
       updatePoi();
     } catch (error) {
@@ -104,27 +119,34 @@ export function PoiCard({
     setCollect(true);
     setShowPopup && setShowPopup(false);
     setGuessPoiPosition &&
-    setGuessPoiPosition({
-      latitude: payload.exact_latitude,
-      longitude: payload.exact_longitude,
-    });
+      setGuessPoiPosition({
+        latitude: payload.exact_latitude,
+        longitude: payload.exact_longitude,
+      });
     payload.is_completed = true;
-  }
-
+  };
 
   // RETURN
   return (
     <section className="relative top-0 flex flex-col bg-gray-300 w-[300px] min-h-[600px] max-h-full rounded-2xl overflow-hidden border-solid border-white border-4 z-[999]">
       {/* IMAGE */}
-      <Image
-        src={payload.img_url}
-        alt={payload.title}
-        width={300}
-        height={400}
-        sizes="(max-width: 300px) 100vw, 300px"
-        priority
-        className="object-cover h-[460px]"
-      />
+      {!imgError && (
+        <Image
+          src={payload.img_url}
+          alt={payload.title}
+          width={300}
+          height={400}
+          sizes="(max-width: 300px) 100vw, 300px"
+          priority
+          className="object-cover h-[460px]"
+          onError={() => setImgError(true)}
+        />
+      )}
+      {imgError && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-200 text-gray-500">
+          Image not available
+        </div>
+      )}
 
       <article className="flex-auto max-h-full w-full p-2">
         <h1 className="text-2xl font-bold text-black p-0 m-0 mb-2">
@@ -147,8 +169,7 @@ export function PoiCard({
           <Button
             id={`${id}`}
             className="w-full mt-4 rounded-lg"
-            
-            onClick={():void  => {
+            onClick={(): void => {
               if (user) {
                 if (!handleCheckUserInSearchZone()) {
                   if (trackingPinContext) {
@@ -156,8 +177,8 @@ export function PoiCard({
                     setShowPopup && setShowPopup(false);
                   }
                 } else {
-                  void handleSubmitGuessOnClick(user, payload, userCoordinates)
-                  }
+                  void handleSubmitGuessOnClick(user, payload, userCoordinates);
+                }
               } else {
                 alert("please login");
               }

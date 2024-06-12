@@ -14,6 +14,7 @@ interface PoidexModalProps {
 const PoidexModal: React.FC<PoidexModalProps> = ({ pins, setShowPoidex }) => {
   const [showBigImage, setShowBigImage] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [imgError, setImgError] = useState<boolean>(false);
 
   return (
     <main className="fixed flex h-screen flex-col items-center justify-between">
@@ -64,16 +65,24 @@ const PoidexModal: React.FC<PoidexModalProps> = ({ pins, setShowPoidex }) => {
                           {pin.title}
                         </div>
                       )}
-                      <Image
-                        src={
-                          pin.is_completed ? pin.img_url : "/UnknownIcon.png"
-                        }
-                        alt={pin.title}
-                        width={600}
-                        height={600}
-                        className="w-full min-h-28 flex-1 object-cover"
-                        onClick={() => setSelectedId(null)}
-                      />
+                      {!imgError && (
+                        <Image
+                          src={
+                            pin.is_completed ? pin.img_url : "/UnknownIcon.png"
+                          }
+                          alt={pin.title}
+                          width={600}
+                          height={600}
+                          className="w-full min-h-28 flex-1 object-cover"
+                          onClick={() => setSelectedId(null)}
+                          onError={() => setImgError(true)}
+                        />
+                      )}
+                      {imgError && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-gray-200 text-gray-500">
+                          Image not available
+                        </div>
+                      )}
                       <h2 className="w-full h-12 text-center mt-2 line-clamp-2 overflow-ellipsis">
                         {pin.is_completed ? pin.title : "???"}
                       </h2>
