@@ -1,7 +1,5 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { Leaderboards } from "../_utils/global";
+import { getLeaderboardData } from "../_utils/fetchLeaderboard";
 import {
   Table,
   TableHeader,
@@ -12,30 +10,14 @@ import {
 } from "../_components/ui/table";
 import FooterMenu from "../_components/FooterMenu";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+export default async function Leaderboard() {
+  const LeaderboardData: Leaderboards[] | undefined =
+    await getLeaderboardData();
 
-const Leaderboard: React.FC = () => {
-  const [leaderboard, setLeaderboard] = useState<Leaderboards[]>([]);
-
-  useEffect(() => {
-    return () => {
-      void getLeaderboard();
-    };
-  }, []);
-
-  const getLeaderboard = async () => {
-    try {
-      const response = await fetch(`${baseUrl}/api/leaderboards`, {
-        credentials: "include",
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const resData: Leaderboards[] = (await response.json()) as Leaderboards[];
-      setLeaderboard(resData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  if (!LeaderboardData) {
+    alert("Leaderboard currently unavailble");
+    return;
+  }
 
   return (
     <>
@@ -53,7 +35,7 @@ const Leaderboard: React.FC = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {leaderboard.map((player, index) => (
+            {LeaderboardData.map((player, index) => (
               <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{player.username}</TableCell>
@@ -68,6 +50,4 @@ const Leaderboard: React.FC = () => {
       <FooterMenu variant="leaderboard" />
     </>
   );
-};
-
-export default Leaderboard;
+}
