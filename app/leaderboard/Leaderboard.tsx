@@ -1,4 +1,3 @@
-
 import { Leaderboards } from "../_utils/global";
 import { getLeaderboardData } from "../_utils/fetchLeaderboard";
 import {
