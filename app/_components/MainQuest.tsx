@@ -28,10 +28,10 @@ const MainQuest = ({ closestNotCompletedPin: closestPin }: MainQuestProps) => {
     console.log(trackingPinContext?.trackingPin);
     if (!trackingPinContext || !trackingPinContext.trackingPin) {
       setIsTracking(false);
-      setPinToPanTo(closestPin);
+      setPinToPanTo((closestPin?.is_completed) ? null : closestPin);
       return;
     }
-    if (!closestPin) {
+    if (!closestPin || closestPin.is_completed) {
       setPinToPanTo(null);
       return;
     }
