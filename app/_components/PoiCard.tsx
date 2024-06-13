@@ -17,14 +17,12 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export function PoiCard({
   id,
   payload,
-  setGuessPoiPosition,
   setShowPopup,
   userCoordinates,
   setScore,
 }: {
   id: number;
   payload: Pin;
-  setGuessPoiPosition?: (arg0: Coordinates | null) => void;
   setShowPopup?: (arg0: boolean) => void;
   userCoordinates: Coordinates | null;
   setScore: (arg0: number | null) => void;
@@ -128,11 +126,6 @@ export function PoiCard({
   const updatePoi = () => {
     setCollect(true);
     setShowPopup && setShowPopup(false);
-    setGuessPoiPosition &&
-      setGuessPoiPosition({
-        latitude: payload.exact_latitude,
-        longitude: payload.exact_longitude,
-      });
     payload.is_completed = true;
     if (!importantPinContext) return;
     if (importantPinContext.trackingPin?.poi_id == payload.poi_id) {

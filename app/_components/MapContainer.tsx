@@ -42,9 +42,9 @@ function MapInner() {
   // USE STATE
   const [poiData, setPoiData] = useState<Pin[]>([]);
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates | null>(
-    null
-  );
+  // const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates | null>(
+  //   null
+  // );
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
     undefined
@@ -61,6 +61,7 @@ function MapInner() {
   >(null);
 
   const [score, setScore] = useState<number | null>(null);
+  const [userCoordinatesAtMomentOfGuess, setUserGuessCoord] = useState<Coordinates | null>(null);
 
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
@@ -90,6 +91,15 @@ function MapInner() {
     if (!closestNotCompletedPin || !userCoordinates) return;
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
   }, [closestNotCompletedPin, userCoordinates]);
+
+  useEffect(() => {
+    if (!importantPinContext?.guessedPin) {
+      setUserGuessCoord(null)
+    }
+    if (!userCoordinates) return;
+    const currentUserCoordinates:Coordinates = userCoordinates;
+    setUserGuessCoord(currentUserCoordinates)
+  },[importantPinContext?.guessedPin]);
 
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
@@ -274,23 +284,25 @@ function MapInner() {
             poiData={poiData}
             selectedPoiId={selectedPoiId}
             setShowPopup={setShowPopup}
-            setGuessPoiPosition={setGuessPoiPosition}
             userCoordinates={userCoordinates}
             setScore={setScore}
           />
         )}
 
         {/* GUESS MODEL */}
-        {userCoordinates && guessPoiPosition !== null && (
+        {userCoordinatesAtMomentOfGuess && importantPinContext && importantPinContext.guessedPin && (
           <>
             <GuessPolyline
-              userLocation={userCoordinates}
-              guessPoiLocation={guessPoiPosition}
+              userLocation={userCoordinatesAtMomentOfGuess}
+              guessPoiLocation={{
+                longitude: importantPinContext.guessedPin.exact_longitude,
+                latitude: importantPinContext.guessedPin.exact_latitude
+              } as Coordinates}
             />
             <GuessDistanceModal
-              guessPoiPosition={guessPoiPosition}
-              setGuessPoiPosition={setGuessPoiPosition}
-              userCoordinates={userCoordinates}
+              guessedPin = {importantPinContext.guessedPin}
+              setGuessedPin={importantPinContext.setGuessedPin}
+              userCoordinates={userCoordinatesAtMomentOfGuess}
               score={score}
             />
           </>

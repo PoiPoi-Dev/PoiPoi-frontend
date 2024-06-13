@@ -1,36 +1,36 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Drawer, DrawerContent, DrawerTrigger } from "./ui/drawer";
 import {
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
 import { Button } from "./ui/button";
-import { ImportantPinContext } from "./useContext/ImportantPinContext";
 import { Pin } from "../_utils/global";
 import { Input } from "./ui/input";
 import { Label } from "@radix-ui/react-label";
 
 const GuessDistanceModal = ({
-  guessPoiPosition,
-  setGuessPoiPosition,
+  guessedPin,
+  setGuessedPin,
+  // guessPoiPosition,
   userCoordinates,
   score,
 }: {
-  guessPoiPosition: Coordinates;
-  setGuessPoiPosition: (arg0: Coordinates | null) => void;
+  guessedPin: Pin
+  // guessPoiPosition: Coordinates;
+  setGuessedPin: (arg0: Pin | null) => void;
   userCoordinates: Coordinates;
   score: number | null;
 }) => {
-  const importantPinContext = useContext(ImportantPinContext);
   const [distanceToPin, setDistancePin] = useState<number>(0);
   const [hint, setHint] = useState<string>("");
   const drawerRef = useRef<HTMLButtonElement>(null); // Ref for the Done button
   const thresholdDistance = 20;
 
   useEffect(() => {
-    if (!importantPinContext || !importantPinContext.guessedPin) return;
-    handleDistanceToPin(importantPinContext.guessedPin, userCoordinates);
-  }, [importantPinContext?.guessedPin]);
+    if (!guessedPin) return;
+    handleDistanceToPin(guessedPin, userCoordinates);
+  }, [guessedPin]);
 
   const handleDistanceToPin = (
     guessedPin: Pin,
@@ -50,7 +50,7 @@ const GuessDistanceModal = ({
 
   const handleSubmitHint = async () => {
     const hintData = {
-      poi_id: importantPinContext?.guessedPin?.poi_id,
+      poi_id: guessedPin,
       content: hint,
     };
     console.log(hintData);
@@ -94,20 +94,10 @@ const GuessDistanceModal = ({
           <p className="mb-4">
             You guessed{" "}
             <span className="text-primary font-semibold">
-              {GetDistanceFromCoordinatesToMeters(
-                userCoordinates,
-                guessPoiPosition
-              ) > 1000
-                ? (
-                    GetDistanceFromCoordinatesToMeters(
-                      userCoordinates,
-                      guessPoiPosition
-                    ) / 1000
-                  ).toFixed(2) + "km"
-                : GetDistanceFromCoordinatesToMeters(
-                    userCoordinates,
-                    guessPoiPosition
-                  ).toFixed(2) + "m"}{" "}
+              { distanceToPin > 1000
+                ? (distanceToPin / 1000)
+                  .toFixed(2) + "km"
+                : distanceToPin.toFixed(2) + "m"}{" "}
             </span>
             away from the picture and your score is{" "}
             <span className="text-primary font-semibold">{score}</span>! Good
@@ -143,7 +133,8 @@ const GuessDistanceModal = ({
                   ref={drawerRef}
                   onClick={() => {
                     handleSubmitClick;
-                    setGuessPoiPosition(null);
+                    // setGuessPoiPosition(null);
+                    setGuessedPin(null);
                   }}
                   className="w-full"
                 >
@@ -153,7 +144,8 @@ const GuessDistanceModal = ({
                   variant={"link"}
                   ref={drawerRef}
                   onClick={() => {
-                    setGuessPoiPosition(null);
+                    // setGuessPoiPosition(null);
+                    setGuessedPin(null);
                   }}
                   className="w-full"
                 >
@@ -169,7 +161,8 @@ const GuessDistanceModal = ({
                 variant={"link"}
                 ref={drawerRef}
                 onClick={() => {
-                  setGuessPoiPosition(null);
+                  // setGuessPoiPosition(null);
+                  setGuessedPin(null);
                 }}
                 className="w-full"
               >
