@@ -61,6 +61,7 @@ function MapInner() {
   >(null);
 
   const [score, setScore] = useState<number | null>(null);
+  const [userCoordinatesAtMomentOfGuess, setUserGuessCoord] = useState<Coordinates | null>(null);
 
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
@@ -90,6 +91,15 @@ function MapInner() {
     if (!closestNotCompletedPin || !userCoordinates) return;
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
   }, [closestNotCompletedPin, userCoordinates]);
+
+  useEffect(() => {
+    if (!importantPinContext?.guessedPin) {
+      setUserGuessCoord(null)
+    }
+    if (!userCoordinates) return;
+    const currentUserCoordinates:Coordinates = userCoordinates;
+    setUserGuessCoord(currentUserCoordinates)
+  },[importantPinContext?.guessedPin]);
 
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
@@ -280,10 +290,10 @@ function MapInner() {
         )}
 
         {/* GUESS MODEL */}
-        {userCoordinates && importantPinContext && importantPinContext.guessedPin && (
+        {userCoordinatesAtMomentOfGuess && importantPinContext && importantPinContext.guessedPin && (
           <>
             <GuessPolyline
-              userLocation={userCoordinates}
+              userLocation={userCoordinatesAtMomentOfGuess}
               guessPoiLocation={{
                 longitude: importantPinContext.guessedPin.exact_longitude,
                 latitude: importantPinContext.guessedPin.exact_latitude
@@ -292,7 +302,7 @@ function MapInner() {
             <GuessDistanceModal
               guessedPin = {importantPinContext.guessedPin}
               setGuessedPin={importantPinContext.setGuessedPin}
-              userCoordinates={userCoordinates}
+              userCoordinates={userCoordinatesAtMomentOfGuess}
               score={score}
             />
           </>
