@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useContext } from "react";
-import Map, {LngLatBoundsLike} from "react-map-gl/maplibre";
+import Map, { LngLatBoundsLike } from "react-map-gl/maplibre";
 import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
@@ -29,11 +29,11 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 //Map Settings
 const mapMaxBounds: LngLatBoundsLike = [
-  139.47995,  //West
-  35.52205,  //South
-  139.93502,  //East
-  35.84602 //North
-  ];
+  139.47995, //West
+  35.52205, //South
+  139.93502, //East
+  35.84602, //North
+];
 const mapMaxZoom = 20;
 const mapMinZoom = 10;
 const mapMaxPitch = 0;
@@ -245,7 +245,7 @@ function MapInner() {
         maxBounds={mapMaxBounds}
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
-        style={{ width: "100vw", height: "100vh" }}
+        style={{ width: "100svw", height: "100svh" }}
         reuseMaps
         dragRotate={false}
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
