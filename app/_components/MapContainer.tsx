@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useContext } from "react";
-import Map, {LngLatBoundsLike} from "react-map-gl/maplibre";
+import Map, { LngLatBoundsLike } from "react-map-gl/maplibre";
 import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
@@ -29,11 +29,11 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 //Map Settings
 const mapMaxBounds: LngLatBoundsLike = [
-  139.47995,  //West
-  35.52205,  //South
-  139.93502,  //East
-  35.84602 //North
-  ];
+  139.47995, //West
+  35.52205, //South
+  139.93502, //East
+  35.84602, //North
+];
 const mapMaxZoom = 20;
 const mapMinZoom = 10;
 const mapMaxPitch = 0;
@@ -42,9 +42,9 @@ function MapInner() {
   // USE STATE
   const [poiData, setPoiData] = useState<Pin[]>([]);
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates | null>(
-    null
-  );
+  // const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates | null>(
+  //   null
+  // );
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
     undefined
@@ -61,6 +61,7 @@ function MapInner() {
   >(null);
 
   const [score, setScore] = useState<number | null>(null);
+  const [userCoordinatesAtMomentOfGuess, setUserGuessCoord] = useState<Coordinates | null>(null);
 
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
@@ -90,6 +91,15 @@ function MapInner() {
     if (!closestNotCompletedPin || !userCoordinates) return;
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
   }, [closestNotCompletedPin, userCoordinates]);
+
+  useEffect(() => {
+    if (!importantPinContext?.guessedPin) {
+      setUserGuessCoord(null)
+    }
+    if (!userCoordinates) return;
+    const currentUserCoordinates:Coordinates = userCoordinates;
+    setUserGuessCoord(currentUserCoordinates)
+  },[importantPinContext?.guessedPin]);
 
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
@@ -245,7 +255,7 @@ function MapInner() {
         maxBounds={mapMaxBounds}
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
-        style={{ width: "100vw", height: "100vh" }}
+        style={{ width: "100svw", height: "100svh" }}
         reuseMaps
         dragRotate={false}
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
@@ -274,23 +284,25 @@ function MapInner() {
             poiData={poiData}
             selectedPoiId={selectedPoiId}
             setShowPopup={setShowPopup}
-            setGuessPoiPosition={setGuessPoiPosition}
             userCoordinates={userCoordinates}
             setScore={setScore}
           />
         )}
 
         {/* GUESS MODEL */}
-        {userCoordinates && guessPoiPosition !== null && (
+        {userCoordinatesAtMomentOfGuess && importantPinContext && importantPinContext.guessedPin && (
           <>
             <GuessPolyline
-              userLocation={userCoordinates}
-              guessPoiLocation={guessPoiPosition}
+              userLocation={userCoordinatesAtMomentOfGuess}
+              guessPoiLocation={{
+                longitude: importantPinContext.guessedPin.exact_longitude,
+                latitude: importantPinContext.guessedPin.exact_latitude
+              } as Coordinates}
             />
             <GuessDistanceModal
-              guessPoiPosition={guessPoiPosition}
-              setGuessPoiPosition={setGuessPoiPosition}
-              userCoordinates={userCoordinates}
+              guessedPin = {importantPinContext.guessedPin}
+              setGuessedPin={importantPinContext.setGuessedPin}
+              userCoordinates={userCoordinatesAtMomentOfGuess}
               score={score}
             />
           </>

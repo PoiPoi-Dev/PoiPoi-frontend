@@ -21,8 +21,8 @@ export default function FilterButton({
                   : [...selectedFilters, tag];
                 setSelectedFilters(selectedFilters);
               }}
-              style={{ borderRadius: "9999px", cursor: "pointer" }}
               variant={selectedFilters.includes(tag) ? "default" : "button"}
+              className="cursor-pointer"
             >
               {tag}
             </Badge>
