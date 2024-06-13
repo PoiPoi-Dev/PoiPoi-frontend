@@ -165,9 +165,10 @@ body {
   top: 0;
 }
 
+/* since the app cannot scroll up or down, svh will be the best to lock everything in place in the browser small height and width */
 .maplibregl-map:fullscreen {
-  height: 100%;
-  width: 100%;
+  height: 100svh;
+  width: 100svw;
 }
 
 .maplibregl-ctrl-group button.maplibregl-ctrl-compass {

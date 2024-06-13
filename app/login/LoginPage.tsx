@@ -3,11 +3,9 @@ import React, { useEffect, useState, useContext } from "react";
 import { User } from "../_utils/global";
 import {
   createUser,
-  isVerified,
   loginUser,
   logoutUser,
 } from "../_actions/authenticationActions";
-import { getAuthService } from "@/config/firebaseconfig";
 import { AuthContext } from "../_components/useContext/AuthContext";
 import { Button } from "../_components/ui/button";
 import { Input } from "@/app/_components/ui/input";
@@ -77,20 +75,6 @@ const LoginPage: React.FC = () => {
     try {
       await logoutUser();
       setLoginWindowStatus(0);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const checkIfVerified = async () => {
-    try {
-      const auth = await getAuthService();
-      if (!auth.currentUser) {
-        alert("No current user");
-        throw "No current user";
-      }
-      const idToken: string = await auth.currentUser.getIdToken(true);
-      await isVerified(idToken);
     } catch (error) {
       console.error(error);
     }
@@ -175,7 +159,7 @@ const LoginPage: React.FC = () => {
 
         <div>
           <Button
-            variant={"outline"}
+            variant={"link"}
             className="w-full mt-4"
             onClick={() => setLoginWindowStatus(1)}
           >
@@ -229,7 +213,7 @@ const LoginPage: React.FC = () => {
         </form>
 
         <Button
-          variant={"outline"}
+          variant={"link"}
           className="w-full mt-4"
           onClick={() => setLoginWindowStatus(0)}
         >
@@ -255,11 +239,6 @@ const LoginPage: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-4 w-screen h-screen px-4">
       {renderLoginWindow(loginWindowStatus)}
-      <div>
-        <Button variant={"link"} onClick={() => void checkIfVerified()}>
-          Click here to test if verified
-        </Button>
-      </div>
       <FooterMenu variant="account" />
     </div>
   );
