@@ -135,6 +135,10 @@ export function PoiCard({
       });
     payload.is_completed = true;
     if (!importantPinContext) return;
+    if (importantPinContext.trackingPin?.poi_id == payload.poi_id)
+    {
+      importantPinContext.setTrackingPin(null);
+    }
     importantPinContext.setGuessedPin(payload);
   };
 
