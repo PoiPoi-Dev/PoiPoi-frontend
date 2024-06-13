@@ -41,7 +41,9 @@ export function PoiCard({
     longitude: search_longitude,
   };
   //hint useStates
-  const [hints, setHints] = useState<string[] | undefined[]>([]);
+  const [hints, setHints] = useState<string[] | undefined[]>([
+    "You sure? Click again to show hints!",
+  ]);
 
   // HANDLERS FUNCTIONS
   const handleCheckUserInSearchZone = (): boolean => {
@@ -153,7 +155,7 @@ export function PoiCard({
       if (!userCoordinates) throw "No user coordinates";
 
       await getHints(user, payload);
-      toastHintCycle();
+      //toastHintCycle();
     } catch (error) {
       console.error("Error", error);
     }
@@ -161,16 +163,20 @@ export function PoiCard({
 
   //cycle thru hints in toast
   const toastHintCycle = (i: number = 0) => {
-    toast("Hint:", {
-      description: hints[i],
-      action: {
-        label: "next hint",
-        onClick: () => {
-          const nextIndex = (i + 1) % hints.length; // Calculate the index of the next hint
-          toastHintCycle(nextIndex);
+    if (hints[0] === "You sure? Click again to show hints!") {
+      toast(hints[0]);
+    } else {
+      toast("Hint:", {
+        description: hints[i],
+        action: {
+          label: "next hint",
+          onClick: () => {
+            const nextIndex = (i + 1) % hints.length; // Calculate the index of the next hint
+            toastHintCycle(nextIndex);
+          },
         },
-      },
-    });
+      });
+    }
   };
 
   //get hints
@@ -273,7 +279,7 @@ export function PoiCard({
             <Button
               id={`${id}`}
               className="w-full mt-4 rounded-lg"
-              onClick={(): void => {
+              onClick={async (): Promise<void> => {
                 if (!user) {
                   alert("please login");
                   return;
@@ -284,8 +290,9 @@ export function PoiCard({
                     setShowPopup && setShowPopup(false);
                   }
                 } else {
-                  //may be empty bc still fetching from handleGetHintOnClick
-                  void handleGetHintOnClick(user, payload, userCoordinates);
+                  // empty bc using OG useState; separating the functions like this doesn't solve it
+                  await handleGetHintOnClick(user, payload, userCoordinates);
+                  toastHintCycle();
                 }
               }}
             >
