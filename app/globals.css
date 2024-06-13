@@ -8,7 +8,6 @@ body {
 }
 
 .card {
-  max-width: 400px;
   width: 100%;
 }
 
@@ -44,10 +43,10 @@ body {
     hsla(var(--primary-500)) 0%,
     hsla(var(--secondary-500)) 100%
   );
-  height: 400px;
-  width: 400px;
+  aspect-ratio: 1 / 1;
+  width: 105%;
   position: absolute;
-  animation: rotate 8s linear infinite;
+  animation: rotate 6s linear infinite;
   z-index: 0;
 }
 
