@@ -42,9 +42,9 @@ function MapInner() {
   // USE STATE
   const [poiData, setPoiData] = useState<Pin[]>([]);
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates | null>(
-    null
-  );
+  // const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates | null>(
+  //   null
+  // );
   // const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
     undefined
@@ -274,7 +274,6 @@ function MapInner() {
             poiData={poiData}
             selectedPoiId={selectedPoiId}
             setShowPopup={setShowPopup}
-            setGuessPoiPosition={setGuessPoiPosition}
             userCoordinates={userCoordinates}
             setScore={setScore}
           />

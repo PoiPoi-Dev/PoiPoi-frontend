@@ -11,14 +11,12 @@ export default function PoiPopup({
   id,
   payload,
   setShowPopup,
-  setGuessPoiPosition,
   userCoordinates,
   setScore
 }: {
   id: number;
   payload: Pin;
   setShowPopup: (arg0: boolean) => void;
-  setGuessPoiPosition: (arg0: Coordinates | null) => void;
   userCoordinates: Coordinates | null;
   setScore: (arg0: number|null) => void;
 }): JSX.Element {
@@ -31,7 +29,6 @@ export default function PoiPopup({
           <PoiCard
             id={id}
             payload={payload}
-            setGuessPoiPosition={setGuessPoiPosition}
             setShowPopup={setShowPopup}
             userCoordinates={userCoordinates}
             setScore={setScore}
