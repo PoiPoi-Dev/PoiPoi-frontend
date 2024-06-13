@@ -148,7 +148,7 @@ export function PoiCard({
       if (!userCoordinates) throw "No user coordinates";
 
       await getHints(user, payload);
-      //toastHintCycle();
+      toastHintCycle();
     } catch (error) {
       console.error("Error", error);
     }
@@ -212,30 +212,26 @@ export function PoiCard({
         width={300}
         height={400}
         priority
-        className={`object-cover ${
-          collect
-            ? "min-h-[400px] max-h-[400px]"
-            : "min-h-[500px] max-h-[500px]"
-        }`}
+        className="object-cover min-h-[420px] flex-1"
       />
 
-      <article className="flex flex-col w-full h-full p-2 overflow-y-scroll no-scrollbar">
-        <div className="h-fit w-full whitespace-nowrap overflow-x-scroll no-scrollbar">
-          <h1 className="text-2xl w-full align-baseline font-bold text-black p-0 m-0 mb-2">
+      <article className="flex flex-col gap-2 justify-between w-full h-fit py-2 pl-2 overflow-y-scroll no-scrollbar">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-primary text-2xl font-bold p-0 m-0 w-full whitespace-nowrap overflow-x-scroll -mb-2 no-scrollbar">
             {payload.title}
           </h1>
-        </div>
 
-        {/* TAG */}
-        {payload.tags.length > 0 && (
-          <div className="flex w-full whitespace-nowrap overflow-x-scroll no-scrollbar h-[30px] gap-2 text-sm mb-2">
-            {payload.tags.map(
-              (tag: string): JSX.Element => (
-                <Badge key={tag + id}>{tag}</Badge>
-              )
-            )}
-          </div>
-        )}
+          {/* TAG */}
+          {payload.tags.length > 0 && (
+            <div className="flex w-full whitespace-nowrap overflow-x-scroll no-scrollbar h-[30px] gap-2 text-sm">
+              {payload.tags.map(
+                (tag: string): JSX.Element => (
+                  <Badge key={tag + id}>{tag}</Badge>
+                )
+              )}
+            </div>
+          )}
+        </div>
 
         {/* COLLECT BUTTON OR DESCRIPTION */}
         {collect && userCoordinates ? (
@@ -243,10 +239,10 @@ export function PoiCard({
             {payload.description}
           </p>
         ) : (
-          <div>
+          <div className="flex flex-col pr-2 gap-2 mt-2">
             <Button
               id={`${id}`}
-              className="w-full mt-4 rounded-lg"
+              className="w-full rounded-lg"
               onClick={(): void => {
                 if (!user) {
                   alert("please login");
@@ -271,8 +267,10 @@ export function PoiCard({
             <Toaster position="top-center" closeButton />
             <Button
               id={`${id}`}
-              className="w-full mt-4 rounded-lg"
-              onClick={async (): Promise<void> => {
+              className="w-full rounded-lg"
+              variant={"link"}
+              disabled={!handleCheckUserInSearchZone()}
+              onClick={(): void => {
                 if (!user) {
                   alert("please login");
                   return;
@@ -284,8 +282,7 @@ export function PoiCard({
                   }
                 } else {
                   // empty bc using OG useState; separating the functions like this doesn't solve it
-                  await handleGetHintOnClick(user, payload, userCoordinates);
-                  toastHintCycle();
+                  void handleGetHintOnClick(user, payload, userCoordinates);
                 }
               }}
             >
