@@ -212,11 +212,7 @@ export function PoiCard({
         width={300}
         height={400}
         priority
-        className={`object-cover ${
-          collect
-            ? "min-h-[400px] max-h-[400px]"
-            : "min-h-[500px] max-h-[500px]"
-        }`}
+        className={`object-cover min-h-[420px]`}
       />
 
       <article className="flex flex-col w-full h-full p-2 overflow-y-scroll no-scrollbar">
