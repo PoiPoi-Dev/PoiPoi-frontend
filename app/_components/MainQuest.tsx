@@ -60,7 +60,7 @@ const MainQuest = ({ closestNotCompletedPin: closestPin }: MainQuestProps) => {
 
   return (
     <div
-      className="fixed box-border w-screen h-12 top-4 left-0 z-50 px-20 flex justify-between gap-4"
+      className="fixed w-screen h-16 top-0 left-0 z-50 p-0 m-0 flex justify-between"
       onClick={() => {
         if (pinToPanTo) handlePanMapToTrackingPin(pinToPanTo);
       }}
@@ -69,9 +69,9 @@ const MainQuest = ({ closestNotCompletedPin: closestPin }: MainQuestProps) => {
         <div className="w-full h-full bg-white rounded-full z-50"></div>
       </div> */}
 
-      <div className="rounded-full h-12 w-full flex gap-4 cursor-pointer card border-mix p-1 shrink">
-        <div className="flex z-50 bg-white/80 w-full h-full rounded-full justify-center items-center px-4">
-          <FaMapPin size={24} className="text-primary mr-4" />
+      <div className="h-full w-full flex gap-4 cursor-pointer card border-mix pb-1">
+        <div className="flex z-50 bg-white/60 w-full h-full justify-center items-center px-4">
+          <FaMapPin size={24} className="text-primary mr-4 animate-bounce" />
           <h1 className="text-primary-500 text-sm font-semibold truncate">
             {!pinToPanTo
               ? "Select POI to track!"
