@@ -212,18 +212,18 @@ export function PoiCard({
         width={300}
         height={400}
         priority
-        className={`object-cover min-h-[420px]`}
+        className="object-cover min-h-[420px] flex-1"
       />
 
-      <article className="flex flex-col justify-between w-full h-full py-2 pl-2 overflow-y-scroll no-scrollbar">
+      <article className="flex flex-col gap-2 justify-between w-full h-fit py-2 pl-2 overflow-y-scroll no-scrollbar">
         <div className="flex flex-col gap-2">
-          <h1 className="text-primary text-2xl align-baseline font-bold text-black p-0 m-0 h-[28px] w-full whitespace-nowrap overflow-x-scroll no-scrollbar">
+          <h1 className="text-primary text-2xl font-bold p-0 m-0 w-full whitespace-nowrap overflow-x-scroll -mb-2 no-scrollbar">
             {payload.title}
           </h1>
 
           {/* TAG */}
           {payload.tags.length > 0 && (
-            <div className="flex w-full whitespace-nowrap overflow-x-scroll no-scrollbar h-[30px] gap-2 text-sm mb-2">
+            <div className="flex w-full whitespace-nowrap overflow-x-scroll no-scrollbar h-[30px] gap-2 text-sm">
               {payload.tags.map(
                 (tag: string): JSX.Element => (
                   <Badge key={tag + id}>{tag}</Badge>
@@ -239,7 +239,7 @@ export function PoiCard({
             {payload.description}
           </p>
         ) : (
-          <div className="flex flex-col pr-2 gap-2">
+          <div className="flex flex-col pr-2 gap-2 mt-2">
             <Button
               id={`${id}`}
               className="w-full rounded-lg"
@@ -268,7 +268,7 @@ export function PoiCard({
             <Button
               id={`${id}`}
               className="w-full rounded-lg"
-              variant={"outline"}
+              variant={"link"}
               disabled={!handleCheckUserInSearchZone()}
               onClick={(): void => {
                 if (!user) {
