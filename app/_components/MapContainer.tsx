@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useContext } from "react";
-import Map from "react-map-gl/maplibre";
+import Map, { LngLatBoundsLike } from "react-map-gl/maplibre";
 import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapContextProvider from "./MapContextProvider";
@@ -20,10 +20,23 @@ import GuessPolyline from "./ui/guessPolyline";
 import PopoverCard from "./PopoverCard";
 import GuessDistanceModal from "./GuessDistanceModal";
 import PoiPhotoToggle from "./PoiPhotoToggle";
-import TrackingPinContextProvider, {TrackingPinContext} from "./useContext/TrackingPinContext";
+import ImportantPinContextProvider, {
+  ImportantPinContext,
+} from "./useContext/ImportantPinContext";
 import MainQuest from "./MainQuest";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+//Map Settings
+const mapMaxBounds: LngLatBoundsLike = [
+  139.47995, //West
+  35.52205, //South
+  139.93502, //East
+  35.84602, //North
+];
+const mapMaxZoom = 20;
+const mapMinZoom = 10;
+const mapMaxPitch = 0;
 
 function MapInner() {
   // USE STATE
@@ -38,11 +51,17 @@ function MapInner() {
   );
   const [filters, setFilters] = useState<string[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const [userCoordinates, setUserCoordinates] = useState<Coordinates|null>(null);
-  const [closestNotCompletedPin, setClosestNotCompletedPin] = useState<Pin|null> (null);
-  const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<number|null> (null);
-  
-  
+  const [userCoordinates, setUserCoordinates] = useState<Coordinates | null>(
+    null
+  );
+  const [closestNotCompletedPin, setClosestNotCompletedPin] =
+    useState<Pin | null>(null);
+  const [distanceToTrackingPin, setDistanceToTrackingPin] = useState<
+    number | null
+  >(null);
+
+  const [score, setScore] = useState<number | null>(null);
+
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
 
   // Default camera map when user opens the app
@@ -55,9 +74,8 @@ function MapInner() {
   });
 
   const user = useContext(AuthContext);
-  const trackingPinContext = useContext(TrackingPinContext);
-  
-  
+  const importantPinContext = useContext(ImportantPinContext);
+
   // USE EFFECT
   useEffect(() => {
     user ? void handleFetchPoiByUid() : void handleFetchPoiByAnonymous();
@@ -65,11 +83,8 @@ function MapInner() {
   }, [user]);
 
   useEffect(() => {
-    if (!trackingPinContext) return;
-    if (!trackingPinContext.trackingPin) return;
-    console.table(trackingPinContext.trackingPin);
-  },[trackingPinContext, trackingPinContext?.trackingPin])
-
+    console.log(importantPinContext?.trackingPin);
+  }, [importantPinContext?.trackingPin]);
 
   useEffect(() => {
     if (!closestNotCompletedPin || !userCoordinates) return;
@@ -194,10 +209,7 @@ function MapInner() {
       {/* GAME UI */}
       <div className="absolute top-0 left-0 z-50 w-screen pt-4 gap-4 flex flex-col">
         {/* HEADER CONTROLLER */}
-        <div className="flex flex-col gap-4 w-full">
-          <div className="px-4">
-            <MainQuest />
-          </div>
+        <div className="fixed top-20 flex flex-col gap-4 w-full">
           <FilterButton
             filters={filters}
             selectedFilters={selectedFilters}
@@ -207,10 +219,15 @@ function MapInner() {
         </div>
 
         {/* ISLAND CONTROLLER */}
-        <PoiPhotoToggle pins={poiData} setShowPopup={setShowPopup} setSelectedPoiId={setSelectedPoiId} showPopup={showPopup} />
+        <PoiPhotoToggle
+          pins={poiData}
+          setShowPopup={setShowPopup}
+          setSelectedPoiId={setSelectedPoiId}
+          showPopup={showPopup}
+        />
 
         {/* FOOTER CONTROLLER */}
-        <div className="fixed bottom-0 left-0 w-full flex gap-2 h-16 bg-white justify-center items-end">
+        <div className="fixed bottom-0 left-0 w-full flex gap-2 h-16 bg-white rounded-t-3xl justify-center items-end">
           <GameControls
             pins={poiData}
             trackingPin={closestNotCompletedPin}
@@ -222,9 +239,13 @@ function MapInner() {
 
       {/* MAP CANVAS */}
       <Map
+        maxPitch={mapMaxPitch}
+        minZoom={mapMinZoom}
+        maxZoom={mapMaxZoom}
+        maxBounds={mapMaxBounds}
         {...viewPort}
         onMove={(evt) => setViewPort(evt.viewState)}
-        style={{ width: "100vw", height: "100vh" }}
+        style={{ width: "100svw", height: "100svh" }}
         reuseMaps
         dragRotate={false}
         mapStyle={`https://api.protomaps.com/styles/v2/light.json?key=${process.env.NEXT_PUBLIC_PROTOMAPS_API_KEY}`}
@@ -255,6 +276,7 @@ function MapInner() {
             setShowPopup={setShowPopup}
             setGuessPoiPosition={setGuessPoiPosition}
             userCoordinates={userCoordinates}
+            setScore={setScore}
           />
         )}
 
@@ -269,9 +291,11 @@ function MapInner() {
               guessPoiPosition={guessPoiPosition}
               setGuessPoiPosition={setGuessPoiPosition}
               userCoordinates={userCoordinates}
+              score={score}
             />
           </>
         )}
+        <MainQuest closestNotCompletedPin={closestNotCompletedPin} />
         <MapControls />
       </Map>
     </div>
@@ -279,11 +303,11 @@ function MapInner() {
 }
 
 const MapContainer = () => (
-  <TrackingPinContextProvider>
+  <ImportantPinContextProvider>
     <MapContextProvider>
       <MapInner />
     </MapContextProvider>
-  </TrackingPinContextProvider>
+  </ImportantPinContextProvider>
 );
 
 export default MapContainer;

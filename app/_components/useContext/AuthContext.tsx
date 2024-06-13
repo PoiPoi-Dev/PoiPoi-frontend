@@ -1,34 +1,33 @@
-'use client'
+"use client";
 import { createContext, useEffect, useState } from "react";
 
 import { User, getAuth } from "firebase/auth";
 import { getAuthService } from "@/config/firebaseconfig";
-getAuth
+getAuth;
 
-export const AuthContext = createContext<User|null>(null);
+export const AuthContext = createContext<User | null>(null);
 
 interface AuthProviderProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  
+
   useEffect(() => {
     void handleIsLoggedIn();
 
     return () => {};
-  },[]);
+  }, []);
 
   const handleIsLoggedIn = async () => {
     try {
       const auth = await getAuthService();
-      auth.onAuthStateChanged(user => {
+      auth.onAuthStateChanged((user) => {
         try {
-          if (!user) throw 'No user';
-            setUser(user);
-            console.log(user.uid)
-        } catch(error) {
+          if (!user) throw "No user";
+          setUser(user);
+        } catch (error) {
           console.log(error);
           setUser(null);
         }
@@ -39,12 +38,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  return (
-    <AuthContext.Provider value={user}>
-      {children}
-    </AuthContext.Provider>
-  )
-  
-}
+  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+};
 
 export default AuthProvider;

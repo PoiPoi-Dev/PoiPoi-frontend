@@ -36,8 +36,10 @@ export interface MarkerContainerProps {
 
 export interface User {
   email: string;
-  displayName: string;
+  creatingEmail: string;
   password: string;
+  creatingPassword: string;
+  displayName: string;
 }
 
 export interface Leaderboards {

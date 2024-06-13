@@ -1,11 +1,12 @@
 import { useEffect, useContext } from "react";
 import { NavigationControl, GeolocateControl, useMap } from "react-map-gl/maplibre";
-import {TrackingPinContext} from "./useContext/TrackingPinContext";
+import {ImportantPinContext} from "./useContext/ImportantPinContext";
 import { Pin } from "../_utils/global";
+
 
 const MapControls = (): React.JSX.Element => {
 
-  const trackingPinContext = useContext(TrackingPinContext);
+  const trackingPinContext = useContext(ImportantPinContext);
   const {current: map} = useMap();
 
   useEffect(() => {
@@ -20,7 +21,9 @@ const MapControls = (): React.JSX.Element => {
       if (!map) throw "Can't find map";
       map.flyTo({
         center: [pin.search_longitude, pin.search_latitude],
-        duration: 500,
+        duration: 1000,
+        minZoom: 24,
+        zoom: 17
       });
     } catch (error) {
       console.error(error);
