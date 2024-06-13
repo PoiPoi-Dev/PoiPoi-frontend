@@ -6,7 +6,10 @@ export async function getLeaderboardData() {
     const response = await fetch(`${baseUrl}/api/leaderboards`, {
       credentials: "include",
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-cache",
+      },
     });
     const resData: Leaderboards[] = (await response.json()) as Leaderboards[];
     return resData;
