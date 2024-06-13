@@ -281,15 +281,18 @@ function MapInner() {
         )}
 
         {/* GUESS MODEL */}
-        {userCoordinates && guessPoiPosition !== null && (
+        {userCoordinates && importantPinContext && importantPinContext.guessedPin && (
           <>
             <GuessPolyline
               userLocation={userCoordinates}
-              guessPoiLocation={guessPoiPosition}
+              guessPoiLocation={{
+                longitude: importantPinContext.guessedPin.exact_longitude,
+                latitude: importantPinContext.guessedPin.exact_latitude
+              } as Coordinates}
             />
             <GuessDistanceModal
-              guessPoiPosition={guessPoiPosition}
-              setGuessPoiPosition={setGuessPoiPosition}
+              guessedPin = {importantPinContext.guessedPin}
+              setGuessedPin={importantPinContext.setGuessedPin}
               userCoordinates={userCoordinates}
               score={score}
             />
