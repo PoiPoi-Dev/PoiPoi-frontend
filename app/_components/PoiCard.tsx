@@ -27,8 +27,7 @@ export function PoiCard({
   setGuessPoiPosition?: (arg0: Coordinates | null) => void;
   setShowPopup?: (arg0: boolean) => void;
   userCoordinates: Coordinates | null;
-  setScore: (arg0: number|null) => void;
-  
+  setScore: (arg0: number | null) => void;
 }): JSX.Element {
   // USE STATE
   const [collect, setCollect] = useState<boolean | undefined>(
@@ -42,8 +41,8 @@ export function PoiCard({
     longitude: search_longitude,
   };
   //hint useStates
-  const [isOpen, setIsOpen] = useState(false);
   const [hints, setHints] = useState<string[] | undefined[]>([]);
+
   // HANDLERS FUNCTIONS
   const handleCheckUserInSearchZone = (): boolean => {
     if (!userCoordinates) return false;
@@ -151,14 +150,24 @@ export function PoiCard({
       if (!userCoordinates) throw "No user coordinates";
 
       await getHints(user, payload);
-      updatePoiHint();
+      toastHintCycle();
     } catch (error) {
       console.error("Error", error);
     }
   };
-  //update POI but for hints?
-  const updatePoiHint = () => {
-    setIsOpen(!isOpen);
+
+  //cycle thru hints in toast
+  const toastHintCycle = (i: number = 0) => {
+    toast("Hint:", {
+      description: hints[i],
+      action: {
+        label: "next hint",
+        onClick: () => {
+          const nextIndex = (i + 1) % hints.length; // Calculate the index of the next hint
+          toastHintCycle(nextIndex);
+        },
+      },
+    });
   };
 
   //get hints
@@ -232,36 +241,8 @@ export function PoiCard({
             {payload.description}
           </p>
         ) : (
-        <div>
-           
-          <Button
-            id={`${id}`}
-            className="w-full mt-4 rounded-lg"
-            
-            onClick={(): void => {
-              if (!user) {
-                alert("please login");
-                return;
-              }
-            
-              if (handleCheckUserInSearchZone()) {
-                void handleSubmitGuessOnClick(user, payload, userCoordinates);
-                return;
-              }
-            
-              if (importantPinContext) {
-                importantPinContext.setTrackingPin(payload);
-                setShowPopup && setShowPopup(false);
-              }
-            }}
-            
-          >
-            {!handleCheckUserInSearchZone()
-              ? "Too far! Track this pin?"
-              : "Guess and collect"}
-          </Button>
-
-          <Toaster position="top-center" closeButton />
+          <div>
+            <Toaster position="top-center" closeButton />
             <Button
               id={`${id}`}
               className="w-full mt-4 rounded-lg"
@@ -278,7 +259,6 @@ export function PoiCard({
                 } else {
                   //may be empty bc still fetching from handleGetHintOnClick
                   void handleGetHintOnClick(user, payload, userCoordinates);
-                  toast(hints);
                 }
               }}
             >
@@ -286,9 +266,31 @@ export function PoiCard({
                 ? "Hints only available within zone"
                 : "Hint"}
             </Button>
-            
-          </div>
+            <Button
+              id={`${id}`}
+              className="w-full mt-4 rounded-lg"
+              onClick={(): void => {
+                if (!user) {
+                  alert("please login");
+                  return;
+                }
 
+                if (handleCheckUserInSearchZone()) {
+                  void handleSubmitGuessOnClick(user, payload, userCoordinates);
+                  return;
+                }
+
+                if (importantPinContext) {
+                  importantPinContext.setTrackingPin(payload);
+                  setShowPopup && setShowPopup(false);
+                }
+              }}
+            >
+              {!handleCheckUserInSearchZone()
+                ? "Too far! Track this pin?"
+                : "Guess and collect"}
+            </Button>
+          </div>
         )}
       </article>
     </section>
