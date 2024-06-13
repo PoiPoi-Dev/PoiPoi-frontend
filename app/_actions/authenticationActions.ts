@@ -9,7 +9,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 interface UserProfile {
   firebase_uuid: string;
-  user_id?: string;
+  user_id?: number;
   username: string;
   score: number;
 }
@@ -38,14 +38,23 @@ export async function createUser(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newUserProfile),
     });
+
+    if (!response.ok) {
+      const errorResponse = await response.json() as {error: string};
+      throw new Error(errorResponse.error);
+    }
+
     const resData = (await response.json()) as UserProfile;
     console.log(resData);
     alert("Account created successfully!");
   } catch (error) {
-    alert("Account creation failed, please try again.");
-    try{ await deleteCurrentlyLoggedInUser(); 
-    } catch (error) {console.error(error);}
-    console.log(error);
+    alert(`Account creation failed: ${(error as Error).message}`);
+    try{ 
+      await deleteCurrentlyLoggedInUser(); 
+    } catch (deleteError) {
+      console.error(deleteError);
+    }
+    console.error(error);
   }
 }
 
