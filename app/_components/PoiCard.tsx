@@ -10,24 +10,22 @@ import {
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
 import { Badge } from "./ui/badge";
+import { Toaster, toast } from "sonner";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export function PoiCard({
   id,
   payload,
-  setGuessPoiPosition,
   setShowPopup,
   userCoordinates,
   setScore,
 }: {
   id: number;
   payload: Pin;
-  setGuessPoiPosition?: (arg0: Coordinates | null) => void;
   setShowPopup?: (arg0: boolean) => void;
   userCoordinates: Coordinates | null;
-  setScore: (arg0: number|null) => void;
-  
+  setScore: (arg0: number | null) => void;
 }): JSX.Element {
   // USE STATE
   const [collect, setCollect] = useState<boolean | undefined>(
@@ -41,8 +39,10 @@ export function PoiCard({
     longitude: search_longitude,
   };
   //hint useStates
-  const [isOpen, setIsOpen] = useState(false);
-  const [hints, setHints] = useState<string[] | undefined[]>([]);
+  const [hints, setHints] = useState<string[] | undefined[]>([
+    "You sure? Click again to show hints!",
+  ]);
+
   // HANDLERS FUNCTIONS
   const handleCheckUserInSearchZone = (): boolean => {
     if (!userCoordinates) return false;
@@ -128,13 +128,11 @@ export function PoiCard({
   const updatePoi = () => {
     setCollect(true);
     setShowPopup && setShowPopup(false);
-    setGuessPoiPosition &&
-      setGuessPoiPosition({
-        latitude: payload.exact_latitude,
-        longitude: payload.exact_longitude,
-      });
     payload.is_completed = true;
     if (!importantPinContext) return;
+    if (importantPinContext.trackingPin?.poi_id == payload.poi_id) {
+      importantPinContext.setTrackingPin(null);
+    }
     importantPinContext.setGuessedPin(payload);
   };
 
@@ -150,14 +148,28 @@ export function PoiCard({
       if (!userCoordinates) throw "No user coordinates";
 
       await getHints(user, payload);
-      updatePoiHint();
+      //toastHintCycle();
     } catch (error) {
       console.error("Error", error);
     }
   };
-  //update POI but for hints?
-  const updatePoiHint = () => {
-    setIsOpen(!isOpen);
+
+  //cycle thru hints in toast
+  const toastHintCycle = (i: number = 0) => {
+    if (hints[0] === "You sure? Click again to show hints!") {
+      toast(hints[0]);
+    } else {
+      toast("Hint:", {
+        description: hints[i],
+        action: {
+          label: "next hint",
+          onClick: () => {
+            const nextIndex = (i + 1) % hints.length; // Calculate the index of the next hint
+            toastHintCycle(nextIndex);
+          },
+        },
+      });
+    }
   };
 
   //get hints
@@ -179,7 +191,7 @@ export function PoiCard({
         user_id: number;
         hint_id: number;
       }[];
-      const arrayOfContent: string[] |undefined[] = new Array(data.length);
+      const arrayOfContent: string[] | undefined[] = new Array(data.length);
       for (let i = 0; i < data.length; i++) {
         arrayOfContent[i] = data[i].content;
       }
@@ -231,35 +243,7 @@ export function PoiCard({
             {payload.description}
           </p>
         ) : (
-        <div>
-          <Button
-            id={`${id}`}
-            className="w-full mt-4 rounded-lg"
-            
-            onClick={(): void => {
-              if (!user) {
-                alert("please login");
-                return;
-              }
-            
-              if (handleCheckUserInSearchZone()) {
-                void handleSubmitGuessOnClick(user, payload, userCoordinates);
-                return;
-              }
-            
-              if (importantPinContext) {
-                importantPinContext.setTrackingPin(payload);
-                setShowPopup && setShowPopup(false);
-              }
-            }}
-            
-          >
-            {!handleCheckUserInSearchZone()
-              ? "Too far! Track this pin?"
-              : "Guess and collect"}
-          </Button>
-
-          
+          <div>
             <Button
               id={`${id}`}
               className="w-full mt-4 rounded-lg"
@@ -268,34 +252,48 @@ export function PoiCard({
                   alert("please login");
                   return;
                 }
-              
-              if (handleCheckUserInSearchZone()) {
-                void handleGetHintOnClick(user, payload, userCoordinates);
-                return;
-              }
-            
-              if (importantPinContext) {
-                importantPinContext.setTrackingPin(payload);
-                setShowPopup && setShowPopup(false);
-              }
-            }}
+
+                if (handleCheckUserInSearchZone()) {
+                  void handleSubmitGuessOnClick(user, payload, userCoordinates);
+                  return;
+                }
+
+                if (importantPinContext) {
+                  importantPinContext.setTrackingPin(payload);
+                  setShowPopup && setShowPopup(false);
+                }
+              }}
+            >
+              {!handleCheckUserInSearchZone()
+                ? "Too far! Track this pin?"
+                : "Guess and collect"}
+            </Button>
+            <Toaster position="top-center" closeButton />
+            <Button
+              id={`${id}`}
+              className="w-full mt-4 rounded-lg"
+              onClick={async (): Promise<void> => {
+                if (!user) {
+                  alert("please login");
+                  return;
+                }
+                if (!handleCheckUserInSearchZone()) {
+                  if (importantPinContext) {
+                    importantPinContext.setTrackingPin(payload);
+                    setShowPopup && setShowPopup(false);
+                  }
+                } else {
+                  // empty bc using OG useState; separating the functions like this doesn't solve it
+                  await handleGetHintOnClick(user, payload, userCoordinates);
+                  toastHintCycle();
+                }
+              }}
             >
               {!handleCheckUserInSearchZone()
                 ? "Hints only available within zone"
                 : "Hint"}
             </Button>
-            {isOpen && (
-              <div className="absolute bg-white border rounded shadow-lg mt-2 p-2 z-10 top-0">
-                {hints.map((hint, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <span>{index + 1}</span>
-                    <p>{hint}</p>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
-
         )}
       </article>
     </section>

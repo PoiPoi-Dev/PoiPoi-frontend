@@ -14,7 +14,7 @@ const MapControls = (): React.JSX.Element => {
     if (!trackingPinContext.trackingPin) return;
     console.table(trackingPinContext.trackingPin);
       handlePanMapToTrackingPin(trackingPinContext.trackingPin);
-  },[trackingPinContext, trackingPinContext?.trackingPin])
+  },[trackingPinContext?.trackingPin])
 
   const handlePanMapToTrackingPin = (pin: Pin) => {
     try {
