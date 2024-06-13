@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Pin } from "../_utils/global";
-import { Coordinates, GetDistanceFromCoordinatesToMeters } from "../_utils/coordinateMath";
+import {
+  Coordinates,
+  GetDistanceFromCoordinatesToMeters,
+} from "../_utils/coordinateMath";
 import { getAuthService } from "@/config/firebaseconfig";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -26,29 +29,33 @@ function SubmitGuessButton({
 }: SubmitGuessButtonProps): React.JSX.Element {
   const [isActiveState, setIsActiveState] = useState<boolean>(false);
 
-  const isWithinSearchRadius = (distance: number, pin:Pin) => {
-    return distance < pin.search_radius
-  }
+  const isWithinSearchRadius = (distance: number, pin: Pin) => {
+    return distance < pin.search_radius;
+  };
 
   useEffect(() => {
     if (distanceToTrackingPin === null) return;
 
     if (trackingPin)
-      setIsActiveState(isWithinSearchRadius(distanceToTrackingPin, trackingPin));  
+      setIsActiveState(
+        isWithinSearchRadius(distanceToTrackingPin, trackingPin)
+      );
+  }, [distanceToTrackingPin, trackingPin]);
 
-  },[distanceToTrackingPin, trackingPin])
-
-  const postGuess = async (poi_id: number, distance: number):Promise<Response|void> => {
+  const postGuess = async (
+    poi_id: number,
+    distance: number
+  ): Promise<Response | void> => {
     try {
-    const auth = await getAuthService(); //gives auth service
-    if (!auth.currentUser) throw 'Not logged in'; //error
+      const auth = await getAuthService(); //gives auth service
+      if (!auth.currentUser) throw "Not logged in"; //error
 
-    const uid = auth.currentUser.uid;
-    const data: {
-      distance: number;
-      poi_id: number | undefined;
-      uid: string;
-      search_radius: number | undefined;
+      const uid = auth.currentUser.uid;
+      const data: {
+        distance: number;
+        poi_id: number | undefined;
+        uid: string;
+        search_radius: number | undefined;
       } = {
         distance,
         poi_id,
@@ -70,18 +77,26 @@ function SubmitGuessButton({
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
-  const handleSubmitGuessOnClick = async (pin:Pin | null, userCoordinates: Coordinates | null) => {
+  const handleSubmitGuessOnClick = async (
+    pin: Pin | null,
+    userCoordinates: Coordinates | null
+  ) => {
     try {
-      if (!pin) throw 'No pin to track';
-      if (!userCoordinates) throw 'No user coordinates'
+      if (!pin) throw "No pin to track";
+      if (!userCoordinates) throw "No user coordinates";
       const pinCoordinates: Coordinates = {
         longitude: pin.exact_longitude,
-        latitude: pin.exact_latitude
-      }
-      const distanceToPin:number = parseFloat(GetDistanceFromCoordinatesToMeters(userCoordinates, pinCoordinates).toFixed(3));
-  
+        latitude: pin.exact_latitude,
+      };
+      const distanceToPin: number = parseFloat(
+        GetDistanceFromCoordinatesToMeters(
+          userCoordinates,
+          pinCoordinates
+        ).toFixed(3)
+      );
+
       await postGuess(pin.poi_id, distanceToPin);
       pin.is_completed = true;
       setIsActiveState(false);
@@ -98,7 +113,9 @@ function SubmitGuessButton({
       <Button
         className="w-full h-full"
         disabled={!isActiveState}
-        onClick={(): void => void handleSubmitGuessOnClick(trackingPin, userCoordinates)}
+        onClick={(): void =>
+          void handleSubmitGuessOnClick(trackingPin, userCoordinates)
+        }
       >
         Submit your answer?
       </Button>
