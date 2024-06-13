@@ -135,8 +135,7 @@ export function PoiCard({
       });
     payload.is_completed = true;
     if (!importantPinContext) return;
-    if (importantPinContext.trackingPin?.poi_id == payload.poi_id)
-    {
+    if (importantPinContext.trackingPin?.poi_id == payload.poi_id) {
       importantPinContext.setTrackingPin(null);
     }
     importantPinContext.setGuessedPin(payload);
@@ -246,30 +245,6 @@ export function PoiCard({
           </p>
         ) : (
           <div>
-            <Toaster position="top-center" closeButton />
-            <Button
-              id={`${id}`}
-              className="w-full mt-4 rounded-lg"
-              onClick={(): void => {
-                if (!user) {
-                  alert("please login");
-                  return;
-                }
-                if (!handleCheckUserInSearchZone()) {
-                  if (importantPinContext) {
-                    importantPinContext.setTrackingPin(payload);
-                    setShowPopup && setShowPopup(false);
-                  }
-                } else {
-                  //may be empty bc still fetching from handleGetHintOnClick
-                  void handleGetHintOnClick(user, payload, userCoordinates);
-                }
-              }}
-            >
-              {!handleCheckUserInSearchZone()
-                ? "Hints only available within zone"
-                : "Hint"}
-            </Button>
             <Button
               id={`${id}`}
               className="w-full mt-4 rounded-lg"
@@ -293,6 +268,30 @@ export function PoiCard({
               {!handleCheckUserInSearchZone()
                 ? "Too far! Track this pin?"
                 : "Guess and collect"}
+            </Button>
+            <Toaster position="top-center" closeButton />
+            <Button
+              id={`${id}`}
+              className="w-full mt-4 rounded-lg"
+              onClick={(): void => {
+                if (!user) {
+                  alert("please login");
+                  return;
+                }
+                if (!handleCheckUserInSearchZone()) {
+                  if (importantPinContext) {
+                    importantPinContext.setTrackingPin(payload);
+                    setShowPopup && setShowPopup(false);
+                  }
+                } else {
+                  //may be empty bc still fetching from handleGetHintOnClick
+                  void handleGetHintOnClick(user, payload, userCoordinates);
+                }
+              }}
+            >
+              {!handleCheckUserInSearchZone()
+                ? "Hints only available within zone"
+                : "Hint"}
             </Button>
           </div>
         )}
