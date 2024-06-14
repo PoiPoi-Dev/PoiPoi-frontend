@@ -50,7 +50,7 @@ const GuessDistanceModal = ({
 
   const handleSubmitHint = async () => {
     const hintData = {
-      poi_id: guessedPin,
+      poi_id: guessedPin.poi_id,
       content: hint,
     };
     console.log(hintData);
@@ -73,6 +73,7 @@ const GuessDistanceModal = ({
         );
         drawerRef.current?.click(); // Simulate clicking the Done button
       } else {
+        console.log(hintData)
         const responseData = (await response.json()) as { message?: string };
         alert(
           `Failed to submit hint: ${responseData.message || "Unknown error"}`
@@ -110,10 +111,8 @@ const GuessDistanceModal = ({
         <DrawerContent>
           {distanceToPin < thresholdDistance ? (
             <div className="p-4">
-              <p className="my-2">
-                Nice Guessing! How about leaving a hint for someone else? Be
-                sure to be helpful! But don&apos;t just give it away!
-              </p>
+              <h2> {`Nice Guessing! How about leaving a hint for someone else?`}</h2>
+              <p className="my-2"> {`(Be sure to be helpful! But don't just give it away!)`}</p>
               <Label htmlFor="hint">Your hint: </Label>
               <Input
                 id="hint"
@@ -123,16 +122,11 @@ const GuessDistanceModal = ({
                 onChange={(e) => setHint(e.target.value)}
                 className="border p-2 mt-2 w-full"
               />
-              <Input
-                type="text"
-                value={hint}
-                onChange={(e) => setHint(e.target.value)}
-              />
               <div className="flex flex-col gap-4 mt-4 justify-end">
                 <Button
                   ref={drawerRef}
                   onClick={() => {
-                    handleSubmitClick;
+                    handleSubmitClick();
                     // setGuessPoiPosition(null);
                     setGuessedPin(null);
                   }}
@@ -144,6 +138,7 @@ const GuessDistanceModal = ({
                   variant={"link"}
                   ref={drawerRef}
                   onClick={() => {
+                    handleSubmitClick;
                     // setGuessPoiPosition(null);
                     setGuessedPin(null);
                   }}
@@ -156,7 +151,7 @@ const GuessDistanceModal = ({
           ) : (
             <div className="p-4">
               <h2>{`Good effort! Try to get within 20 meters next time!`}</h2>
-              <p>{`(You'll be able to leave a hint if you're close enough!)`}</p>
+              <p className="my-2">{`(You'll be able to leave a hint if you're close enough!)`}</p>
               <Button
                 variant={"link"}
                 ref={drawerRef}
