@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { useState } from "react";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { BiSolidNavigation } from "react-icons/bi";
+import { useMap } from "react-map-gl/maplibre";
 
 interface PoidexModalProps {
   pins: Pin[];
@@ -15,6 +16,21 @@ interface PoidexModalProps {
 const PoidexModal: React.FC<PoidexModalProps> = ({ pins, setShowPoidex }) => {
   const [showBigImage, setShowBigImage] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const { gameMap } = useMap();
+
+  const handlePanMapToPoi = (pin: Pin) => {
+    try {
+      if (!gameMap) throw "Can't find map";
+      gameMap.flyTo({
+        center: [pin.exact_longitude, pin.exact_latitude],
+        duration: 1000,
+        minZoom: 24,
+        zoom: 17
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <main className="fixed flex h-screen flex-col items-center justify-between">
@@ -75,6 +91,12 @@ const PoidexModal: React.FC<PoidexModalProps> = ({ pins, setShowPoidex }) => {
                           <BiSolidNavigation
                             size={24}
                             className="text-primary"
+                            onClick={() => {
+                              handlePanMapToPoi(pin);
+                              setShowBigImage(false);
+                              setSelectedId(null);
+                              setShowPoidex(false);
+                            }}
                           />
                         </div>
                       )}
