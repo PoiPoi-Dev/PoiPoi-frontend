@@ -64,7 +64,7 @@ function MapInner() {
     useState<Coordinates | null>(null);
 
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
-
+  const [checkLevel, setCheckLevel] = useState<boolean>(false);
   const [levelAndXp, setLevelAndXp] = useState<levelAndXp>({
     level: 1,
     totalXp: 0,
@@ -107,6 +107,7 @@ function MapInner() {
     setUserGuessCoord(currentUserCoordinates);
   }, [importantPinContext?.guessedPin]);
 
+  //on load, or refresh
   useEffect(() => {
     const savedLevelAndXp = localStorage.getItem("levelAndXp");
     if (savedLevelAndXp) {
@@ -115,6 +116,11 @@ function MapInner() {
       void handleLevelAndXp();
     }
   }, []);
+
+  //on guess
+  useEffect(() => {
+    void handleLevelAndXp();
+  }, [checkLevel]);
 
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
@@ -245,7 +251,7 @@ function MapInner() {
       const data = (await response.json()) as levelAndXp;
       setLevelAndXp(data);
 
-      // Save to local storage
+      // Save to local storage if use reloads the page then it will use the localstorage data
       localStorage.setItem("levelAndXp", JSON.stringify(data));
     } catch (error) {
       console.log(error);
@@ -321,6 +327,7 @@ function MapInner() {
         {/* Popup */}
         {showPopup && selectedPoiId && (
           <PopoverCard
+            setCheckLevel={setCheckLevel}
             poiData={poiData}
             selectedPoiId={selectedPoiId}
             setShowPopup={setShowPopup}
