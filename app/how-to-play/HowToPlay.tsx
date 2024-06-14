@@ -1,3 +1,7 @@
+import Link from "next/link";
+import { BsQuestionDiamondFill } from "react-icons/bs";
+import { ButtonIconCircle } from "../_components/ui/MenuIconCircle";
+
 export default function HowToPlay() {
   return (
     <main className="flex flex-col justify-between p-10 bg-amber-50">
@@ -24,12 +28,13 @@ export default function HowToPlay() {
       <section>
         <h2>Making a Guess</h2>
         <p>
-          The goal of the game is to get as close to the location where the
-          photo was taken as possible. Once the player enters a search zone, it
-          will be possible to submit a guess or get hints. Submitting a guess
-          will take the player's current geolocation and compare it to the POI's
-          location, giving the player the distance in meters and a score. It
-          will also add the POI card to the Collection.
+          The goal of the game is to be as close to the location as possible.
+          Remember, it's not the thing in the photo, but /where/ the photo was
+          taken! Once the player enters a search zone, it will be possible to
+          submit a guess or get hints. Submitting a guess will take the player's
+          current location and compare it to the POI's location, giving the
+          player the distance in meters and a score. It will also add the POI
+          card to the Collection.
         </p>
       </section>
       <section>
@@ -37,29 +42,35 @@ export default function HowToPlay() {
         <p>
           Scores are calculated based on the distance between the player's guess
           and the exact location of the POI. The lowest possible score for each
-          guess is 250, and the highest is 1000! Scores also get added to the
-          overall XP, which raises the player's level.
+          guess is 250, but players can get as many as 1000! Scores also get
+          added to the overall XP, which raises the player's level.
         </p>
       </section>
       <section>
         <h2>Leaving Hints</h2>
         <p>
-          If the player's guess is within 20 meters of the POI, it will be
-          possible to leave a hint that other players who haven't collected the
-          POI yet can see. Please leave a short comment that will help other
-          players find the POI!
+          If the player's guess is within 20 meters of the POI, they have the
+          option to leave a hint. This hint can be seen by others who haven't
+          collected the POI yet. Please leave a short comment that will help
+          other players find the POI! Be sure to leave a hint that is easy to
+          understand, but doesn't give away too much.
         </p>
       </section>
       <section>
         <h2>Collection</h2>
         <p>
-          In the collection, players can see the total amount of POIs available,
-          and the ones that have already been collected. Clicking on a collected
-          POI will display the photo and description. Clicking on the "navigate"
-          button in the top-left corner will recenter the camera on the map to
-          the POI, so players can see the exact location of the POI again.
+          In the collection, players can see all the POIs. Clicking on a
+          collected POI will display the photo and description. Clicking on the
+          "navigate" button in the top-right corner will show the POI's exact
+          location on the map. Players can revisit their favorite spots!
         </p>
       </section>
+      <Link
+        className=" text-purple-500 hover:underline underline-offset-2"
+        href="/map"
+      >
+        Return to Map
+      </Link>
     </main>
   );
 }
