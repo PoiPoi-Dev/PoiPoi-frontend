@@ -3,6 +3,7 @@ import { Layer, Marker, Source, LayerProps } from "react-map-gl/maplibre";
 import { MarkerContainerProps } from "../_utils/global";
 import { PiSealQuestionDuotone } from "react-icons/pi";
 import { IoMdCheckmarkCircle } from "react-icons/io";
+import { ImportantPinContext } from "./useContext/ImportantPinContext";
 
 const geojson = (lat: number, long: number) => {
   return {
@@ -50,6 +51,8 @@ function MarkerContainer({
   setShowPopup,
   setSelectedPoiId,
 }: MarkerContainerProps): JSX.Element {
+  const importantPinContext = React.useContext(ImportantPinContext);
+
   const generateLayerStyle: LayerProps = layerStyle(
     pin.title,
     pin.search_radius,
@@ -110,7 +113,11 @@ function MarkerContainer({
           {/* Pin icon */}
           <PiSealQuestionDuotone
             size={32}
-            className="text-primary"
+            className={`text-primary ${
+              importantPinContext?.trackingPin?.poi_id === pin.poi_id
+                ? "animate-ping"
+                : ""
+            }`}
             onClick={handleClick}
           />
 
