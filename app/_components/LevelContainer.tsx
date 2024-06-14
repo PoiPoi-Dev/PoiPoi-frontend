@@ -15,14 +15,23 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
     const totalXpForCurrentLevel = totalXp + xpToNextLevel;
     const progressPercentage = (totalXp / totalXpForCurrentLevel) * 100;
 
+    //written in use effect to trigger dependency
     const handleLevelUp = async () => {
+      //handle /refresh to not animate progressbar
+      if (currentLevel === 0) {
+        setCurrentLevel(level);
+        setProgress(progressPercentage);
+        return;
+      }
+
+      // Player leveled up
       if (level > currentLevel) {
-        // Player leveled up
         setProgress(100);
         await delay(1000);
         setLevelKey(level);
         setCurrentLevel(level);
         setProgress(0);
+        //no levelup
       } else {
         setProgress(progressPercentage);
       }

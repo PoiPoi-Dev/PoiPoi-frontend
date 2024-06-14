@@ -67,9 +67,9 @@ function MapInner() {
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
   const [checkLevel, setCheckLevel] = useState<boolean>(false);
   const [levelAndXp, setLevelAndXp] = useState<levelAndXp>({
-    level: 1,
+    level: 0,
     totalXp: 0,
-    xpToNextLevel: 200,
+    xpToNextLevel: 0,
   });
 
   // Default camera map when user opens the app
