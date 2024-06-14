@@ -23,6 +23,7 @@ import ImportantPinContextProvider, {
   ImportantPinContext,
 } from "./useContext/ImportantPinContext";
 import MainQuest from "./MainQuest";
+import LevelContainer from "./LevelContainer";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -361,6 +362,8 @@ function MapInner() {
         <MainQuest closestNotCompletedPin={closestNotCompletedPin} />
         <MapControls />
       </Map>
+
+      <LevelContainer levelAndXp = {levelAndXp} />
     </div>
   );
 }

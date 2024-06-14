@@ -89,8 +89,7 @@ export function PoiCard({
           body: JSON.stringify(data),
         }
       );
-      const JSONresponse = response.json() as Promise<Response>;
-      console.log(JSONresponse);
+      const JSONresponse = (await response.json()) as Promise<Response>;
       setCheckLevel(true);
       return JSONresponse;
     } catch (error) {
