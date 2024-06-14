@@ -1,8 +1,9 @@
 import * as React from "react";
 import { Layer, Marker, Source, LayerProps } from "react-map-gl/maplibre";
 import { MarkerContainerProps } from "../_utils/global";
-import { PiSealQuestion } from "react-icons/pi";
+import { PiSealQuestionDuotone } from "react-icons/pi";
 import { IoMdCheckmarkCircle } from "react-icons/io";
+import { ImportantPinContext } from "./useContext/ImportantPinContext";
 
 const geojson = (lat: number, long: number) => {
   return {
@@ -38,8 +39,8 @@ const layerStyle = (
         20,
         metersToPixelsAtMaxZoom(radius, latitude),
       ],
-      "circle-color": "rgba(255, 216, 61, 0.3)",
-      "circle-opacity": 1,
+      "circle-color": "rgb(254, 199, 99)",
+      "circle-opacity": 0.4,
     },
     source: "",
   };
@@ -50,6 +51,8 @@ function MarkerContainer({
   setShowPopup,
   setSelectedPoiId,
 }: MarkerContainerProps): JSX.Element {
+  const importantPinContext = React.useContext(ImportantPinContext);
+
   const generateLayerStyle: LayerProps = layerStyle(
     pin.title,
     pin.search_radius,
@@ -86,7 +89,7 @@ function MarkerContainer({
         >
           {/* Pin icon */}
           <IoMdCheckmarkCircle
-            size={48}
+            size={36}
             className="text-primary"
             onClick={handleClick}
           />
@@ -108,9 +111,13 @@ function MarkerContainer({
           anchor="center"
         >
           {/* Pin icon */}
-          <PiSealQuestion
+          <PiSealQuestionDuotone
             size={32}
-            className="text-primary"
+            className={`text-primary ${
+              importantPinContext?.trackingPin?.poi_id === pin.poi_id
+                ? "animate-ping"
+                : ""
+            }`}
             onClick={handleClick}
           />
 
