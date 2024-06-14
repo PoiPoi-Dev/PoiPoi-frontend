@@ -1,8 +1,9 @@
 "use client";
-import { createAccount, 
-  loginEmailPassword, 
+import {
+  createAccount,
+  loginEmailPassword,
   deleteCurrentlyLoggedInUser,
-  logout, 
+  logout,
 } from "../_utils/authentication";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -40,17 +41,18 @@ export async function createUser(
     });
 
     if (!response.ok) {
-      const errorResponse = await response.json() as {error: string};
+      const errorResponse = (await response.json()) as { error: string };
       throw new Error(errorResponse.error);
     }
 
     const resData = (await response.json()) as UserProfile;
     console.log(resData);
+    localStorage.removeItem("levelAndXp"); //if user had a session and creates second account
     alert("Account created successfully!");
   } catch (error) {
     alert(`Account creation failed: ${(error as Error).message}`);
-    try{ 
-      await deleteCurrentlyLoggedInUser(); 
+    try {
+      await deleteCurrentlyLoggedInUser();
     } catch (deleteError) {
       console.error(deleteError);
     }
@@ -66,9 +68,10 @@ export async function createUser(
 export async function loginUser(email: string, password: string) {
   try {
     const uuid = await loginEmailPassword(email, password);
-    if (!uuid) throw 'Could not find user';
+    if (!uuid) throw "Could not find user";
+    localStorage.removeItem("levelAndXp"); //if other user creates second account.
     alert("Login successful!");
-    } catch (error) {
+  } catch (error) {
     alert("Login failed!");
     console.error(error);
   }
@@ -81,6 +84,7 @@ export async function logoutUser(): Promise<void> {
   try {
     await logout();
     alert("Logout successful!");
+    localStorage.removeItem("levelAndXp"); //clean up after user
   } catch (error) {
     alert("Logout failed!");
     console.error(error);
