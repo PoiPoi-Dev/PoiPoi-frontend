@@ -44,9 +44,6 @@ const MapControls = (): React.JSX.Element => {
     if (error.code === error.PERMISSION_DENIED) {
       alert("Geolocation permission denied. Please enable geolocation in your browser settings.");
     } 
-    if (error.code === error.TIMEOUT) {
-      alert("Geolocation process timed out.");
-    }
     if (error.code === error.POSITION_UNAVAILABLE) {
       alert("Geolocation has permission, however position unavailable.");
     }
