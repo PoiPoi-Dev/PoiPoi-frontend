@@ -363,7 +363,7 @@ function MapInner() {
         <MapControls />
       </Map>
 
-      <LevelContainer levelAndXp = {levelAndXp} />
+      <LevelContainer levelAndXp={levelAndXp} />
     </div>
   );
 }
