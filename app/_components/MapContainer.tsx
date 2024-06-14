@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useContext } from "react";
 import { LngLatBoundsLike, MapProvider, Map } from "react-map-gl/maplibre";
-import { Pin } from "../_utils/global";
+import { Pin, levelAndXp } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapControls from "./MapControls";
 import { AuthContext } from "./useContext/AuthContext";
@@ -60,9 +60,16 @@ function MapInner() {
   >(null);
 
   const [score, setScore] = useState<number | null>(null);
-  const [userCoordinatesAtMomentOfGuess, setUserGuessCoord] = useState<Coordinates | null>(null);
+  const [userCoordinatesAtMomentOfGuess, setUserGuessCoord] =
+    useState<Coordinates | null>(null);
 
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
+
+  const [levelAndXp, setLevelAndXp] = useState<levelAndXp>({
+    level: 1,
+    totalXp: 0,
+    xpToNextLevel: 200,
+  });
 
   // Default camera map when user opens the app
   const longitude: number = 139.72953967417234;
@@ -93,12 +100,21 @@ function MapInner() {
 
   useEffect(() => {
     if (!importantPinContext?.guessedPin) {
-      setUserGuessCoord(null)
+      setUserGuessCoord(null);
     }
     if (!userCoordinates) return;
-    const currentUserCoordinates:Coordinates = userCoordinates;
-    setUserGuessCoord(currentUserCoordinates)
-  },[importantPinContext?.guessedPin]);
+    const currentUserCoordinates: Coordinates = userCoordinates;
+    setUserGuessCoord(currentUserCoordinates);
+  }, [importantPinContext?.guessedPin]);
+
+  useEffect(() => {
+    const savedLevelAndXp = localStorage.getItem("levelAndXp");
+    if (savedLevelAndXp) {
+      setLevelAndXp(JSON.parse(savedLevelAndXp) as levelAndXp);
+    } else {
+      void handleLevelAndXp();
+    }
+  }, []);
 
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
@@ -212,6 +228,30 @@ function MapInner() {
   useGeolocation(handleSetUserCoordinates);
   useGeolocation(handleSetClosestNotCompletedPin);
 
+  const handleLevelAndXp = async () => {
+    try {
+      const auth = await getAuthService();
+      if (!auth.currentUser) throw "No current user";
+      const uid = auth.currentUser.uid;
+
+      const response = await fetch(`${BASE_URL}/api/level/`, {
+        credentials: "include",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firebase_uuid: uid }),
+      });
+      const data = (await response.json()) as levelAndXp;
+      setLevelAndXp(data);
+
+      // Save to local storage
+      localStorage.setItem("levelAndXp", JSON.stringify(data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // RETURN
   return (
     <div className="relative overflow-hidden inset-0 bg-mapBg">
@@ -290,23 +330,27 @@ function MapInner() {
         )}
 
         {/* GUESS MODEL */}
-        {userCoordinatesAtMomentOfGuess && importantPinContext && importantPinContext.guessedPin && (
-          <>
-            <GuessPolyline
-              userLocation={userCoordinatesAtMomentOfGuess}
-              guessPoiLocation={{
-                longitude: importantPinContext.guessedPin.exact_longitude,
-                latitude: importantPinContext.guessedPin.exact_latitude
-              } as Coordinates}
-            />
-            <GuessDistanceModal
-              guessedPin = {importantPinContext.guessedPin}
-              setGuessedPin={importantPinContext.setGuessedPin}
-              userCoordinates={userCoordinatesAtMomentOfGuess}
-              score={score}
-            />
-          </>
-        )}
+        {userCoordinatesAtMomentOfGuess &&
+          importantPinContext &&
+          importantPinContext.guessedPin && (
+            <>
+              <GuessPolyline
+                userLocation={userCoordinatesAtMomentOfGuess}
+                guessPoiLocation={
+                  {
+                    longitude: importantPinContext.guessedPin.exact_longitude,
+                    latitude: importantPinContext.guessedPin.exact_latitude,
+                  } as Coordinates
+                }
+              />
+              <GuessDistanceModal
+                guessedPin={importantPinContext.guessedPin}
+                setGuessedPin={importantPinContext.setGuessedPin}
+                userCoordinates={userCoordinatesAtMomentOfGuess}
+                score={score}
+              />
+            </>
+          )}
         <MainQuest closestNotCompletedPin={closestNotCompletedPin} />
         <MapControls />
       </Map>
