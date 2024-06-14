@@ -61,7 +61,7 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
   }, [levelAndXp, currentLevel]);
 
   return (
-    <div className="fixed top-28 left-4 w-40" key={levelKey}>
+    <div className="fixed bottom-40 left-4 w-40" key={levelKey}>
       <p>level{currentLevel}</p>
       <Progress value={progress} />
     </div>
