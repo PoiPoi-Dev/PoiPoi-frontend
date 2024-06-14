@@ -10,7 +10,6 @@ import {
 } from "../_components/ui/table";
 import FooterMenu from "../_components/FooterMenu";
 import { Leaderboards } from "../_utils/global";
-import { AuthContext } from "../_components/useContext/AuthContext";
 
 interface LeaderboardProps {}
 
@@ -35,7 +34,7 @@ const Leaderboard: React.FC<LeaderboardProps> = () => {
           },
         }
       );
-      const resData: Leaderboards[] = await response.json() as Leaderboards [];
+      const resData: Leaderboards[] = (await response.json()) as Leaderboards[];
       setLeaderboardData(resData);
     } catch (error) {
       alert("Leaderboard currently unavailable");
@@ -68,9 +67,7 @@ const Leaderboard: React.FC<LeaderboardProps> = () => {
                 <TableCell>{index + 1}</TableCell>
                 <TableCell
                   className={
-                    player.username === storedName
-                      ? "text-blue-600 font-bold bg-yellow-100" // Example: Applying background color to highlight
-                      : ""
+                    player.username === storedName ? "bg-yellow-100" : ""
                   }
                 >
                   {player.username}
