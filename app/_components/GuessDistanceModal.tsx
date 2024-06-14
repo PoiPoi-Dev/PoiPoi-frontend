@@ -27,7 +27,7 @@ const GuessDistanceModal = ({
   const drawerRef = useRef<HTMLButtonElement>(null); // Ref for the Done button
   const thresholdDistance = 20;
 
-  useEffect(() => {
+   useEffect(() => {
     if (!guessedPin) return;
     handleDistanceToPin(guessedPin, userCoordinates);
   }, [guessedPin]);
