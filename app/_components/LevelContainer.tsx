@@ -3,12 +3,16 @@ import { Progress } from "./ui/Progress";
 
 const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
   const { level, totalXp, xpToNextLevel } = levelAndXp;
+  const totalXpForCurrentLevel = totalXp + xpToNextLevel;
+  const progressPercentage = (totalXp / totalXpForCurrentLevel) * 100;
+
   return (
     <div className="fixed bottom-40 left-4 w-40">
       <p>level{level}</p>
-      <p>XP have{totalXp}</p>
-      <p>XP neeed{xpToNextLevel}</p>
-      <Progress value={level}/>
+      <p>
+        XP Bar:{totalXp}/{totalXpForCurrentLevel}
+      </p>
+      <Progress value={progressPercentage} />
     </div>
   );
 };
