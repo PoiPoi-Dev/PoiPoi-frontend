@@ -50,7 +50,7 @@ const GuessDistanceModal = ({
 
   const handleSubmitHint = async () => {
     const hintData = {
-      poi_id: guessedPin,
+      poi_id: guessedPin.poi_id,
       content: hint,
     };
     console.log(hintData);
@@ -73,6 +73,7 @@ const GuessDistanceModal = ({
         );
         drawerRef.current?.click(); // Simulate clicking the Done button
       } else {
+        console.log(hintData)
         const responseData = (await response.json()) as { message?: string };
         alert(
           `Failed to submit hint: ${responseData.message || "Unknown error"}`
@@ -111,8 +112,8 @@ const GuessDistanceModal = ({
           {distanceToPin < thresholdDistance ? (
             <div className="p-4">
               <p className="my-2">
-                Nice Guessing! How about leaving a hint for someone else? Be
-                sure to be helpful! But don&apos;t just give it away!
+                {`Nice Guessing! How about leaving a hint for someone else?`} 
+                {`(Be sure to be helpful! But don't just give it away!)`}
               </p>
               <Label htmlFor="hint">Your hint: </Label>
               <Input
@@ -123,33 +124,18 @@ const GuessDistanceModal = ({
                 onChange={(e) => setHint(e.target.value)}
                 className="border p-2 mt-2 w-full"
               />
-              <Input
-                type="text"
-                value={hint}
-                onChange={(e) => setHint(e.target.value)}
-              />
               <div className="flex flex-col gap-4 mt-4 justify-end">
                 <Button
+                  variant={"link"}
                   ref={drawerRef}
                   onClick={() => {
-                    handleSubmitClick;
+                    handleSubmitClick();
                     // setGuessPoiPosition(null);
                     setGuessedPin(null);
                   }}
                   className="w-full"
                 >
                   Submit Hint
-                </Button>
-                <Button
-                  variant={"link"}
-                  ref={drawerRef}
-                  onClick={() => {
-                    // setGuessPoiPosition(null);
-                    setGuessedPin(null);
-                  }}
-                  className="w-full"
-                >
-                  Maybe next time
                 </Button>
               </div>
             </div>
