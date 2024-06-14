@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState, useContext } from "react";
-import Map, { LngLatBoundsLike } from "react-map-gl/maplibre";
+import { LngLatBoundsLike, MapProvider, Map } from "react-map-gl/maplibre";
 import { Pin } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
-import MapContextProvider from "./MapContextProvider";
 import MapControls from "./MapControls";
 import { AuthContext } from "./useContext/AuthContext";
 import { getAuthService } from "@/config/firebaseconfig";
@@ -249,6 +248,7 @@ function MapInner() {
 
       {/* MAP CANVAS */}
       <Map
+        id="gameMap"
         maxPitch={mapMaxPitch}
         minZoom={mapMinZoom}
         maxZoom={mapMaxZoom}
@@ -316,9 +316,9 @@ function MapInner() {
 
 const MapContainer = () => (
   <ImportantPinContextProvider>
-    <MapContextProvider>
+    <MapProvider>
       <MapInner />
-    </MapContextProvider>
+    </MapProvider>
   </ImportantPinContextProvider>
 );
 

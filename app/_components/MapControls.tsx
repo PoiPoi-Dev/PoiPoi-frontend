@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useRef } from "react";
 import { NavigationControl, GeolocateControl, useMap } from "react-map-gl/maplibre";
 import {ImportantPinContext} from "./useContext/ImportantPinContext";
 import { Pin } from "../_utils/global";
@@ -8,6 +8,15 @@ const MapControls = (): React.JSX.Element => {
 
   const trackingPinContext = useContext(ImportantPinContext);
   const {current: map} = useMap();
+
+  const geolocationRef = useRef<maplibregl.GeolocateControl|null>(null);
+
+  useEffect(() => {
+    if (!geolocationRef.current) {
+      return;
+    }
+    geolocationRef.current.trigger();
+  }, [geolocationRef.current])
 
   useEffect(() => {
     if (!trackingPinContext) return;
@@ -30,10 +39,20 @@ const MapControls = (): React.JSX.Element => {
     }
   }
 
+  const handleGeolocateError = (error: GeolocationPositionError) => {
+    console.log("geolocate error detected");
+    if (error.code === error.PERMISSION_DENIED) {
+      alert("Geolocation permission denied. Please enable geolocation in your browser settings.");
+    } 
+    if (error.code === error.POSITION_UNAVAILABLE) {
+      alert("Geolocation has permission, however position unavailable.");
+    }
+  };
+
   return (
     <>
       <NavigationControl position="top-right" />
-      <GeolocateControl position="bottom-right" trackUserLocation={true} />
+      <GeolocateControl position="bottom-right" trackUserLocation={true} ref={geolocationRef} onError={handleGeolocateError}/>
     </>
   );
 };

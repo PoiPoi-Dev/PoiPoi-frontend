@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { useState } from "react";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { BiSolidNavigation } from "react-icons/bi";
+import { useMap } from "react-map-gl/maplibre";
 
 interface PoidexModalProps {
   pins: Pin[];
@@ -15,6 +16,23 @@ interface PoidexModalProps {
 const PoidexModal: React.FC<PoidexModalProps> = ({ pins, setShowPoidex }) => {
   const [showBigImage, setShowBigImage] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const { gameMap } = useMap();
+
+  const handlePanMapToPoi = (pin: Pin) => {
+    try {
+      if (!gameMap) throw "Can't find map";
+      gameMap.flyTo({
+        center: pin.is_completed
+          ? [pin.exact_longitude, pin.exact_latitude]
+          : [pin.search_longitude, pin.search_latitude],
+        duration: 1000,
+        minZoom: 24,
+        zoom: 17,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <main className="fixed flex h-screen flex-col items-center justify-between">
@@ -36,7 +54,9 @@ const PoidexModal: React.FC<PoidexModalProps> = ({ pins, setShowPoidex }) => {
                 {/* HEADER */}
                 {!showBigImage && (
                   <div className="w-full text-center mb-4">
-                    <h1 className="text-2xl font-bold mt-0">POIDEX</h1>
+                    <h1 className="text-2xl text-primary font-extrabold mt-0">
+                      POIDEX
+                    </h1>
                   </div>
                 )}
 
@@ -60,7 +80,8 @@ const PoidexModal: React.FC<PoidexModalProps> = ({ pins, setShowPoidex }) => {
                       }`}
                     >
                       {showBigImage && (
-                        <div className="flex w-full justify-between items-center mb-4">
+                        <div className="flex w-full justify-between items-center sticky top-0 bg-white py-1">
+                          {/* BACK BUTTON */}
                           <MdArrowBackIosNew
                             size={24}
                             className="text-primary"
@@ -69,12 +90,22 @@ const PoidexModal: React.FC<PoidexModalProps> = ({ pins, setShowPoidex }) => {
                               setSelectedId(null);
                             }}
                           />
-                          <h2 className="w-full text-center text-lg font-semibold truncate text-ellipsis">
+
+                          {/* PIN TITLE */}
+                          <h2 className="w-full text-primary text-center text-lg font-semibold truncate text-ellipsis px-4">
                             {pin.title}
                           </h2>
+
+                          {/* NAVIGATION BUTTON */}
                           <BiSolidNavigation
                             size={24}
                             className="text-primary"
+                            onClick={() => {
+                              handlePanMapToPoi(pin);
+                              setShowBigImage(false);
+                              setSelectedId(null);
+                              setShowPoidex(false);
+                            }}
                           />
                         </div>
                       )}
@@ -86,19 +117,25 @@ const PoidexModal: React.FC<PoidexModalProps> = ({ pins, setShowPoidex }) => {
                         alt={pin.title}
                         width={600}
                         height={600}
-                        className={`w-full min-h-28 flex-1 object-cover ${
-                          showBigImage && "rounded-lg shadow-xl"
-                        }`}
+                        className={`w-full min-h-28 object-cover rounded-lg pt-1`}
                         onClick={() => {
                           setShowBigImage(() => true);
                           setSelectedId(() => pin.poi_id);
                         }}
                       />
 
-                      {!showBigImage && (
-                        <h2 className="w-full text-center mt-2 line-clamp-2 overflow-hidden">
-                          {pin.is_completed ? pin.title : "???"}
+                      {!showBigImage ? (
+                        <h2
+                          className={`w-full text-center mt-2 line-clamp-2 overflow-hidden ${
+                            pin.is_completed && "text-primary"
+                          } `}
+                        >
+                          {pin.title}
                         </h2>
+                      ) : pin.is_completed ? (
+                        <p className="w-full mt-4 h-auto">{pin.description}</p>
+                      ) : (
+                        "????????????????"
                       )}
                     </div>
                   ))}

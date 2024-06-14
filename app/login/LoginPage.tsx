@@ -27,6 +27,9 @@ const LoginPage: React.FC = () => {
     if (firebaseUser != null) {
       setLoginWindowStatus(2);
     }
+    if (firebaseUser == null) {
+      setLoginWindowStatus(0);
+    }
     return () => {};
   }, [firebaseUser]);
 
@@ -161,7 +164,7 @@ const LoginPage: React.FC = () => {
           <Button
             variant={"link"}
             className="w-full mt-4"
-            onClick={() => setLoginWindowStatus(1)}
+            onClick={() => setLoginWindowStatus(0)}
           >
             {" "}
             Switch to Login Menu{" "}
@@ -215,7 +218,7 @@ const LoginPage: React.FC = () => {
         <Button
           variant={"link"}
           className="w-full mt-4"
-          onClick={() => setLoginWindowStatus(0)}
+          onClick={() => setLoginWindowStatus(1)}
         >
           {" "}
           Switch to create new account menu
@@ -230,8 +233,8 @@ const LoginPage: React.FC = () => {
         {status === 2
           ? renderSignOutLayout()
           : status === 1
-          ? renderSignInWindow()
-          : renderCreateAccountLayout()}
+          ? renderCreateAccountLayout()
+          : renderSignInWindow()}
       </div>
     );
   };

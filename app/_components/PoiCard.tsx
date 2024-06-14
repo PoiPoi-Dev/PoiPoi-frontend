@@ -11,6 +11,7 @@ import {
 } from "../_utils/coordinateMath";
 import { Badge } from "./ui/badge";
 import { Toaster, toast } from "sonner";
+import Link from "next/link";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -240,30 +241,35 @@ export function PoiCard({
           </p>
         ) : (
           <div className="flex flex-col pr-2 gap-2 mt-2">
-            <Button
-              id={`${id}`}
-              className="w-full rounded-lg"
-              onClick={(): void => {
-                if (!user) {
-                  alert("please login");
-                  return;
-                }
+            {user ? (
+              <Button
+                id={`${id}`}
+                className="w-full rounded-lg"
+                onClick={(): void => {
+                  if (handleCheckUserInSearchZone()) {
+                    void handleSubmitGuessOnClick(
+                      user,
+                      payload,
+                      userCoordinates
+                    );
+                    return;
+                  }
 
-                if (handleCheckUserInSearchZone()) {
-                  void handleSubmitGuessOnClick(user, payload, userCoordinates);
-                  return;
-                }
-
-                if (importantPinContext) {
-                  importantPinContext.setTrackingPin(payload);
-                  setShowPopup && setShowPopup(false);
-                }
-              }}
-            >
-              {!handleCheckUserInSearchZone()
-                ? "Too far! Track this pin?"
-                : "Guess and collect"}
-            </Button>
+                  if (importantPinContext) {
+                    importantPinContext.setTrackingPin(payload);
+                    setShowPopup && setShowPopup(false);
+                  }
+                }}
+              >
+                {!handleCheckUserInSearchZone()
+                  ? "Too far! Track this pin?"
+                  : "Guess and collect"}
+              </Button>
+            ) : (
+              <Link href={"/login"}>
+                <Button className="w-full rounded-lg">Login to collect</Button>
+              </Link>
+            )}
             <Toaster position="top-center" closeButton />
             <Button
               id={`${id}`}

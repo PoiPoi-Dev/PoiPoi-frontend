@@ -22,7 +22,7 @@ const MainQuest = ({ closestNotCompletedPin: closestPin }: MainQuestProps) => {
   const trackingPinContext = useContext(ImportantPinContext);
   const [pinToPanTo, setPinToPanTo] = useState<Pin | null>(null);
   const [isTracking, setIsTracking] = useState<boolean>(false);
-  const { current: map } = useMap();
+  const { gameMap } = useMap();
 
   useEffect(() => {
     console.log(trackingPinContext?.trackingPin);
@@ -41,8 +41,8 @@ const MainQuest = ({ closestNotCompletedPin: closestPin }: MainQuestProps) => {
 
   const handlePanMapToTrackingPin = (pin: Pin) => {
     try {
-      if (!map) throw "Can't find map";
-      map.flyTo({
+      if (!gameMap) throw "Can't find map";
+      gameMap.flyTo({
         center: [pin.search_longitude, pin.search_latitude],
         duration: 1000,
         minZoom: 24,
