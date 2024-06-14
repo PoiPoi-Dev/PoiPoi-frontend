@@ -27,6 +27,9 @@ const LoginPage: React.FC = () => {
     if (firebaseUser != null) {
       setLoginWindowStatus(2);
     }
+    if (firebaseUser == null) {
+      setLoginWindowStatus(0);
+    }
     return () => {};
   }, [firebaseUser]);
 
