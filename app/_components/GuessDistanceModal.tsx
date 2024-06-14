@@ -111,10 +111,8 @@ const GuessDistanceModal = ({
         <DrawerContent>
           {distanceToPin < thresholdDistance ? (
             <div className="p-4">
-              <p className="my-2">
-                {`Nice Guessing! How about leaving a hint for someone else?`} 
-                {`(Be sure to be helpful! But don't just give it away!)`}
-              </p>
+              <h2> {`Nice Guessing! How about leaving a hint for someone else?`}</h2>
+              <p className="my-2"> {`(Be sure to be helpful! But don't just give it away!)`}</p>
               <Label htmlFor="hint">Your hint: </Label>
               <Input
                 id="hint"
@@ -126,7 +124,6 @@ const GuessDistanceModal = ({
               />
               <div className="flex flex-col gap-4 mt-4 justify-end">
                 <Button
-                  variant={"link"}
                   ref={drawerRef}
                   onClick={() => {
                     handleSubmitClick();
@@ -137,12 +134,24 @@ const GuessDistanceModal = ({
                 >
                   Submit Hint
                 </Button>
+                <Button
+                  variant={"link"}
+                  ref={drawerRef}
+                  onClick={() => {
+                    handleSubmitClick;
+                    // setGuessPoiPosition(null);
+                    setGuessedPin(null);
+                  }}
+                  className="w-full"
+                >
+                  Maybe next time
+                </Button>
               </div>
             </div>
           ) : (
             <div className="p-4">
               <h2>{`Good effort! Try to get within 20 meters next time!`}</h2>
-              <p>{`(You'll be able to leave a hint if you're close enough!)`}</p>
+              <p className="my-2">{`(You'll be able to leave a hint if you're close enough!)`}</p>
               <Button
                 variant={"link"}
                 ref={drawerRef}
