@@ -22,7 +22,9 @@ const PoidexModal: React.FC<PoidexModalProps> = ({ pins, setShowPoidex }) => {
     try {
       if (!gameMap) throw "Can't find map";
       gameMap.flyTo({
-        center: [pin.exact_longitude, pin.exact_latitude],
+        center: pin.is_completed
+          ? [pin.exact_longitude, pin.exact_latitude]
+          : [pin.search_longitude, pin.search_latitude],
         duration: 1000,
         minZoom: 24,
         zoom: 17,
