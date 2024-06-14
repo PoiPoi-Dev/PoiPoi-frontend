@@ -56,6 +56,8 @@ const LoginPage: React.FC = () => {
         user.creatingPassword,
         user.displayName
       );
+      //to be used for Leaderboard
+      localStorage.setItem("username", user.displayName);
     } catch (error) {
       console.error(error);
     }
@@ -69,6 +71,7 @@ const LoginPage: React.FC = () => {
     try {
       if (!user.email || !user.password) throw "Invalid User/Password";
       await loginUser(user.email, user.password);
+      localStorage.setItem("username", user.displayName);
     } catch (error) {
       console.error(error);
     }
@@ -78,6 +81,7 @@ const LoginPage: React.FC = () => {
     try {
       await logoutUser();
       setLoginWindowStatus(0);
+      localStorage.removeItem("username");
     } catch (error) {
       console.error(error);
     }
