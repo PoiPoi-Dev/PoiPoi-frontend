@@ -16,7 +16,7 @@ const GuessDistanceModal = ({
   userCoordinates,
   score,
 }: {
-  guessedPin: Pin
+  guessedPin: Pin;
   // guessPoiPosition: Coordinates;
   setGuessedPin: (arg0: Pin | null) => void;
   userCoordinates: Coordinates;
@@ -27,7 +27,7 @@ const GuessDistanceModal = ({
   const drawerRef = useRef<HTMLButtonElement>(null); // Ref for the Done button
   const thresholdDistance = 20;
 
-   useEffect(() => {
+  useEffect(() => {
     if (!guessedPin) return;
     handleDistanceToPin(guessedPin, userCoordinates);
   }, [guessedPin]);
@@ -73,7 +73,7 @@ const GuessDistanceModal = ({
         );
         drawerRef.current?.click(); // Simulate clicking the Done button
       } else {
-        console.log(hintData)
+        console.log(hintData);
         const responseData = (await response.json()) as { message?: string };
         alert(
           `Failed to submit hint: ${responseData.message || "Unknown error"}`
@@ -95,9 +95,8 @@ const GuessDistanceModal = ({
           <p className="mb-4">
             You guessed{" "}
             <span className="text-primary font-semibold">
-              { distanceToPin > 1000
-                ? (distanceToPin / 1000)
-                  .toFixed(2) + "km"
+              {distanceToPin > 1000
+                ? (distanceToPin / 1000).toFixed(2) + "km"
                 : distanceToPin.toFixed(2) + "m"}{" "}
             </span>
             away from the picture and your score is{" "}
@@ -111,8 +110,14 @@ const GuessDistanceModal = ({
         <DrawerContent>
           {distanceToPin < thresholdDistance ? (
             <div className="p-4">
-              <h2> {`Nice Guessing! How about leaving a hint for someone else?`}</h2>
-              <p className="my-2"> {`(Be sure to be helpful! But don't just give it away!)`}</p>
+              <h2>
+                {" "}
+                {`Nice Guessing! How about leaving a hint for someone else?`}
+              </h2>
+              <p className="my-2">
+                {" "}
+                {`(Be sure to be helpful! But don't just give it away!)`}
+              </p>
               <Label htmlFor="hint">Your hint: </Label>
               <Input
                 id="hint"
