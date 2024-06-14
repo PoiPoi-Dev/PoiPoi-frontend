@@ -1,10 +1,8 @@
 import Link from "next/link";
-import { BsQuestionDiamondFill } from "react-icons/bs";
-import { ButtonIconCircle } from "../_components/ui/MenuIconCircle";
 
 export default function HowToPlay() {
   return (
-    <main className="flex flex-col justify-between p-10 bg-amber-50">
+    <main className="flex flex-col justify-between p-10 bg-amber-50 h-screen overflow-y-scroll no-scrollbar">
       <section>
         <h1>HOW TO PLAY</h1>
         <p>
