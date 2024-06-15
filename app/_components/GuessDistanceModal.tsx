@@ -23,7 +23,7 @@ const GuessDistanceModal = ({
   const [hint, setHint] = useState<string>("");
   const drawerRef = useRef<HTMLButtonElement>(null); // Ref for the Done button
   const thresholdDistance = 20;
-  const distanceToGuessedPin = handleDistanceToPin(guessedPin, userCoordinates);
+  const distanceToGuessedPinExactLocation = handleDistanceToPin(guessedPin, userCoordinates);
   
   function handleDistanceToPin(
     guessedPin: Pin,
@@ -88,9 +88,9 @@ const GuessDistanceModal = ({
           <p className="mb-4">
             You guessed{" "}
             <span className="text-primary font-semibold">
-              {distanceToGuessedPin > 1000
-                ? (distanceToGuessedPin / 1000).toFixed(2) + "km"
-                : distanceToGuessedPin.toFixed(2) + "m"}{" "}
+              {distanceToGuessedPinExactLocation > 1000
+                ? (distanceToGuessedPinExactLocation / 1000).toFixed(2) + "km"
+                : distanceToGuessedPinExactLocation.toFixed(2) + "m"}{" "}
             </span>
             away from the picture and your score is{" "}
             <span className="text-primary font-semibold">{score}</span>! Good
@@ -101,7 +101,7 @@ const GuessDistanceModal = ({
           </DrawerTrigger>
         </div>
         <DrawerContent>
-          {distanceToGuessedPin < thresholdDistance ? (
+          {distanceToGuessedPinExactLocation < thresholdDistance ? (
             <div className="p-4">
               <h2>
                 {" "}
