@@ -176,7 +176,7 @@ function MapInner() {
 
   /**
    * Sets closestNotCompletedPin to the closes pin BY POSITION
-   * Currently does not account for filters
+   * Accounts for the toggled filters
    * @param position
    */
   const handleSetClosestNotCompletedPin = (position: GeolocationPosition) => {
@@ -188,9 +188,13 @@ function MapInner() {
     let shortestDistance: number = Number.MAX_SAFE_INTEGER;
     let closestPin: Pin | null = null;
 
-    for (const pin of poiData) {
-      if (pin.is_completed) continue;
+    const pinsAfterFiltering = poiData.filter((pin) => {
+      return (pin.is_completed) ? false :
+      (selectedFilters.length === 0) ? true 
+      : selectedFilters.every((tag) => pin.tags.includes(tag))
+    })
 
+    for (const pin of pinsAfterFiltering) {
       const pinCoordinates: Coordinates = {
         longitude: pin.search_longitude,
         latitude: pin.search_latitude,
