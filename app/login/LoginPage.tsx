@@ -19,7 +19,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const LoginPage: React.FC = () => {
   const [loginWindowStatus, setLoginWindowStatus] = useState<number>(0);
-  const [currAccount, setCurrAccount] = useState<Account | null>(null);
+  const [currAccount, setCurrAccount] = useState<Account>({} as Account);
   const [user, setUser] = useState<User>({
     email: "",
     creatingEmail: "",
@@ -104,10 +104,9 @@ const LoginPage: React.FC = () => {
   };
 
   const renderSignOutLayout = (): React.JSX.Element => {
-    const currXp: number = currAccount
-      ? currAccount?.totalXp - currAccount?.xpToNextLevel
-      : 0;
-    const maxXp = currAccount ? currAccount?.totalXp : 0;
+    const { level, xpToNextLevel } = currAccount;
+    const XPRequireToNextLevel = 250 * (1 + level / 10);
+    const currentXPIntoNextLevel = XPRequireToNextLevel - xpToNextLevel;
     return (
       <>
         <div className="flex flex-col justify-center items-center gap-4">
@@ -121,15 +120,14 @@ const LoginPage: React.FC = () => {
               <RiUserFill size={100} className="text-secondary-300" />
             </div>
             <CircularProgressBar
-              percentage={currAccount ? (currXp / maxXp) * 100 : 0}
+              percentage={currAccount ? (currentXPIntoNextLevel / XPRequireToNextLevel) * 100 : 0}
               strokeWidth={16}
               sqSize={200}
             />
           </div>
 
-
           <p>
-            Exp: {currAccount ? currXp : 0} / {maxXp || 0}
+            Exp: {currAccount ? currentXPIntoNextLevel : 0} / {XPRequireToNextLevel || 0}
           </p>
 
           <p>
