@@ -1,6 +1,7 @@
 import { levelAndXp } from "../_utils/global";
 import { useState, useEffect } from "react";
 import { Progress } from "./ui/Progress";
+import calculateLevel from "../_utils/calculateLvl";
 
 const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
   const [progress, setProgress] = useState<number>(0);
@@ -11,9 +12,9 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
     new Promise((resolve) => setTimeout(resolve, ms));
 
   useEffect(() => {
-    const { totalXp, level, xpToNextLevel } = levelAndXp;
-    const totalXpForCurrentLevel = totalXp + xpToNextLevel;
-    const progressPercentage = (totalXp / totalXpForCurrentLevel) * 100;
+    const { level, xpToNextLevel } = levelAndXp;
+    const totalXpForCurrentLevel: number = calculateLevel(level);
+    const progressPercentage = (xpToNextLevel / totalXpForCurrentLevel) * 100;
 
     const animateMultipleLevelUps = async (
       startLevel: number,
