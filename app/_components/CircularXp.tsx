@@ -8,8 +8,7 @@ interface Props {
 
 const CircularProgressBar: FC<Props> = (props) => {
   const [percentageAnimate, setPercentageAnimate] = useState(0);
-
-  const { strokeWidth = 16, sqSize = 200, percentage } = props;
+  const { strokeWidth = 16, sqSize = 16, percentage } = props;
   const radius = (sqSize - strokeWidth) / 2;
   const viewBox = `0 0 ${sqSize} ${sqSize}`;
   const dashArray = radius * Math.PI * 2;

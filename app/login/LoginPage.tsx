@@ -115,18 +115,23 @@ const LoginPage: React.FC = () => {
             {currAccount?.username || "User"}
           </h1>
 
+          {/* USER PROFILE IMAGE & XP */}
           <div className="relative h-40 my-6">
             <div className="absolute top-20 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary-100 w-40 h-40 rounded-full flex justify-center items-center">
               <RiUserFill size={100} className="text-secondary-300" />
             </div>
             <CircularProgressBar
               percentage={currAccount ? (currXp / maxXp) * 100 : 0}
+              strokeWidth={16}
+              sqSize={200}
             />
           </div>
+
 
           <p>
             Exp: {currAccount ? currXp : 0} / {maxXp || 0}
           </p>
+
           <p>
             level:{" "}
             <span className="font-bold text-primary-500">
