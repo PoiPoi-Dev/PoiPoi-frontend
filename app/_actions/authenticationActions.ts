@@ -26,6 +26,7 @@ export async function createUser(
   displayName: string
 ) {
   try {
+    localStorage.removeItem("levelAndXp"); //if user had a session and creates second account
     const newUserUuid = await createAccount(email, password);
     const newUserProfile = {
       firebase_uuid: newUserUuid,
@@ -47,7 +48,6 @@ export async function createUser(
 
     const resData = (await response.json()) as UserProfile;
     console.log(resData);
-    localStorage.removeItem("levelAndXp"); //if user had a session and creates second account
     alert("Account created successfully!");
   } catch (error) {
     alert(`Account creation failed: ${(error as Error).message}`);
@@ -66,10 +66,10 @@ export async function createUser(
  * @param password
  */
 export async function loginUser(email: string, password: string) {
+  localStorage.removeItem("levelAndXp"); //if other user creates second account.
   try {
     const uuid = await loginEmailPassword(email, password);
     if (!uuid) throw "Could not find user";
-    localStorage.removeItem("levelAndXp"); //if other user creates second account.
     alert("Login successful!");
   } catch (error) {
     alert("Login failed!");
@@ -81,10 +81,10 @@ export async function loginUser(email: string, password: string) {
  * Logs the user out from the app.
  */
 export async function logoutUser(): Promise<void> {
+  localStorage.removeItem("levelAndXp"); //clean up after user
   try {
     await logout();
     alert("Logout successful!");
-    localStorage.removeItem("levelAndXp"); //clean up after user
   } catch (error) {
     alert("Logout failed!");
     console.error(error);

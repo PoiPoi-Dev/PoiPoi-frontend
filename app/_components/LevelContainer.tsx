@@ -14,7 +14,18 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
     const { totalXp, level, xpToNextLevel } = levelAndXp;
     const totalXpForCurrentLevel = totalXp + xpToNextLevel;
     const progressPercentage = (totalXp / totalXpForCurrentLevel) * 100;
-    let transitionLevel: number = currentLevel;
+
+    const animateMultipleLevelUps = async (
+      startLevel: number,
+      endLevel: number
+    ) => {
+      let transitionLevel = startLevel + 1;
+      while (transitionLevel < endLevel) {
+        await delay(1000);
+        setCurrentLevel(transitionLevel);
+        transitionLevel += 1;
+      }
+    };
 
     //written in use effect to trigger dependency
     const handleLevelUp = async () => {
@@ -29,16 +40,11 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
       if (level > currentLevel) {
         //frame 1
         setProgress(100);
-        //animate multiple level ups
-        while (transitionLevel < level) {
-          await delay(1000);
-          transitionLevel += 1;
-          setCurrentLevel(transitionLevel);
-        }
-        await delay(1000);
+        await animateMultipleLevelUps(currentLevel, level);
 
         //frame 2
         setLevelKey(level);
+        setCurrentLevel(level);
         setProgress(0);
         await delay(1000);
 
@@ -54,8 +60,11 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
   }, [levelAndXp, currentLevel]);
 
   return (
-    <div className="fixed bottom-52 left-4 w-40" key={levelKey}>
-      <p>level{currentLevel}</p>
+    <div className="fixed top-28 left-4 w-40" key={levelKey}>
+      <p>
+        level{currentLevel} {levelAndXp.totalXp}/
+        {levelAndXp.totalXp + levelAndXp.xpToNextLevel}
+      </p>
       <Progress value={progress} />
     </div>
   );
