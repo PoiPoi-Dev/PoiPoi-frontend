@@ -1,4 +1,3 @@
-import { useState } from "react";
 import PoidexModal from "./PoidexModal";
 import { Pin } from "../_utils/global";
 import { BsCollectionFill } from "react-icons/bs";
@@ -6,11 +5,15 @@ import { ButtonIconCircle } from "./ui/MenuIconCircle";
 
 interface PoidexProps {
   pins: Pin[];
+  setShowPoidex: (arg0: boolean) => void;
+  showPoidex: boolean;
 }
 
-const Poidex = ({ pins }: PoidexProps): React.JSX.Element => {
-  const [showPoidex, setShowPoidex] = useState<boolean>(false);
-
+const Poidex = ({
+  pins,
+  setShowPoidex,
+  showPoidex,
+}: PoidexProps): React.JSX.Element => {
   return (
     <>
       <ButtonIconCircle
