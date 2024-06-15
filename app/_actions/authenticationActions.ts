@@ -48,7 +48,6 @@ export async function createUser(
 
     const resData = (await response.json()) as UserProfile;
     console.log(resData);
-    localStorage.removeItem("levelAndXp"); //if user had a session and creates second account
     alert("Account created successfully!");
   } catch (error) {
     alert(`Account creation failed: ${(error as Error).message}`);
@@ -71,7 +70,6 @@ export async function loginUser(email: string, password: string) {
   try {
     const uuid = await loginEmailPassword(email, password);
     if (!uuid) throw "Could not find user";
-    localStorage.removeItem("levelAndXp"); //if other user creates second account.
     alert("Login successful!");
     return true;
     } catch (error) {
@@ -89,7 +87,6 @@ export async function logoutUser(): Promise<void> {
   try {
     await logout();
     alert("Logout successful!");
-    localStorage.removeItem("levelAndXp"); //clean up after user
   } catch (error) {
     alert("Logout failed!");
     console.error(error);

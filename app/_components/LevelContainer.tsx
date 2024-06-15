@@ -46,6 +46,7 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
 
         //frame 2
         setLevelKey(level);
+        setCurrentLevel(level);
         setProgress(0);
         await delay(1000);
 
