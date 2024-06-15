@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, useContext } from "react";
-import { User } from "../_utils/global";
+import { Account, User } from "../_utils/global";
 import { useRouter } from "next/navigation";
 import {
   createUser,
@@ -13,8 +13,11 @@ import { Input } from "@/app/_components/ui/input";
 import { Label } from "@/app/_components/ui/label";
 import FooterMenu from "../_components/FooterMenu";
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
 const LoginPage: React.FC = () => {
   const [loginWindowStatus, setLoginWindowStatus] = useState<number>(0);
+  const [currAccount, setCurrAccount] = useState<Account | null>(null);
   const [user, setUser] = useState<User>({
     email: "",
     creatingEmail: "",
@@ -27,6 +30,7 @@ const LoginPage: React.FC = () => {
 
   useEffect(() => {
     if (firebaseUser != null) {
+      void handleFetchUserData();
       setLoginWindowStatus(2);
     }
     if (firebaseUser == null) {
@@ -34,6 +38,18 @@ const LoginPage: React.FC = () => {
     }
     return () => {};
   }, [firebaseUser]);
+
+  const handleFetchUserData = async () => {
+    console.log(firebaseUser?.uid);
+    const data = await fetch(`${BASE_URL}/api/user_profiles/user_stats`, {
+      credentials: "include",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ firebase_uuid: firebaseUser?.uid }),
+    });
+    const userData: Account = (await data.json()) as Account;
+    setCurrAccount(userData);
+  };
 
   const handleInputChange = (e: {
     target: { name: string; value: string };
@@ -89,6 +105,27 @@ const LoginPage: React.FC = () => {
   const renderSignOutLayout = (): React.JSX.Element => {
     return (
       <>
+        {/* REQUIRE FETCH REQUEST */}
+        {/* 
+        FETCH
+        POST: http://localhost:8000/api/user_profiles/user_stats
+        key: firebase_uuid
+        value: user_uuid
+
+        RETURN
+        username
+        totalXp
+        Level
+        xpToNextLevel */}
+        <h1>{currAccount?.username || "User"}</h1>
+        <p>
+          Exp:{" "}
+          {currAccount
+            ? currAccount.totalXp -
+              currAccount.xpToNextLevel / currAccount.totalXp
+            : 0}
+        </p>
+        <p>level: {currAccount?.level || 1} </p>
         <h1 className="text-primary text-2xl font-bold">
           Would you like to sign out?
         </h1>
