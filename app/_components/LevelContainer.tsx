@@ -16,14 +16,13 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
     const XPRequireToNextLevel = calculateTotalExperienceForLevel(level);
     const currentUserXp = XPRequireToNextLevel - xpToNextLevel;
     const progressPercentage = (currentUserXp / XPRequireToNextLevel) * 100;
-    console.log(progressPercentage);
 
     const animateMultipleLevelUps = async (
       startLevel: number,
       endLevel: number
     ) => {
       let transitionLevel = startLevel + 1;
-      while (transitionLevel < endLevel) {
+      while (transitionLevel <= endLevel) {
         await delay(1000);
         setCurrentLevel(transitionLevel);
         transitionLevel += 1;
@@ -47,7 +46,6 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
 
         //frame 2
         setLevelKey(level);
-        setCurrentLevel(level);
         setProgress(0);
         await delay(1000);
 
