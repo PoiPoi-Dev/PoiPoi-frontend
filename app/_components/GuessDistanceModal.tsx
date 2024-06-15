@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Drawer, DrawerContent, DrawerTrigger } from "./ui/drawer";
 import {
   Coordinates,
@@ -23,14 +23,8 @@ const GuessDistanceModal = ({
   const [hint, setHint] = useState<string>("");
   const drawerRef = useRef<HTMLButtonElement>(null); // Ref for the Done button
   const thresholdDistance = 20;
-  const distanceToPinRef = useRef<number>(handleDistanceToPin(guessedPin, userCoordinates));
-
-  useEffect(() => {
-    console.log("Guess Modal Mounted");
-
-    return () => console.log("Unmounting");
-  },[]);
-
+  const distanceToGuessedPin = handleDistanceToPin(guessedPin, userCoordinates);
+  
   function handleDistanceToPin(
     guessedPin: Pin,
     userCoordinates: Coordinates
@@ -94,9 +88,9 @@ const GuessDistanceModal = ({
           <p className="mb-4">
             You guessed{" "}
             <span className="text-primary font-semibold">
-              {distanceToPinRef.current > 1000
-                ? (distanceToPinRef.current / 1000).toFixed(2) + "km"
-                : distanceToPinRef.current.toFixed(2) + "m"}{" "}
+              {distanceToGuessedPin > 1000
+                ? (distanceToGuessedPin / 1000).toFixed(2) + "km"
+                : distanceToGuessedPin.toFixed(2) + "m"}{" "}
             </span>
             away from the picture and your score is{" "}
             <span className="text-primary font-semibold">{score}</span>! Good
@@ -107,7 +101,7 @@ const GuessDistanceModal = ({
           </DrawerTrigger>
         </div>
         <DrawerContent>
-          {distanceToPinRef.current < thresholdDistance ? (
+          {distanceToGuessedPin < thresholdDistance ? (
             <div className="p-4">
               <h2>
                 {" "}
