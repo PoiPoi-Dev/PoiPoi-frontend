@@ -12,6 +12,7 @@ import {
 import { Badge } from "./ui/badge";
 import { Toaster, toast } from "sonner";
 import Link from "next/link";
+import { useMap } from "react-map-gl/maplibre";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -36,6 +37,7 @@ export function PoiCard({
   );
   const user = useContext(AuthContext);
   const importantPinContext = useContext(ImportantPinContext);
+  const { gameMap } = useMap();
   const { search_latitude, search_longitude } = payload;
   const pinCoordinates: Coordinates = {
     latitude: search_latitude,
@@ -54,6 +56,20 @@ export function PoiCard({
       payload.search_radius
     );
   };
+
+  const handlePanMapToTrackingPin = (pin: Pin) => {
+    try {
+      if (!gameMap) throw "Can't find map";
+      gameMap.flyTo({
+        center: [pin.search_longitude, pin.search_latitude],
+        duration: 1000,
+        minZoom: 24,
+        zoom: 17
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const PostGuess = async (
     user: User,
@@ -261,6 +277,7 @@ export function PoiCard({
 
                   if (importantPinContext) {
                     importantPinContext.setTrackingPin(payload);
+                    handlePanMapToTrackingPin(payload);
                     setShowPopup && setShowPopup(false);
                   }
                 }}
@@ -288,6 +305,7 @@ export function PoiCard({
                 if (!handleCheckUserInSearchZone()) {
                   if (importantPinContext) {
                     importantPinContext.setTrackingPin(payload);
+                    handlePanMapToTrackingPin(payload);
                     setShowPopup && setShowPopup(false);
                   }
                 } else {
