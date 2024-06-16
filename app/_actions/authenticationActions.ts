@@ -71,9 +71,11 @@ export async function loginUser(email: string, password: string) {
     const uuid = await loginEmailPassword(email, password);
     if (!uuid) throw "Could not find user";
     alert("Login successful!");
-  } catch (error) {
+    return true;
+    } catch (error) {
     alert("Login failed!");
     console.error(error);
+    return false;
   }
 }
 

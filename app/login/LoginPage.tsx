@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useContext } from "react";
 import { User } from "../_utils/global";
+import { useRouter } from "next/navigation";
 import {
   createUser,
   loginUser,
@@ -22,6 +23,7 @@ const LoginPage: React.FC = () => {
     displayName: "",
   } as User);
   const firebaseUser = useContext(AuthContext);
+  const router = useRouter();
 
   useEffect(() => {
     if (firebaseUser != null) {
@@ -68,7 +70,8 @@ const LoginPage: React.FC = () => {
 
     try {
       if (!user.email || !user.password) throw "Invalid User/Password";
-      await loginUser(user.email, user.password);
+      const isLoginSuccess = await loginUser(user.email, user.password);
+      if (isLoginSuccess) router.push("/map");
     } catch (error) {
       console.error(error);
     }
