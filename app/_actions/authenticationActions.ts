@@ -1,8 +1,9 @@
 "use client";
-import { createAccount, 
-  loginEmailPassword, 
+import {
+  createAccount,
+  loginEmailPassword,
   deleteCurrentlyLoggedInUser,
-  logout, 
+  logout,
 } from "../_utils/authentication";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -25,6 +26,7 @@ export async function createUser(
   displayName: string
 ) {
   try {
+    localStorage.removeItem("levelAndXp"); //if user had a session and creates second account
     const newUserUuid = await createAccount(email, password);
     const newUserProfile = {
       firebase_uuid: newUserUuid,
@@ -40,7 +42,7 @@ export async function createUser(
     });
 
     if (!response.ok) {
-      const errorResponse = await response.json() as {error: string};
+      const errorResponse = (await response.json()) as { error: string };
       throw new Error(errorResponse.error);
     }
 
@@ -49,8 +51,8 @@ export async function createUser(
     alert("Account created successfully!");
   } catch (error) {
     alert(`Account creation failed: ${(error as Error).message}`);
-    try{ 
-      await deleteCurrentlyLoggedInUser(); 
+    try {
+      await deleteCurrentlyLoggedInUser();
     } catch (deleteError) {
       console.error(deleteError);
     }
@@ -64,11 +66,12 @@ export async function createUser(
  * @param password
  */
 export async function loginUser(email: string, password: string) {
+  localStorage.removeItem("levelAndXp"); //if other user creates second account.
   try {
     const uuid = await loginEmailPassword(email, password);
-    if (!uuid) throw 'Could not find user';
+    if (!uuid) throw "Could not find user";
     alert("Login successful!");
-    } catch (error) {
+  } catch (error) {
     alert("Login failed!");
     console.error(error);
   }
@@ -78,6 +81,7 @@ export async function loginUser(email: string, password: string) {
  * Logs the user out from the app.
  */
 export async function logoutUser(): Promise<void> {
+  localStorage.removeItem("levelAndXp"); //clean up after user
   try {
     await logout();
     alert("Logout successful!");
