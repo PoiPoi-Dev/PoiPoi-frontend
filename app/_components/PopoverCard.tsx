@@ -19,7 +19,7 @@ const PopoverCard = ({
   setCheckLevel: (arg: boolean) => void;
 }) => {
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen">
+    <div className="fixed top-0 left-0 w-screen h-[100svh]">
       <Popover defaultOpen>
         <PopoverContent>
           {setShowPopup && userCoordinates && (
