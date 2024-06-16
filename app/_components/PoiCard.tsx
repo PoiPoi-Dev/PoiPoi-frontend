@@ -21,12 +21,14 @@ export function PoiCard({
   setShowPopup,
   userCoordinates,
   setScore,
+  setCheckLevel,
 }: {
   id: number;
   payload: Pin;
   setShowPopup?: (arg0: boolean) => void;
   userCoordinates: Coordinates | null;
   setScore: (arg0: number | null) => void;
+  setCheckLevel: (arg: boolean) => void;
 }): JSX.Element {
   // USE STATE
   const [collect, setCollect] = useState<boolean | undefined>(
@@ -59,6 +61,7 @@ export function PoiCard({
     distance: number
   ): Promise<Response | void> => {
     try {
+      setCheckLevel(false);
       if (!user) throw "Not logged in"; //error
       if (!pin) throw "Can not get pin";
 
@@ -86,7 +89,8 @@ export function PoiCard({
           body: JSON.stringify(data),
         }
       );
-      const JSONresponse = response.json() as Promise<Response>;
+      const JSONresponse = (await response.json()) as Promise<Response>;
+      setCheckLevel(true);
       return JSONresponse;
     } catch (error) {
       console.error(error);

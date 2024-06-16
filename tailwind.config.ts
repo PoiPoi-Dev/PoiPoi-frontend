@@ -79,7 +79,7 @@ const config = {
         },
       },
       animation: {
-        animate: "bounce 1s infinite",
+        bounce: "bounce 1.5s infinite",
         ping: "ping 1.5s cubic-bezier(0,0,0,0.1) infinite",
         fade: "fadeIn .5s ease-in-out",
         "accordion-down": "accordion-down 0.2s ease-out",

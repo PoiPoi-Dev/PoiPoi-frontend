@@ -42,7 +42,20 @@ export interface User {
   displayName: string;
 }
 
+export interface Account {
+  username: string,
+  totalXp: number,
+  level: number,
+  xpToNextLevel: number
+}
+
 export interface Leaderboards {
   username: string;
   score: number;
+}
+
+export interface levelAndXp {
+  level: number;
+  totalXp: number;
+  xpToNextLevel: number;
 }
