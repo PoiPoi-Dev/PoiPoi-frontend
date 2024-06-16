@@ -51,6 +51,10 @@ const LoginPage: React.FC = () => {
     try {
       if (!user.creatingEmail || !user.creatingPassword || !user.displayName)
         throw "Invalid User/Password/Display Name";
+      if (user.creatingPassword.length < 6) {
+        alert("Password must have at least 6 characters, please try again.");
+        throw "Insufficient password length";
+      }
       await createUser(
         user.creatingEmail,
         user.creatingPassword,
