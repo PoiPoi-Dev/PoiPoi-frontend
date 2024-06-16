@@ -14,6 +14,7 @@ import { Label } from "@/app/_components/ui/label";
 import FooterMenu from "../_components/FooterMenu";
 import CircularProgressBar from "../_components/CircularXp";
 import { RiUserFill } from "react-icons/ri";
+import Loading from "../_components/ui/loading";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -21,6 +22,7 @@ const LoginPage: React.FC = () => {
   const [loginWindowStatus, setLoginWindowStatus] = useState<number>(0);
   const [currAccount, setCurrAccount] = useState<Account>({} as Account);
   const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User>({
     email: "",
     creatingEmail: "",
@@ -32,15 +34,18 @@ const LoginPage: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if(isCreating) return;
+    if (isCreating) return;
     if (firebaseUser != null && !isCreating) {
       void handleFetchUserData();
       setLoginWindowStatus(2);
+      setIsLoading(false);
     }
     if (firebaseUser == null) {
       setLoginWindowStatus(0);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     }
-    return () => {};
   }, [firebaseUser, isCreating]);
 
   const handleFetchUserData = async () => {
@@ -304,8 +309,14 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 w-screen h-screen px-4">
-      {renderLoginWindow(loginWindowStatus)}
-      <FooterMenu variant="account" />
+      {!isLoading ? (
+        <>
+          {renderLoginWindow(loginWindowStatus)}
+          <FooterMenu variant="account" />
+        </>
+      ) : (
+        <Loading />
+      )}
     </div>
   );
 };
