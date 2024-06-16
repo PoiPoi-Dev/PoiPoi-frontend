@@ -31,13 +31,11 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
 
     //written in use effect to trigger dependency
     const handleLevelUp = async () => {
-      //handle /refresh to not animate progressbar
       if (currentLevel === 0) {
-        setCurrentLevel(level);
         setProgress(progressPercentage);
+        setCurrentLevel(level);
         return;
       }
-
       // Player leveled up
       if (level > currentLevel) {
         //frame 1
@@ -63,8 +61,12 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
 
   return (
     <div className="fixed bottom-40 left-4 w-40" key={levelKey}>
-      <p>level{currentLevel}</p>
-      <Progress value={progress} />
+      {currentLevel === 0 ? null : (
+        <>
+          <p>level{currentLevel}</p>
+          <Progress value={progress} />
+        </>
+      )}
     </div>
   );
 };
