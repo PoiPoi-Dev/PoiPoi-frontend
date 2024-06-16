@@ -5,6 +5,7 @@ import {
   deleteCurrentlyLoggedInUser,
   logout,
 } from "../_utils/authentication";
+import { removeAllFromLocalStorage } from "../_utils/localStorageHandler";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -26,7 +27,7 @@ export async function createUser(
   displayName: string
 ) {
   try {
-    localStorage.removeItem("levelAndXp"); //if user had a session and creates second account
+    removeAllFromLocalStorage(); //if user had a session and creates second account
     const newUserUuid = await createAccount(email, password);
     const newUserProfile = {
       firebase_uuid: newUserUuid,
@@ -65,7 +66,7 @@ export async function createUser(
  * @param password
  */
 export async function loginUser(email: string, password: string) {
-  localStorage.removeItem("levelAndXp"); //if other user creates second account.
+  removeAllFromLocalStorage(); //if other user creates second account.
   try {
     const uuid = await loginEmailPassword(email, password);
     if (!uuid) throw "Could not find user";
@@ -82,7 +83,7 @@ export async function loginUser(email: string, password: string) {
  * Logs the user out from the app.
  */
 export async function logoutUser(): Promise<void> {
-  localStorage.removeItem("levelAndXp"); //clean up after user
+  removeAllFromLocalStorage(); //clean up after user
   try {
     await logout();
     alert("Logout successful!");
