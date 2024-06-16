@@ -14,8 +14,9 @@ import { Label } from "@/app/_components/ui/label";
 import FooterMenu from "../_components/FooterMenu";
 import CircularProgressBar from "../_components/CircularXp";
 import { RiUserFill } from "react-icons/ri";
-import Loading from "../_components/ui/loading";
+import LoadingSkeleton from "../_components/ui/loading";
 import { calculateTotalExperienceForLevel } from "../_utils/calculateExpInLevel";
+import Skeleton from "../_components/ui/skeleton";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -121,9 +122,13 @@ const LoginPage: React.FC = () => {
     return (
       <>
         <div className="flex flex-col justify-center items-center gap-4">
-          <h1 className="text-primary text-3xl font-extrabold m-0 p-0">
-            {currAccount?.username || "User"}
-          </h1>
+          {currAccount.username ? (
+            <h1 className="text-primary text-3xl font-extrabold m-0 p-0 h-fit">
+              {currAccount.username}
+            </h1>
+          ) : (
+            <Skeleton className="w-24 h-4" />
+          )}
 
           {/* USER PROFILE IMAGE & XP */}
           <div className="relative h-40 my-6">
@@ -137,16 +142,24 @@ const LoginPage: React.FC = () => {
             />
           </div>
 
-          <p>
-            Exp: {currAccount ? currXp : 0} / {currLvMaxXp || 0}
-          </p>
+          {!isNaN(currXp) ? (
+            <p>
+              Exp: {currXp} / {currLvMaxXp || 0}
+            </p>
+          ) : (
+            <Skeleton className="w-24 h-4" />
+          )}
 
-          <p>
-            level:{" "}
-            <span className="font-bold text-primary-500">
-              {currAccount?.level || 1}
-            </span>{" "}
-          </p>
+          {currAccount.level ? (
+            <p>
+              level:{" "}
+              <span className="font-bold text-primary-500">
+                {currAccount.level}
+              </span>{" "}
+            </p>
+          ) : (
+            <Skeleton className="w-12 h-4" />
+          )}
         </div>
 
         <div className="h-[1px] bg-primary-100/40 w-full my-8"></div>
@@ -311,7 +324,7 @@ const LoginPage: React.FC = () => {
           <FooterMenu variant="account" />
         </>
       ) : (
-        <Loading />
+        <LoadingSkeleton />
       )}
     </div>
   );
