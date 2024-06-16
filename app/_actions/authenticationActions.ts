@@ -46,8 +46,7 @@ export async function createUser(
       throw new Error(errorResponse.error);
     }
 
-    const resData = (await response.json()) as UserProfile;
-    console.log(resData);
+    (await response.json()) as UserProfile;
     alert("Account created successfully!");
   } catch (error) {
     alert(`Account creation failed: ${(error as Error).message}`);
@@ -71,9 +70,11 @@ export async function loginUser(email: string, password: string) {
     const uuid = await loginEmailPassword(email, password);
     if (!uuid) throw "Could not find user";
     alert("Login successful!");
-  } catch (error) {
+    return true;
+    } catch (error) {
     alert("Login failed!");
     console.error(error);
+    return false;
   }
 }
 
