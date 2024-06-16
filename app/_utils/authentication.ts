@@ -12,6 +12,17 @@ import {
  * Attempts to login the user based on the credentials in Google Firebase Authentication.
  * @returns uuid string
  */
+
+// Define a type for Firebase error
+interface FirebaseAuthError extends Error {
+  code: string;
+}
+
+// Type guard for Firebase error
+const isFirebaseAuthError = (error: unknown): error is FirebaseAuthError => {
+  return (error as FirebaseAuthError).code !== undefined;
+};
+
 const loginEmailPassword = async (
   email: string,
   password: string
@@ -27,6 +38,17 @@ const loginEmailPassword = async (
     );
     return userCredential.user.uid;
   } catch (e: unknown) {
+    if (isFirebaseAuthError(e)) {
+      const errorCode = e.code;
+      console.log("errorCode: ", errorCode);
+      if (errorCode === 'auth/invalid-credential') {
+        throw new Error('Email or password incorrect! Please try again.');
+      } else {
+        throw new Error('Login unsuccessful due to internal error. Please try again later.');
+      }
+    } else if (e instanceof Error) {
+      throw new Error(e.message);
+    }
     console.error(e);
   }
 };

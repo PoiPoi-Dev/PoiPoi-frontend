@@ -212,10 +212,12 @@ function MapInner() {
     let closestPin: Pin | null = null;
 
     const pinsAfterFiltering = poiData.filter((pin) => {
-      return (pin.is_completed) ? false :
-      (selectedFilters.length === 0) ? true 
-      : selectedFilters.every((tag) => pin.tags.includes(tag))
-    })
+      return pin.is_completed
+        ? false
+        : selectedFilters.length === 0
+        ? true
+        : selectedFilters.every((tag) => pin.tags.includes(tag));
+    });
 
     for (const pin of pinsAfterFiltering) {
       const pinCoordinates: Coordinates = {
@@ -280,7 +282,8 @@ function MapInner() {
 
         {/* ISLAND CONTROLLER */}
         <PoiPhotoToggle
-          pins={poiData}
+          userCoordinates={userCoordinates}
+          closestNotCompletedPin={closestNotCompletedPin}
           setShowPopup={setShowPopup}
           setSelectedPoiId={setSelectedPoiId}
           showPopup={showPopup}
