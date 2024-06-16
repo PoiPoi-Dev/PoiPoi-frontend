@@ -222,9 +222,11 @@ export function PoiCard({
 
       <article className="flex flex-col gap-2 justify-between w-full h-fit py-2 pl-2 overflow-y-scroll no-scrollbar">
         <div className="flex flex-col gap-2">
-          <h1 className="text-primary text-2xl font-bold p-0 m-0 w-full whitespace-nowrap overflow-x-scroll -mb-2 no-scrollbar">
-            {payload.title}
-          </h1>
+          {payload.is_completed ? (
+            <h1 className="text-primary text-2xl font-extrabold p-0 m-0 w-full whitespace-nowrap overflow-x-scroll -mb-1 no-scrollbar">
+              {payload.title}
+            </h1>
+          ) : null}
 
           {/* TAG */}
           {payload.tags.length > 0 && (
@@ -244,7 +246,7 @@ export function PoiCard({
             {payload.description}
           </p>
         ) : (
-          <div className="flex flex-col pr-2 gap-2 mt-2">
+          <div className="flex flex-col pr-2 gap-2">
             {user ? (
               <Button
                 id={`${id}`}
