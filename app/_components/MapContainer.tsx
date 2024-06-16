@@ -105,7 +105,7 @@ function MapInner() {
     if (poiData.length === 0) return;
 
     getTrackingPinFromLocalStorage();
-  }, [importantPinContext, poiData])
+  }, [poiData])
 
   useEffect(() => {
     if (!closestNotCompletedPin || !userCoordinates) return;
@@ -146,6 +146,7 @@ function MapInner() {
     const { poi_id } = JSON.parse(savedPoiId) as trackingPinID;
     const savedTrackingPoi = poiData.find((pin) => pin.poi_id === poi_id) || null;
     importantPinContext.setTrackingPin(savedTrackingPoi);
+    console.log("Setting tracking pin from local storage");
   }
 
   // HANDLER FUNCTION

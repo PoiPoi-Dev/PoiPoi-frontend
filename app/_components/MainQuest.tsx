@@ -25,13 +25,13 @@ const MainQuest = ({ closestNotCompletedPin: closestPin }: MainQuestProps) => {
   const { gameMap } = useMap();
 
   useEffect(() => {
-    console.log(trackingPinContext?.trackingPin);
-    if (!trackingPinContext || !trackingPinContext.trackingPin) {
+    
+    if (!trackingPinContext || !trackingPinContext?.trackingPin) {
       setIsTracking(false);
-      setPinToPanTo((closestPin?.is_completed) ? null : closestPin);
+      setPinToPanTo(closestPin);
       return;
     }
-    if (!closestPin || closestPin.is_completed) {
+    if (!closestPin) {
       setPinToPanTo(null);
       return;
     }
