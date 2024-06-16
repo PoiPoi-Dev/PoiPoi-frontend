@@ -282,7 +282,8 @@ function MapInner() {
 
         {/* ISLAND CONTROLLER */}
         <PoiPhotoToggle
-          pins={poiData}
+          userCoordinates={userCoordinates}
+          closestNotCompletedPin={closestNotCompletedPin}
           setShowPopup={setShowPopup}
           setSelectedPoiId={setSelectedPoiId}
           showPopup={showPopup}
