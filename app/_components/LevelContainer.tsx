@@ -61,7 +61,7 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
 
   return (
     <div
-      className="flex justify-center items-center gap-2 fixed bottom-36 left-1/2 -translate-x-1/2 w-60"
+      className="flex justify-center items-center gap-2 fixed bottom-36 left-1/2 -translate-x-1/2 w-1/2"
       key={levelKey}
     >
       {currentLevel === 0 ? null : (
