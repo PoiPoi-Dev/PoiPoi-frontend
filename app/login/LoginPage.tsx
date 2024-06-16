@@ -15,6 +15,7 @@ import FooterMenu from "../_components/FooterMenu";
 import CircularProgressBar from "../_components/CircularXp";
 import { RiUserFill } from "react-icons/ri";
 import Loading from "../_components/ui/loading";
+import { calculateTotalExperienceForLevel } from "../_utils/calculateExpInLevel";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -115,8 +116,8 @@ const LoginPage: React.FC = () => {
 
   const renderSignOutLayout = (): React.JSX.Element => {
     const { level, xpToNextLevel } = currAccount;
-    const XPRequireToNextLevel = 250 * (1 + level / 10);
-    const currentXPIntoNextLevel = XPRequireToNextLevel - xpToNextLevel;
+    const currLvMaxXp = calculateTotalExperienceForLevel(level);
+    const currXp = currLvMaxXp - xpToNextLevel;
     return (
       <>
         <div className="flex flex-col justify-center items-center gap-4">
@@ -130,19 +131,14 @@ const LoginPage: React.FC = () => {
               <RiUserFill size={100} className="text-secondary-300" />
             </div>
             <CircularProgressBar
-              percentage={
-                currAccount
-                  ? (currentXPIntoNextLevel / XPRequireToNextLevel) * 100
-                  : 0
-              }
+              percentage={currAccount ? (currXp / currLvMaxXp) * 100 : 0}
               strokeWidth={16}
               sqSize={200}
             />
           </div>
 
           <p>
-            Exp: {currAccount ? currentXPIntoNextLevel : 0} /{" "}
-            {XPRequireToNextLevel || 0}
+            Exp: {currAccount ? currXp : 0} / {currLvMaxXp || 0}
           </p>
 
           <p>
