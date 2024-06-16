@@ -69,7 +69,7 @@ function MapInner() {
   const [levelAndXp, setLevelAndXp] = useState<levelAndXp>({
     level: 0,
     totalXp: 0,
-    xpToNextLevel: 10000000,
+    xpToNextLevel: 0,
   });
 
   // Default camera map when user opens the app

@@ -61,9 +61,7 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
 
   return (
     <div className="fixed bottom-40 left-4 w-40" key={levelKey}>
-      {currentLevel === 0 ? (
-        <div></div>
-      ) : (
+      {currentLevel === 0 ? null : (
         <>
           <p>level{currentLevel}</p>
           <Progress value={progress} />
