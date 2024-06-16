@@ -60,12 +60,30 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
   }, [levelAndXp, currentLevel]);
 
   return (
-    <div className="fixed bottom-40 left-4 w-40" key={levelKey}>
+    <div
+      className="flex justify-center items-center gap-2 fixed bottom-36 left-1/2 -translate-x-1/2 w-60"
+      key={levelKey}
+    >
       {currentLevel === 0 ? null : (
-        <>
-          <p>level{currentLevel}</p>
-          <Progress value={progress} />
-        </>
+        <div className="flex flex-col relative w-full">
+          <div className="flex w-full justify-center items-center gap-2">
+            <div className="flex justify-center items-center h-8 aspect-square bg-primary-100 rounded-full">
+              <p className="text-white">{currentLevel}</p>
+            </div>
+            <Progress value={progress} />
+          </div>
+          <div className="absolute top-6 flex flex-col w-full gap-2">
+            <p className="text-right">
+              <span className="text-primary font-bold">
+                {levelAndXp.xpToNextLevel}
+              </span>{" "}
+              xp to lv{" "}
+              <span className="text-primary font-bold">
+                {levelAndXp.level + 1}
+              </span>
+            </p>
+          </div>
+        </div>
       )}
     </div>
   );
