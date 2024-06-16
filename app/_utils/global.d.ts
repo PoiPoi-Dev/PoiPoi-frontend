@@ -52,3 +52,7 @@ export interface levelAndXp {
   totalXp: number;
   xpToNextLevel: number;
 }
+
+export interface trackingPinID {
+  poi_id: number;
+}

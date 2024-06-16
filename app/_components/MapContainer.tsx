@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useContext } from "react";
 import { LngLatBoundsLike, MapProvider, Map } from "react-map-gl/maplibre";
-import { Pin, levelAndXp } from "../_utils/global";
+import { Pin, levelAndXp, trackingPinID } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapControls from "./MapControls";
 import { AuthContext } from "./useContext/AuthContext";
@@ -91,8 +91,21 @@ function MapInner() {
   }, [user]);
 
   useEffect(() => {
-    console.log(importantPinContext?.trackingPin);
+    // console.log(importantPinContext?.trackingPin);
+    if (importantPinContext?.trackingPin){
+      const trackingPoiId: trackingPinID = {
+        poi_id: importantPinContext.trackingPin.poi_id,
+      }
+      localStorage.setItem("trackingPinID", JSON.stringify(trackingPoiId));
+    }
   }, [importantPinContext?.trackingPin]);
+
+  useEffect(() => {
+    if (!importantPinContext) return;
+    if (poiData.length === 0) return;
+
+    getTrackingPinFromLocalStorage();
+  }, [importantPinContext, poiData])
 
   useEffect(() => {
     if (!closestNotCompletedPin || !userCoordinates) return;
@@ -122,6 +135,18 @@ function MapInner() {
   useEffect(() => {
     void handleLevelAndXp();
   }, [checkLevel]);
+
+  const getTrackingPinFromLocalStorage = () => {
+    if (!importantPinContext) return console.error("No important pin context");
+    if (!poiData || poiData.length === 0) return console.error("no poi data");
+
+    const savedPoiId = localStorage.getItem("trackingPinID");
+    if (!savedPoiId) return;
+
+    const { poi_id } = JSON.parse(savedPoiId) as trackingPinID;
+    const savedTrackingPoi = poiData.find((pin) => pin.poi_id === poi_id) || null;
+    importantPinContext.setTrackingPin(savedTrackingPoi);
+  }
 
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {

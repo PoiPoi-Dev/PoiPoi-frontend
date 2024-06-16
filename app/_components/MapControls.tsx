@@ -5,7 +5,6 @@ import { Pin } from "../_utils/global";
 
 
 const MapControls = (): React.JSX.Element => {
-
   const trackingPinContext = useContext(ImportantPinContext);
   const {current: map} = useMap();
 
