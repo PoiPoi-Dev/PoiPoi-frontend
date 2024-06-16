@@ -46,6 +46,7 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
 
         //frame 2
         setLevelKey(level);
+        setCurrentLevel(level);
         setProgress(0);
         await delay(1000);
 
@@ -61,7 +62,7 @@ const LevelContainer = ({ levelAndXp }: { levelAndXp: levelAndXp }) => {
   }, [levelAndXp, currentLevel]);
 
   return (
-    <div className="fixed top-28 left-4 w-40" key={levelKey}>
+    <div className="fixed bottom-40 left-4 w-40" key={levelKey}>
       <p>level{currentLevel}</p>
       <Progress value={progress} />
     </div>
