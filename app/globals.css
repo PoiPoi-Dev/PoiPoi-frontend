@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  touch-action: none;
+}
+
 body {
   overflow: hidden;
   overscroll-behavior-y: none;
@@ -896,7 +901,7 @@ a.maplibregl-ctrl-logo.maplibregl-compact {
   border-radius: 50%;
   height: 15px;
   width: 15px;
-  z-index: 40;
+  z-index: 30;
 }
 
 .maplibregl-user-location-dot:before {

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useContext } from "react";
 import { LngLatBoundsLike, MapProvider, Map } from "react-map-gl/maplibre";
-import { Pin } from "../_utils/global";
+import { Pin, levelAndXp } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
 import MapControls from "./MapControls";
 import { AuthContext } from "./useContext/AuthContext";
@@ -23,6 +23,7 @@ import ImportantPinContextProvider, {
   ImportantPinContext,
 } from "./useContext/ImportantPinContext";
 import MainQuest from "./MainQuest";
+import LevelContainer from "./LevelContainer";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -60,9 +61,16 @@ function MapInner() {
   >(null);
 
   const [score, setScore] = useState<number | null>(null);
-  const [userCoordinatesAtMomentOfGuess, setUserGuessCoord] = useState<Coordinates | null>(null);
+  const [userCoordinatesAtMomentOfGuess, setUserGuessCoord] =
+    useState<Coordinates | null>(null);
 
   // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
+  const [checkLevel, setCheckLevel] = useState<boolean>(false);
+  const [levelAndXp, setLevelAndXp] = useState<levelAndXp>({
+    level: 0,
+    totalXp: 0,
+    xpToNextLevel: 0,
+  });
 
   // Default camera map when user opens the app
   const longitude: number = 139.72953967417234;
@@ -93,12 +101,27 @@ function MapInner() {
 
   useEffect(() => {
     if (!importantPinContext?.guessedPin) {
-      setUserGuessCoord(null)
+      setUserGuessCoord(null);
     }
     if (!userCoordinates) return;
-    const currentUserCoordinates:Coordinates = userCoordinates;
-    setUserGuessCoord(currentUserCoordinates)
-  },[importantPinContext?.guessedPin]);
+    const currentUserCoordinates: Coordinates = userCoordinates;
+    setUserGuessCoord(currentUserCoordinates);
+  }, [importantPinContext?.guessedPin]);
+
+  //on load, or refresh
+  useEffect(() => {
+    const savedLevelAndXp = localStorage.getItem("levelAndXp");
+    if (savedLevelAndXp) {
+      setLevelAndXp(JSON.parse(savedLevelAndXp) as levelAndXp);
+    } else {
+      void handleLevelAndXp();
+    }
+  }, []);
+
+  //on guess
+  useEffect(() => {
+    void handleLevelAndXp();
+  }, [checkLevel]);
 
   // HANDLER FUNCTION
   const handleFetchPoiByUid = async () => {
@@ -176,7 +199,7 @@ function MapInner() {
 
   /**
    * Sets closestNotCompletedPin to the closes pin BY POSITION
-   * Currently does not account for filters
+   * Accounts for the toggled filters
    * @param position
    */
   const handleSetClosestNotCompletedPin = (position: GeolocationPosition) => {
@@ -188,9 +211,15 @@ function MapInner() {
     let shortestDistance: number = Number.MAX_SAFE_INTEGER;
     let closestPin: Pin | null = null;
 
-    for (const pin of poiData) {
-      if (pin.is_completed) continue;
+    const pinsAfterFiltering = poiData.filter((pin) => {
+      return pin.is_completed
+        ? false
+        : selectedFilters.length === 0
+        ? true
+        : selectedFilters.every((tag) => pin.tags.includes(tag));
+    });
 
+    for (const pin of pinsAfterFiltering) {
       const pinCoordinates: Coordinates = {
         longitude: pin.search_longitude,
         latitude: pin.search_latitude,
@@ -211,6 +240,30 @@ function MapInner() {
 
   useGeolocation(handleSetUserCoordinates);
   useGeolocation(handleSetClosestNotCompletedPin);
+
+  const handleLevelAndXp = async () => {
+    try {
+      const auth = await getAuthService();
+      if (!auth.currentUser) throw "No current user";
+      const uid = auth.currentUser.uid;
+
+      const response = await fetch(`${BASE_URL}/api/level/`, {
+        credentials: "include",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firebase_uuid: uid }),
+      });
+      const data = (await response.json()) as levelAndXp;
+      setLevelAndXp(data);
+
+      // Save to local storage if use reloads the page then it will use the localstorage data
+      localStorage.setItem("levelAndXp", JSON.stringify(data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // RETURN
   return (
@@ -281,6 +334,7 @@ function MapInner() {
         {/* Popup */}
         {showPopup && selectedPoiId && (
           <PopoverCard
+            setCheckLevel={setCheckLevel}
             poiData={poiData}
             selectedPoiId={selectedPoiId}
             setShowPopup={setShowPopup}
@@ -290,26 +344,32 @@ function MapInner() {
         )}
 
         {/* GUESS MODEL */}
-        {userCoordinatesAtMomentOfGuess && importantPinContext && importantPinContext.guessedPin && (
-          <>
-            <GuessPolyline
-              userLocation={userCoordinatesAtMomentOfGuess}
-              guessPoiLocation={{
-                longitude: importantPinContext.guessedPin.exact_longitude,
-                latitude: importantPinContext.guessedPin.exact_latitude
-              } as Coordinates}
-            />
-            <GuessDistanceModal
-              guessedPin = {importantPinContext.guessedPin}
-              setGuessedPin={importantPinContext.setGuessedPin}
-              userCoordinates={userCoordinatesAtMomentOfGuess}
-              score={score}
-            />
-          </>
-        )}
+        {userCoordinatesAtMomentOfGuess &&
+          importantPinContext &&
+          importantPinContext.guessedPin && (
+            <>
+              <GuessPolyline
+                userLocation={userCoordinatesAtMomentOfGuess}
+                guessPoiLocation={
+                  {
+                    longitude: importantPinContext.guessedPin.exact_longitude,
+                    latitude: importantPinContext.guessedPin.exact_latitude,
+                  } as Coordinates
+                }
+              />
+              <GuessDistanceModal
+                guessedPin={importantPinContext.guessedPin}
+                setGuessedPin={importantPinContext.setGuessedPin}
+                userCoordinates={userCoordinatesAtMomentOfGuess}
+                score={score}
+              />
+            </>
+          )}
         <MainQuest closestNotCompletedPin={closestNotCompletedPin} />
         <MapControls />
       </Map>
+
+      <LevelContainer levelAndXp={levelAndXp} />
     </div>
   );
 }

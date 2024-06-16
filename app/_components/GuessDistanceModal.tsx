@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Drawer, DrawerContent, DrawerTrigger } from "./ui/drawer";
 import {
   Coordinates,
@@ -12,30 +12,23 @@ import { Label } from "@radix-ui/react-label";
 const GuessDistanceModal = ({
   guessedPin,
   setGuessedPin,
-  // guessPoiPosition,
   userCoordinates,
   score,
 }: {
   guessedPin: Pin;
-  // guessPoiPosition: Coordinates;
   setGuessedPin: (arg0: Pin | null) => void;
   userCoordinates: Coordinates;
   score: number | null;
 }) => {
-  const [distanceToPin, setDistancePin] = useState<number>(0);
   const [hint, setHint] = useState<string>("");
   const drawerRef = useRef<HTMLButtonElement>(null); // Ref for the Done button
   const thresholdDistance = 20;
-
-  useEffect(() => {
-    if (!guessedPin) return;
-    handleDistanceToPin(guessedPin, userCoordinates);
-  }, [guessedPin]);
-
-  const handleDistanceToPin = (
+  const distanceToGuessedPinExactLocation = handleDistanceToPin(guessedPin, userCoordinates);
+  
+  function handleDistanceToPin(
     guessedPin: Pin,
     userCoordinates: Coordinates
-  ) => {
+  ) {
     const pinCoordinates: Coordinates = {
       longitude: guessedPin.exact_longitude,
       latitude: guessedPin.exact_latitude,
@@ -45,8 +38,8 @@ const GuessDistanceModal = ({
       userCoordinates,
       pinCoordinates
     );
-    setDistancePin(distance);
-  };
+    return distance;
+  }
 
   const handleSubmitHint = async () => {
     const hintData = {
@@ -95,9 +88,9 @@ const GuessDistanceModal = ({
           <p className="mb-4">
             You guessed{" "}
             <span className="text-primary font-semibold">
-              {distanceToPin > 1000
-                ? (distanceToPin / 1000).toFixed(2) + "km"
-                : distanceToPin.toFixed(2) + "m"}{" "}
+              {distanceToGuessedPinExactLocation > 1000
+                ? (distanceToGuessedPinExactLocation / 1000).toFixed(2) + "km"
+                : distanceToGuessedPinExactLocation.toFixed(2) + "m"}{" "}
             </span>
             away from the picture and your score is{" "}
             <span className="text-primary font-semibold">{score}</span>! Good
@@ -108,7 +101,7 @@ const GuessDistanceModal = ({
           </DrawerTrigger>
         </div>
         <DrawerContent>
-          {distanceToPin < thresholdDistance ? (
+          {distanceToGuessedPinExactLocation < thresholdDistance ? (
             <div className="p-4">
               <h2>
                 {" "}
@@ -132,7 +125,6 @@ const GuessDistanceModal = ({
                   ref={drawerRef}
                   onClick={() => {
                     handleSubmitClick();
-                    // setGuessPoiPosition(null);
                     setGuessedPin(null);
                   }}
                   className="w-full"
@@ -144,7 +136,6 @@ const GuessDistanceModal = ({
                   ref={drawerRef}
                   onClick={() => {
                     handleSubmitClick;
-                    // setGuessPoiPosition(null);
                     setGuessedPin(null);
                   }}
                   className="w-full"
@@ -161,7 +152,6 @@ const GuessDistanceModal = ({
                 variant={"link"}
                 ref={drawerRef}
                 onClick={() => {
-                  // setGuessPoiPosition(null);
                   setGuessedPin(null);
                 }}
                 className="w-full"

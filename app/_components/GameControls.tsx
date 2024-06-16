@@ -8,6 +8,7 @@ import { Coordinates } from "../_utils/coordinateMath";
 
 import { Pin } from "../_utils/global";
 import Link from "next/link";
+import { useState } from "react";
 
 interface GameControlsProps {
   pins: Pin[];
@@ -22,15 +23,17 @@ const GameControls = ({
 // userCoordinates,
 // distanceToTrackingPin,
 GameControlsProps): React.JSX.Element => {
+  const [showPoidex, setShowPoidex] = useState<boolean>(false);
+
   return (
     <div className="flex justify-between min-w-[360px] max-w-full">
       <Link href={"/map"}>
-        <ButtonIconCircle text="Map">
+        <ButtonIconCircle text="Map" variant={!showPoidex ? "active" : "default"}>
           <FaMapLocationDot size={24} />
         </ButtonIconCircle>
       </Link>
 
-      <Poidex pins={pins} />
+      <Poidex pins={pins} setShowPoidex={setShowPoidex} showPoidex={showPoidex} />
 
       <Link href="/leaderboard">
         <ButtonIconCircle text="leaderboard">
