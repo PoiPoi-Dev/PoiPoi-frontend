@@ -69,7 +69,7 @@ function MapInner() {
   const [levelAndXp, setLevelAndXp] = useState<levelAndXp>({
     level: 0,
     totalXp: 0,
-    xpToNextLevel: 0,
+    xpToNextLevel: 10000000,
   });
 
   // Default camera map when user opens the app
@@ -212,10 +212,12 @@ function MapInner() {
     let closestPin: Pin | null = null;
 
     const pinsAfterFiltering = poiData.filter((pin) => {
-      return (pin.is_completed) ? false :
-      (selectedFilters.length === 0) ? true 
-      : selectedFilters.every((tag) => pin.tags.includes(tag))
-    })
+      return pin.is_completed
+        ? false
+        : selectedFilters.length === 0
+        ? true
+        : selectedFilters.every((tag) => pin.tags.includes(tag));
+    });
 
     for (const pin of pinsAfterFiltering) {
       const pinCoordinates: Coordinates = {
