@@ -67,12 +67,10 @@ export async function createUser(
 export async function loginUser(email: string, password: string) {
   localStorage.removeItem("levelAndXp"); //if other user creates second account.
   try {
-    const uuid = await loginEmailPassword(email, password);
-    if (!uuid) throw "Could not find user";
+    await loginEmailPassword(email, password);
     alert("Login successful!");
-    return true;
-    } catch (error) {
-    alert("Login failed!");
+  } catch (error) {
+    alert((error as Error).message);
     console.error(error);
     return false;
   }
