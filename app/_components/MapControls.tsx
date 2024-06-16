@@ -1,4 +1,5 @@
 import { useEffect, useContext, useRef } from "react";
+import { FitBoundsOptions } from "maplibre-gl";
 import { NavigationControl, GeolocateControl, useMap } from "react-map-gl/maplibre";
 import {ImportantPinContext} from "./useContext/ImportantPinContext";
 import { Pin } from "../_utils/global";
@@ -8,6 +9,14 @@ const MapControls = (): React.JSX.Element => {
 
   const trackingPinContext = useContext(ImportantPinContext);
   const {current: map} = useMap();
+
+  const geolocateFitBoundsOptions:FitBoundsOptions = {
+    duration: 1500,
+    minZoom: 16,
+    maxZoom: 17,
+    zoom: 17,
+    curve: undefined,
+  }
 
   const geolocationRef = useRef<maplibregl.GeolocateControl|null>(null);
 
@@ -52,7 +61,12 @@ const MapControls = (): React.JSX.Element => {
   return (
     <>
       <NavigationControl position="top-right" />
-      <GeolocateControl position="bottom-right" trackUserLocation={true} ref={geolocationRef} onError={handleGeolocateError}/>
+      <GeolocateControl position="bottom-right" 
+      ref={geolocationRef} 
+      fitBoundsOptions={geolocateFitBoundsOptions} 
+      trackUserLocation={true} 
+      onError={handleGeolocateError} 
+      />
     </>
   );
 };

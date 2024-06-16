@@ -117,7 +117,7 @@ const PoidexModal: React.FC<PoidexModalProps> = ({ pins, setShowPoidex }) => {
                         alt={pin.title}
                         width={600}
                         height={600}
-                        className={`w-full min-h-28 object-cover rounded-lg pt-1`}
+                        className={`w-full min-h-28 flex-1 object-cover rounded-lg pt-1`}
                         onClick={() => {
                           setShowBigImage(() => true);
                           setSelectedId(() => pin.poi_id);

@@ -46,8 +46,7 @@ export async function createUser(
       throw new Error(errorResponse.error);
     }
 
-    const resData = (await response.json()) as UserProfile;
-    console.log(resData);
+    (await response.json()) as UserProfile;
     alert("Account created successfully!");
   } catch (error) {
     alert(`Account creation failed: ${(error as Error).message}`);
@@ -73,6 +72,7 @@ export async function loginUser(email: string, password: string) {
   } catch (error) {
     alert((error as Error).message);
     console.error(error);
+    return false;
   }
 }
 
