@@ -67,7 +67,7 @@ const Leaderboard: React.FC<LeaderboardProps> = () => {
             </TableRow>
           </TableHeader>
         </Table>
-        <div className="max-h-[60vh] overflow-y-auto">
+        <div className="max-h-[60vh] overflow-y-scroll">
           <Table className="table-fixed w-full">
             <TableBody>
               {leaderboardData.map((player, index) => (
