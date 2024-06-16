@@ -6,10 +6,11 @@ const MapControls = (): React.JSX.Element => {
 
   const geolocateFitBoundsOptions:FitBoundsOptions = {
     duration: 1500,
-    minZoom: 16,
-    maxZoom: 17,
+    // minZoom: 16,
+    // maxZoom: 17,
     zoom: 17,
-    curve: undefined,
+    // linear: true,
+    // curve: undefined,
   }
 
   const geolocationRef = useRef<maplibregl.GeolocateControl|null>(null);
