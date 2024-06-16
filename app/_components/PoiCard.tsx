@@ -43,7 +43,7 @@ export function PoiCard({
   };
   //hint useStates
   const [hints, setHints] = useState<string[] | undefined[]>([
-    "You sure? Click again to show hints!",
+    "You sure? Click the hint button again to show hints!",
   ]);
 
   // HANDLERS FUNCTIONS
