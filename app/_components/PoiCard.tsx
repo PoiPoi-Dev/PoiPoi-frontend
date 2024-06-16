@@ -246,7 +246,7 @@ export function PoiCard({
             {payload.description}
           </p>
         ) : (
-          <div className="flex flex-col pr-2 gap-2 mt-2">
+          <div className="flex flex-col pr-2 gap-2">
             {user ? (
               <Button
                 id={`${id}`}
