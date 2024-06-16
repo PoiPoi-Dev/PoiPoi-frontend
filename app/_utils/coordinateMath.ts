@@ -1,3 +1,5 @@
+import { Pin } from "./global";
+
 export interface Coordinates {
   latitude: number;
   longitude: number;
@@ -33,3 +35,12 @@ export function ConvertGeolocationPositionToCoordinates(position:GeolocationPosi
   return coordinates;
 }
 
+export function isCoordinatesWithinPinSearchZone(coordinates:Coordinates, pin: Pin) {
+  const pinCoordinates:Coordinates = {
+    longitude: pin.search_longitude,
+    latitude: pin.search_latitude,
+  }
+  const distance = GetDistanceFromCoordinatesToMeters(coordinates, pinCoordinates);
+
+  return distance < pin.search_radius;
+}

@@ -12,6 +12,7 @@ import {
 import { Badge } from "./ui/badge";
 import { Toaster, toast } from "sonner";
 import Link from "next/link";
+import { useMap } from "react-map-gl/maplibre";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -36,6 +37,7 @@ export function PoiCard({
   );
   const user = useContext(AuthContext);
   const importantPinContext = useContext(ImportantPinContext);
+  const { gameMap } = useMap();
   const { search_latitude, search_longitude } = payload;
   const pinCoordinates: Coordinates = {
     latitude: search_latitude,
@@ -43,7 +45,7 @@ export function PoiCard({
   };
   //hint useStates
   const [hints, setHints] = useState<string[] | undefined[]>([
-    "You sure? Click again to show hints!",
+    "You sure? Click the hint button again to show hints!",
   ]);
 
   // HANDLERS FUNCTIONS
@@ -54,6 +56,20 @@ export function PoiCard({
       payload.search_radius
     );
   };
+
+  const handlePanMapToTrackingPin = (pin: Pin) => {
+    try {
+      if (!gameMap) throw "Can't find map";
+      gameMap.flyTo({
+        center: [pin.search_longitude, pin.search_latitude],
+        duration: 1000,
+        minZoom: 24,
+        zoom: 17
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const PostGuess = async (
     user: User,
@@ -222,9 +238,11 @@ export function PoiCard({
 
       <article className="flex flex-col gap-2 justify-between w-full h-fit py-2 pl-2 overflow-y-scroll no-scrollbar">
         <div className="flex flex-col gap-2">
-          <h1 className="text-primary text-2xl font-bold p-0 m-0 w-full whitespace-nowrap overflow-x-scroll -mb-2 no-scrollbar">
-            {payload.title}
-          </h1>
+          {payload.is_completed ? (
+            <h1 className="text-primary text-2xl font-extrabold p-0 m-0 w-full whitespace-nowrap overflow-x-scroll -mb-1 no-scrollbar">
+              {payload.title}
+            </h1>
+          ) : null}
 
           {/* TAG */}
           {payload.tags.length > 0 && (
@@ -244,7 +262,7 @@ export function PoiCard({
             {payload.description}
           </p>
         ) : (
-          <div className="flex flex-col pr-2 gap-2 mt-2">
+          <div className="flex flex-col pr-2 gap-2">
             {user ? (
               <Button
                 id={`${id}`}
@@ -261,6 +279,7 @@ export function PoiCard({
 
                   if (importantPinContext) {
                     importantPinContext.setTrackingPin(payload);
+                    handlePanMapToTrackingPin(payload);
                     setShowPopup && setShowPopup(false);
                   }
                 }}
@@ -288,6 +307,7 @@ export function PoiCard({
                 if (!handleCheckUserInSearchZone()) {
                   if (importantPinContext) {
                     importantPinContext.setTrackingPin(payload);
+                    handlePanMapToTrackingPin(payload);
                     setShowPopup && setShowPopup(false);
                   }
                 } else {
