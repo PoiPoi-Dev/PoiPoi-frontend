@@ -91,7 +91,6 @@ function MapInner() {
   }, [user]);
 
   useEffect(() => {
-    // console.log(importantPinContext?.trackingPin);
     if (importantPinContext?.trackingPin){
       const trackingPoiId: trackingPinID = {
         poi_id: importantPinContext.trackingPin.poi_id,
@@ -123,8 +122,10 @@ function MapInner() {
 
   useEffect(() => {
     if(!importantPinContext?.trackingPin) return;
-    if (!selectedFilters.every((tag) => importantPinContext.trackingPin?.tags.includes(tag)))
+    if (!selectedFilters.every((tag) => importantPinContext.trackingPin?.tags.includes(tag))) {
       importantPinContext.setTrackingPin(null);
+      localStorage.setItem("trackingPinID", JSON.stringify({poi_id: -1} as trackingPinID))
+    }
   },[selectedFilters])
 
   //on load, or refresh
