@@ -14,10 +14,15 @@ import { Leaderboards } from "../_utils/global";
 interface LeaderboardProps {}
 
 const Leaderboard: React.FC<LeaderboardProps> = () => {
-  const storedName = localStorage.getItem("username");
-  console.log(storedName);
-
+  const [storedName, setStoredName] = useState<string | null>(null);
   const [leaderboardData, setLeaderboardData] = useState<Leaderboards[]>([]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.localStorage) {
+      const name = localStorage.getItem("username");
+      setStoredName(name);
+    }
+  }, []);
 
   const getLeaderboardData = async () => {
     try {
