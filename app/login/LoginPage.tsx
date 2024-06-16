@@ -20,6 +20,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const LoginPage: React.FC = () => {
   const [loginWindowStatus, setLoginWindowStatus] = useState<number>(0);
   const [currAccount, setCurrAccount] = useState<Account>({} as Account);
+  const [isCreating, setIsCreating] = useState<boolean>(false);
   const [user, setUser] = useState<User>({
     email: "",
     creatingEmail: "",
@@ -31,7 +32,8 @@ const LoginPage: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (firebaseUser != null) {
+    if(isCreating) return;
+    if (firebaseUser != null && !isCreating) {
       void handleFetchUserData();
       setLoginWindowStatus(2);
     }
@@ -39,7 +41,7 @@ const LoginPage: React.FC = () => {
       setLoginWindowStatus(0);
     }
     return () => {};
-  }, [firebaseUser]);
+  }, [firebaseUser, isCreating]);
 
   const handleFetchUserData = async () => {
     const data = await fetch(`${BASE_URL}/api/user_profiles/user_stats`, {
@@ -68,6 +70,7 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
 
     try {
+      setIsCreating(true);
       if (!user.creatingEmail || !user.creatingPassword || !user.displayName)
         throw "Invalid User/Password/Display Name";
       await createUser(
@@ -75,6 +78,7 @@ const LoginPage: React.FC = () => {
         user.creatingPassword,
         user.displayName
       );
+      setIsCreating(false);
     } catch (error) {
       console.error(error);
     }
@@ -97,6 +101,7 @@ const LoginPage: React.FC = () => {
   const handleLogout = async () => {
     try {
       await logoutUser();
+      setCurrAccount({} as Account);
       setLoginWindowStatus(0);
     } catch (error) {
       console.error(error);
@@ -120,14 +125,19 @@ const LoginPage: React.FC = () => {
               <RiUserFill size={100} className="text-secondary-300" />
             </div>
             <CircularProgressBar
-              percentage={currAccount ? (currentXPIntoNextLevel / XPRequireToNextLevel) * 100 : 0}
+              percentage={
+                currAccount
+                  ? (currentXPIntoNextLevel / XPRequireToNextLevel) * 100
+                  : 0
+              }
               strokeWidth={16}
               sqSize={200}
             />
           </div>
 
           <p>
-            Exp: {currAccount ? currentXPIntoNextLevel : 0} / {XPRequireToNextLevel || 0}
+            Exp: {currAccount ? currentXPIntoNextLevel : 0} /{" "}
+            {XPRequireToNextLevel || 0}
           </p>
 
           <p>
@@ -157,7 +167,7 @@ const LoginPage: React.FC = () => {
     return (
       <div className="w-full">
         <h1 className="text-primary text-2xl font-bold">Create new account</h1>
-        <form onSubmit={void handleCreateNewAccount}>
+        <form onSubmit={(e) => void handleCreateNewAccount(e)}>
           {/* INPUT */}
           <div className="flex flex-col gap-4 mb-4">
             <div className="grid w-full max-w-sm items-center gap-1.5">
@@ -209,9 +219,7 @@ const LoginPage: React.FC = () => {
 
           {/* CTA */}
           <div className="flex flex-col gap-4">
-            <Button onClick={(e) => void handleCreateNewAccount(e)}>
-              Create account
-            </Button>
+            <Button>Create account</Button>
           </div>
         </form>
 
