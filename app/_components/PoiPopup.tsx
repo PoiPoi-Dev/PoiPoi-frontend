@@ -24,7 +24,7 @@ export default function PoiPopup({
 }): JSX.Element {
   // RETURN
   return (
-    <main className="flex h-screen flex-col items-center justify-between">
+    <main className="flex h-[100svh] flex-col items-center justify-between">
       <Dialog defaultOpen>
         <DialogTrigger />
         <DialogContent onClick={() => setShowPopup(false)}>
