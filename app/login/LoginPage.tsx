@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, useContext } from "react";
-import { User } from "../_utils/global";
+import { Account, User } from "../_utils/global";
 import { useRouter } from "next/navigation";
 import {
   createUser,
@@ -12,9 +12,18 @@ import { Button } from "../_components/ui/button";
 import { Input } from "@/app/_components/ui/input";
 import { Label } from "@/app/_components/ui/label";
 import FooterMenu from "../_components/FooterMenu";
+import CircularProgressBar from "../_components/CircularXp";
+import { RiUserFill } from "react-icons/ri";
+import Loading from "../_components/ui/loading";
+import { calculateTotalExperienceForLevel } from "../_utils/calculateExpInLevel";
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const LoginPage: React.FC = () => {
   const [loginWindowStatus, setLoginWindowStatus] = useState<number>(0);
+  const [currAccount, setCurrAccount] = useState<Account>({} as Account);
+  const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User>({
     email: "",
     creatingEmail: "",
@@ -26,14 +35,30 @@ const LoginPage: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (firebaseUser != null) {
+    if (isCreating) return;
+    if (firebaseUser != null && !isCreating) {
+      void handleFetchUserData();
       setLoginWindowStatus(2);
+      setIsLoading(false);
     }
     if (firebaseUser == null) {
       setLoginWindowStatus(0);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     }
-    return () => {};
-  }, [firebaseUser]);
+  }, [firebaseUser, isCreating]);
+
+  const handleFetchUserData = async () => {
+    const data = await fetch(`${BASE_URL}/api/user_profiles/user_stats`, {
+      credentials: "include",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ firebase_uuid: firebaseUser?.uid }),
+    });
+    const userData: Account = (await data.json()) as Account;
+    setCurrAccount(userData);
+  };
 
   const handleInputChange = (e: {
     target: { name: string; value: string };
@@ -51,6 +76,7 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
 
     try {
+      setIsCreating(true);
       if (!user.creatingEmail || !user.creatingPassword || !user.displayName)
         throw "Invalid User/Password/Display Name";
       await createUser(
@@ -58,6 +84,7 @@ const LoginPage: React.FC = () => {
         user.creatingPassword,
         user.displayName
       );
+      setIsCreating(false);
     } catch (error) {
       console.error(error);
     }
@@ -80,6 +107,7 @@ const LoginPage: React.FC = () => {
   const handleLogout = async () => {
     try {
       await logoutUser();
+      setCurrAccount({} as Account);
       setLoginWindowStatus(0);
     } catch (error) {
       console.error(error);
@@ -87,13 +115,48 @@ const LoginPage: React.FC = () => {
   };
 
   const renderSignOutLayout = (): React.JSX.Element => {
+    const { level, xpToNextLevel } = currAccount;
+    const currLvMaxXp = calculateTotalExperienceForLevel(level);
+    const currXp = currLvMaxXp - xpToNextLevel;
     return (
       <>
-        <h1 className="text-primary text-2xl font-bold">
-          Would you like to sign out?
-        </h1>
+        <div className="flex flex-col justify-center items-center gap-4">
+          <h1 className="text-primary text-3xl font-extrabold m-0 p-0">
+            {currAccount?.username || "User"}
+          </h1>
+
+          {/* USER PROFILE IMAGE & XP */}
+          <div className="relative h-40 my-6">
+            <div className="absolute top-20 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary-100 w-40 h-40 rounded-full flex justify-center items-center">
+              <RiUserFill size={100} className="text-secondary-300" />
+            </div>
+            <CircularProgressBar
+              percentage={currAccount ? (currXp / currLvMaxXp) * 100 : 0}
+              strokeWidth={16}
+              sqSize={200}
+            />
+          </div>
+
+          <p>
+            Exp: {currAccount ? currXp : 0} / {currLvMaxXp || 0}
+          </p>
+
+          <p>
+            level:{" "}
+            <span className="font-bold text-primary-500">
+              {currAccount?.level || 1}
+            </span>{" "}
+          </p>
+        </div>
+
+        <div className="h-[1px] bg-primary-100/40 w-full my-8"></div>
+
         <div>
-          <Button className="w-full" onClick={(): void => void handleLogout()}>
+          <Button
+            className="w-full text-destructive text-lg"
+            variant={"link"}
+            onClick={(): void => void handleLogout()}
+          >
             Sign out
           </Button>
         </div>
@@ -105,7 +168,7 @@ const LoginPage: React.FC = () => {
     return (
       <div className="w-full">
         <h1 className="text-primary text-2xl font-bold">Create new account</h1>
-        <form onSubmit={void handleCreateNewAccount}>
+        <form onSubmit={(e) => void handleCreateNewAccount(e)}>
           {/* INPUT */}
           <div className="flex flex-col gap-4 mb-4">
             <div className="grid w-full max-w-sm items-center gap-1.5">
@@ -157,9 +220,7 @@ const LoginPage: React.FC = () => {
 
           {/* CTA */}
           <div className="flex flex-col gap-4">
-            <Button onClick={(e) => void handleCreateNewAccount(e)}>
-              Create account
-            </Button>
+            <Button>Create account</Button>
           </div>
         </form>
 
@@ -244,8 +305,14 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 w-screen h-screen px-4">
-      {renderLoginWindow(loginWindowStatus)}
-      <FooterMenu variant="account" />
+      {!isLoading ? (
+        <>
+          {renderLoginWindow(loginWindowStatus)}
+          <FooterMenu variant="account" />
+        </>
+      ) : (
+        <Loading />
+      )}
     </div>
   );
 };
