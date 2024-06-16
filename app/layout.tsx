@@ -10,7 +10,7 @@ const baloo = Baloo_2({
 export const metadata: Metadata = {
   title: "PoiPoi",
   description:
-    " immersive web game that challenges players to identify locations within Tokyo using visual clues from carefully curated images.",
+    "An immersive web game that challenges players to identify locations using visual clues from carefully curated images.",
 };
 
 export default function RootLayout({
