@@ -143,7 +143,7 @@ const PoidexModal: React.FC<PoidexModalProps> = ({ pins, setShowPoidex }) => {
                         >
                           {pin.is_completed
                             ? pin.description
-                            : "???????????????"}
+                            : "Unlock to learn more"}
                         </p>
                       )}
                     </div>
