@@ -58,30 +58,34 @@ const Leaderboard: React.FC<LeaderboardProps> = () => {
         <h1 className="text-center text-2xl font-bold text-primary bg-secondary py-4 my-0">
           Leaderboard
         </h1>
-        <Table>
-          <TableHeader>
+        <Table className="table-fixed w-full">
+          <TableHeader className="sticky top-0 bg-white z-10">
             <TableRow>
               <TableHead className="w-[100px]">Rank</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Score</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
-            {leaderboardData.map((player, index) => (
-              <TableRow key={index}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell
-                  className={
-                    player.username === storedName ? "bg-yellow-100" : ""
-                  }
-                >
-                  {player.username}
-                </TableCell>
-                <TableCell>{player.score}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
         </Table>
+        <div className="max-h-[60vh] overflow-y-auto">
+          <Table className="table-fixed w-full">
+            <TableBody>
+              {leaderboardData.map((player, index) => (
+                <TableRow key={index}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell
+                    className={
+                      player.username === storedName ? "bg-yellow-100" : ""
+                    }
+                  >
+                    {player.username}
+                  </TableCell>
+                  <TableCell>{player.score}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       {/* MENU */}
