@@ -121,6 +121,12 @@ function MapInner() {
     setUserGuessCoord(currentUserCoordinates);
   }, [importantPinContext?.guessedPin]);
 
+  useEffect(() => {
+    if(!importantPinContext?.trackingPin) return;
+    if (!selectedFilters.every((tag) => importantPinContext.trackingPin?.tags.includes(tag)))
+      importantPinContext.setTrackingPin(null);
+  },[selectedFilters])
+
   //on load, or refresh
   useEffect(() => {
     const savedLevelAndXp = localStorage.getItem("levelAndXp");
@@ -146,7 +152,6 @@ function MapInner() {
     const { poi_id } = JSON.parse(savedPoiId) as trackingPinID;
     const savedTrackingPoi = poiData.find((pin) => pin.poi_id === poi_id) || null;
     importantPinContext.setTrackingPin(savedTrackingPoi);
-    console.log("Setting tracking pin from local storage");
   }
 
   // HANDLER FUNCTION

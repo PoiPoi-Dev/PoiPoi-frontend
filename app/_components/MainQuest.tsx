@@ -31,10 +31,6 @@ const MainQuest = ({ closestNotCompletedPin: closestPin }: MainQuestProps) => {
       setPinToPanTo(closestPin);
       return;
     }
-    if (!closestPin) {
-      setPinToPanTo(null);
-      return;
-    }
     setPinToPanTo(trackingPinContext.trackingPin);
     setIsTracking(true);
   }, [trackingPinContext?.trackingPin, closestPin]);
