@@ -22,6 +22,10 @@ const MapControls = ({
     // curve: undefined,
   }
 
+  const geolocatePositionOptions:PositionOptions = {
+    enableHighAccuracy:true,
+  }
+
   const geolocationRef = useRef<maplibregl.GeolocateControl|null>(null);
 
   useEffect(() => {
@@ -33,13 +37,9 @@ const MapControls = ({
 
 
   const handleGeolocateError = (error: GeolocationPositionError) => {
-    console.log("geolocate error detected");
     if (error.code === error.PERMISSION_DENIED) {
       alert("Geolocation permission denied. Please enable geolocation in your browser settings.");
     } 
-    // if (error.code === error.POSITION_UNAVAILABLE) {
-    //   alert("Geolocation has permission, however position unavailable.");
-    // }
   };
 
   return (
@@ -56,6 +56,7 @@ const MapControls = ({
           handleSetClosestNotCompletedPin(evt.coords);
         }
       }
+      positionOptions={geolocatePositionOptions}
       />
     </>
   );
