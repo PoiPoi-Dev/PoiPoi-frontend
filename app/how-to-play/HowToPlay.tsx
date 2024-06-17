@@ -108,7 +108,7 @@ export default function HowToPlay() {
             <h2 className="text-primary text-xl">Making a Guess {`(1/2)`}</h2>
             <p>
             {`The goal of the game is to be as close to the location as possible.
-           Remember, it's where the thing is in the photo, but *WHERE THE PHOTO WAS TAKEN*! Once you enter a search zone, it will be possible to
+           Remember, it is NOT the location of the object, but *WHERE THE PHOTO WAS TAKEN*! Once you enter a search zone, it will be possible to
            submit a guess or get hints.`}
            </p>
           </CarouselItem>
@@ -135,7 +135,7 @@ export default function HowToPlay() {
             ></Image>
           <h2 className="text-primary text-xl">Scoring and Leveling Up</h2>
           <p>
-            {`Scores are calculated based on the distance between your guess and the exact location of the POI. You can get as many as 1000 per POI! Scores also get added to the overall XP, which raises your level.`}
+            {`Scores are calculated based on the distance between your guess and the exact location of the POI. You can get as many as 1000 points per POI! Points also get added to the overall XP, which raises your level.`}
           </p>
         </CarouselItem>
         <CarouselItem className={contentStyle}>
@@ -148,9 +148,7 @@ export default function HowToPlay() {
             ></Image>
           <h2 className="text-primary text-xl">Leaving Hints {`(1/2)`}</h2>
           <p>
-            {`If your guess is within 20 meters of the POI, you get the
-           option to leave a hint! This hint can then be seen by others who haven't
-           collected the POI yet.`}
+            {`If your guess is within 20 meters of the POI, you get the option to leave a hint! This hint can then be seen by others who have not yet collected the POI.`}
           </p>
         </CarouselItem>
         <CarouselItem className={contentStyle}>
