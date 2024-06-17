@@ -1,17 +1,17 @@
 import { useEffect, useRef } from "react";
-// import { FitBoundsOptions } from "maplibre-gl";
+import { FitBoundsOptions } from "maplibre-gl";
 import { NavigationControl, GeolocateControl} from "react-map-gl/maplibre";
 
 const MapControls = (): React.JSX.Element => {
 
-  // const geolocateFitBoundsOptions:FitBoundsOptions = {
+  const geolocateFitBoundsOptions:FitBoundsOptions = {
     // duration: 1500,
     // minZoom: 14,
     // maxZoom: 17,
-    // zoom: 17,
-    // linear: true,
+    zoom: 17,
+    linear: true,
     // curve: undefined,
-  // }
+  }
 
   const geolocationRef = useRef<maplibregl.GeolocateControl|null>(null);
 
@@ -38,7 +38,7 @@ const MapControls = (): React.JSX.Element => {
       <NavigationControl position="top-right" />
       <GeolocateControl position="bottom-right" 
       ref={geolocationRef} 
-      // fitBoundsOptions={geolocateFitBoundsOptions} 
+      fitBoundsOptions={geolocateFitBoundsOptions} 
       trackUserLocation={true} 
       onError={handleGeolocateError} 
       />
