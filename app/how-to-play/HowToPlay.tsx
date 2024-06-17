@@ -11,13 +11,13 @@ import { Button } from "../_components/ui/button";
 
 export default function HowToPlay() {
   return (
-    <div className="w-screen h-[100svh] px-4">
+    <div className="w-screen h-[100svh] px-4 overflow-y-hidden">
       <Carousel className="w-full h-full">
         <CarouselContent>
-          <CarouselItem className="flex flex-col justify-center text-center">
+          <CarouselItem className="flex-col h-svh items-end justify-center text-center">
             <Image
               alt="welcome screen"
-              className="mt-4"
+              className="mt-4 rounded-2xl"
               src="https://firebasestorage.googleapis.com/v0/b/tokyo-quest.appspot.com/o/devPhotos%2FIMG_3593.jpg?alt=media&token=47a552ab-701a-48e2-b1fb-e3dcaeab52a3"
               width={400}
               height={600}
@@ -28,10 +28,10 @@ export default function HowToPlay() {
              players will be collecting throughout the game.`}
             </p>
           </CarouselItem>
-          <CarouselItem className="flex-col h-dvh items-end justify-center text-center">
+          <CarouselItem className="flex-col h-svh items-end justify-center text-center">
             <Image
               alt="Tutorial 1"
-              className="mt-4"
+              className="mt-4 rounded-2xl"
               src="https://firebasestorage.googleapis.com/v0/b/tokyo-quest.appspot.com/o/devPhotos%2FIMG_3593.jpg?alt=media&token=47a552ab-701a-48e2-b1fb-e3dcaeab52a3"
               width={400}
               height={600}
@@ -48,10 +48,10 @@ export default function HowToPlay() {
            the thumbnail photo will also open the POI card.`}
             </p>
           </CarouselItem>
-          <CarouselItem className="flex-col h-dvh items-end justify-center text-center">
+          <CarouselItem className="flex-col h-svh items-end justify-center text-center">
             <Image
               alt="Tutorial 2"
-              className="mt-4"
+              className="mt-4 rounded-2xl"
               src="https://firebasestorage.googleapis.com/v0/b/tokyo-quest.appspot.com/o/devPhotos%2FIMG_3593.jpg?alt=media&token=47a552ab-701a-48e2-b1fb-e3dcaeab52a3"
               width={400}
               height={600}
@@ -67,10 +67,10 @@ export default function HowToPlay() {
              card to the Collection.`}
             </p>
           </CarouselItem>
-          <CarouselItem className="flex-col h-dvh items-end justify-center text-center">
+          <CarouselItem className="flex-col h-svh items-end justify-center text-center">
             <Image
               alt="Tutorial 3"
-              className="mt-4"
+              className="mt-4 rounded-2xl"
               src="https://firebasestorage.googleapis.com/v0/b/tokyo-quest.appspot.com/o/devPhotos%2FIMG_3593.jpg?alt=media&token=47a552ab-701a-48e2-b1fb-e3dcaeab52a3"
               width={400}
               height={600}
@@ -83,10 +83,10 @@ export default function HowToPlay() {
              added to the overall XP, which raises the player's level.`}
             </p>
           </CarouselItem>
-          <CarouselItem className="flex-col h-dvh items-end justify-center text-center">
+          <CarouselItem className="flex-col h-svh items-end justify-center text-center">
             <Image
               alt="Tutorial 4"
-              className="mt-4"
+              className="mt-4 rounded-2xl"
               src="https://firebasestorage.googleapis.com/v0/b/tokyo-quest.appspot.com/o/devPhotos%2FIMG_3593.jpg?alt=media&token=47a552ab-701a-48e2-b1fb-e3dcaeab52a3"
               width={400}
               height={600}
@@ -100,10 +100,10 @@ export default function HowToPlay() {
              understand, but doesn't give away too much.`}
             </p>
           </CarouselItem>
-          <CarouselItem className="flex-col h-dvh items-end justify-center text-center">
+          <CarouselItem className="flex-col h-svh items-end justify-center text-center">
             <Image
               alt="Tutorial 5"
-              className="mt-4"
+              className="mt-4 rounded-2xl"
               src="https://firebasestorage.googleapis.com/v0/b/tokyo-quest.appspot.com/o/devPhotos%2FIMG_3593.jpg?alt=media&token=47a552ab-701a-48e2-b1fb-e3dcaeab52a3"
               width={400}
               height={600}
