@@ -23,12 +23,12 @@ const GuessDistanceModal = ({
   const [hint, setHint] = useState<string>("");
   const drawerRef = useRef<HTMLButtonElement>(null); // Ref for the Done button
   const thresholdDistance = 20;
-  const distanceToGuessedPinExactLocation = handleDistanceToPin(guessedPin, userCoordinates);
-  
-  function handleDistanceToPin(
-    guessedPin: Pin,
-    userCoordinates: Coordinates
-  ) {
+  const distanceToGuessedPinExactLocation = handleDistanceToPin(
+    guessedPin,
+    userCoordinates
+  );
+
+  function handleDistanceToPin(guessedPin: Pin, userCoordinates: Coordinates) {
     const pinCoordinates: Coordinates = {
       longitude: guessedPin.exact_longitude,
       latitude: guessedPin.exact_latitude,
@@ -79,7 +79,7 @@ const GuessDistanceModal = ({
   };
 
   return (
-    <div className="fixed bottom-40 flex w-screen justify-center items-center z-50">
+    <div className="fixed bottom-40 flex w-screen justify-center items-center z-[100]">
       <Drawer>
         <div className="w-1/2 bg-white p-4 rounded-2xl">
           <p className="mb-4">
