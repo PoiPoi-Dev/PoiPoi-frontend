@@ -1,5 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  redirects: async () => [
+    {
+      source: "/",
+      has: [
+        {
+          type: "header",
+          key: "User-Agent",
+          value:
+            "Mozilla/5.0 (compatible; MSIE 10.0; Windows Phone 8.0; Trident/6.0; IEMobile/10.0; ARM; Touch; Microsoft; Lumia 950)",
+        },
+      ],
+      destination: "/map",
+      permanent: false,
+    },
+  ],
   images: {
     remotePatterns: [
       {
