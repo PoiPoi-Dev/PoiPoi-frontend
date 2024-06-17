@@ -11,10 +11,10 @@ import { Button } from "../_components/ui/button";
 
 export default function HowToPlay() {
   return (
-    <div className="w-screen h-[100svh] px-4 overflow-y-hidden">
+    <div className="w-screen h-[100svh] px-4 overflow-y-scroll">
       <Carousel className="w-full h-full">
         <CarouselContent>
-          <CarouselItem className="flex-col h-svh items-end justify-center text-center">
+          <CarouselItem className="flex-col h-svh overflow-y-scroll items-end justify-center text-center">
             <Image
               alt="welcome screen"
               className="mt-4 rounded-2xl"
