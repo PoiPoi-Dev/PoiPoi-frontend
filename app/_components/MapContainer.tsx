@@ -9,11 +9,9 @@ import { AuthContext } from "./useContext/AuthContext";
 import { getAuthService } from "@/config/firebaseconfig";
 import GameControls from "./GameControls";
 import {
-  // ConvertGeolocationPositionToCoordinates,
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
-// import useGeolocation from "../_hooks/useGeolocation";
 import FilterButton from "./FilterButton";
 import GuessPolyline from "./ui/guessPolyline";
 import PopoverCard from "./PopoverCard";
@@ -42,10 +40,6 @@ function MapInner() {
   // USE STATE
   const [poiData, setPoiData] = useState<Pin[]>([]);
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  // const [guessPoiPosition, setGuessPoiPosition] = useState<Coordinates | null>(
-  //   null
-  // );
-  // const [filteredPins, setFilteredPins] = useState(sample.pin);
   const [selectedPoiId, setSelectedPoiId] = useState<number | undefined>(
     undefined
   );
@@ -64,7 +58,6 @@ function MapInner() {
   const [userCoordinatesAtMomentOfGuess, setUserGuessCoord] =
     useState<Coordinates | null>(null);
 
-  // const [isTrackingTheClosestPin, setIsTrackingTheClosestPin] = useState<boolean> (true);
   const [checkLevel, setCheckLevel] = useState<boolean>(false);
   const [levelAndXp, setLevelAndXp] = useState<levelAndXp>({
     level: 0,
@@ -109,7 +102,6 @@ function MapInner() {
   useEffect(() => {
     if (!closestNotCompletedPin || !userCoordinates) return;
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
-    console.log("use effect closestNotCompletedPin");
   }, [closestNotCompletedPin, userCoordinates]);
 
   useEffect(() => {
@@ -174,7 +166,7 @@ function MapInner() {
       const data: Pin[] = (await response.json()) as Pin[];
       setPoiData(data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setPoiData([]);
     }
   };
@@ -191,7 +183,7 @@ function MapInner() {
       const data: Pin[] = (await response.json()) as Pin[];
       setPoiData(data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -229,8 +221,6 @@ function MapInner() {
       longitude: position.longitude,
       latitude: position.latitude,
     }
-      // ConvertGeolocationPositionToCoordinates(position);
-    console.log(userCoord);
     setUserCoordinates(userCoord);
   };
 
@@ -275,9 +265,6 @@ function MapInner() {
     setClosestNotCompletedPin(closestPin);
   };
 
-  // useGeolocation(handleSetUserCoordinates);
-  // useGeolocation(handleSetClosestNotCompletedPin);
-
   const handleLevelAndXp = async () => {
     try {
       const auth = await getAuthService();
@@ -298,7 +285,7 @@ function MapInner() {
       // Save to local storage if use reloads the page then it will use the localstorage data
       localStorage.setItem("levelAndXp", JSON.stringify(data));
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
