@@ -2,7 +2,16 @@ import { useEffect, useRef } from "react";
 // import { FitBoundsOptions } from "maplibre-gl";
 import { NavigationControl, GeolocateControl} from "react-map-gl/maplibre";
 
-const MapControls = (): React.JSX.Element => {
+interface MapControlProps {
+  handleUserCoordinates: (position: GeolocationCoordinates) => void;
+  handleSetClosestNotCompletedPin: (position: GeolocationCoordinates) => void;
+}
+
+const MapControls = ({
+  handleUserCoordinates, 
+  handleSetClosestNotCompletedPin
+}: MapControlProps): React.JSX.Element => {
+
 
   // const geolocateFitBoundsOptions:FitBoundsOptions = {
     // duration: 1500,
@@ -41,6 +50,12 @@ const MapControls = (): React.JSX.Element => {
       // fitBoundsOptions={geolocateFitBoundsOptions} 
       trackUserLocation={true} 
       onError={handleGeolocateError} 
+      onGeolocate={
+        (evt) => {
+          handleUserCoordinates(evt.coords);
+          handleSetClosestNotCompletedPin(evt.coords);
+        }
+      }
       />
     </>
   );
