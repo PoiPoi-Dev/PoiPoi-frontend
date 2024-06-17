@@ -1,6 +1,5 @@
 "use client";
-
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -12,14 +11,13 @@ import {
 import FooterMenu from "../_components/FooterMenu";
 import { Leaderboards } from "../_utils/global";
 
-export default function Leaderboard() {
+interface LeaderboardProps {}
+
+const Leaderboard: React.FC<LeaderboardProps> = () => {
+
   const [leaderboardData, setLeaderboardData] = useState<Leaderboards[]>([]);
 
-  useEffect(() => {
-    void handleLeaderboardData();
-  }, []);
-
-  const handleLeaderboardData = async () => {
+  const getLeaderboardData = async () => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
       const cacheBuster = Date.now();
@@ -35,12 +33,16 @@ export default function Leaderboard() {
         }
       );
       const resData: Leaderboards[] = (await response.json()) as Leaderboards[];
-      console.log(resData);
       setLeaderboardData(resData);
     } catch (error) {
-      alert(error);
+      alert("Leaderboard currently unavailable");
+      console.error("Error fetching leaderboard:", error);
     }
   };
+
+  useEffect(() => {
+    void getLeaderboardData();
+  }, []);
 
   return (
     <>
@@ -49,8 +51,8 @@ export default function Leaderboard() {
         <h1 className="text-center text-2xl font-bold text-primary bg-secondary py-4 my-0">
           Leaderboard
         </h1>
-        <Table className="table-fixed w-full">
-          <TableHeader className="sticky top-0 bg-white z-10">
+        <Table>
+          <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Rank</TableHead>
               <TableHead>Name</TableHead>
@@ -67,25 +69,6 @@ export default function Leaderboard() {
             ))}
           </TableBody>
         </Table>
-        <div className="max-h-[60vh] overflow-y-scroll">
-          <Table className="table-fixed w-full">
-            <TableBody>
-              {leaderboardData.map((player, index) => (
-                <TableRow key={index}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell
-                    className={
-                      player.username === storedName ? "bg-yellow-100" : ""
-                    }
-                  >
-                    {player.username}
-                  </TableCell>
-                  <TableCell>{player.score}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
       </div>
 
       {/* MENU */}
@@ -93,3 +76,5 @@ export default function Leaderboard() {
     </>
   );
 };
+
+export default Leaderboard;
