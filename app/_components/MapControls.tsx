@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { FitBoundsOptions } from "maplibre-gl";
+// import { FitBoundsOptions } from "maplibre-gl";
 import { NavigationControl, GeolocateControl} from "react-map-gl/maplibre";
 
 const MapControls = (): React.JSX.Element => {
