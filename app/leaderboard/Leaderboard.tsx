@@ -35,7 +35,6 @@ export default function Leaderboard() {
         }
       );
       const resData: Leaderboards[] = (await response.json()) as Leaderboards[];
-      console.log(resData);
       setLeaderboardData(resData);
     } catch (error) {
       alert(error);
