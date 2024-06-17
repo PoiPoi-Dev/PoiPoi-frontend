@@ -265,9 +265,6 @@ function MapInner() {
     setClosestNotCompletedPin(closestPin);
   };
 
-  // useGeolocation(handleSetUserCoordinates);
-  // useGeolocation(handleSetClosestNotCompletedPin);
-
   const handleLevelAndXp = async () => {
     try {
       const auth = await getAuthService();
