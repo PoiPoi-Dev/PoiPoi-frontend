@@ -79,7 +79,7 @@ const GuessDistanceModal = ({
   };
 
   return (
-    <div className="fixed bottom-40 flex w-screen justify-center items-center z-[100]">
+    <div className="fixed bottom-40 flex w-screen justify-center items-center z-50">
       <Drawer>
         <div className="w-1/2 bg-white p-4 rounded-2xl">
           <p className="mb-4">
