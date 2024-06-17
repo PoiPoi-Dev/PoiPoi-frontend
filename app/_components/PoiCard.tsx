@@ -63,7 +63,6 @@ export function PoiCard({
       gameMap.flyTo({
         center: [pin.search_longitude, pin.search_latitude],
         duration: 1000,
-        minZoom: 24,
         zoom: 17
       });
     } catch (error) {

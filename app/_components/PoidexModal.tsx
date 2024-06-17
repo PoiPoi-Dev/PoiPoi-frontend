@@ -26,7 +26,6 @@ const PoidexModal: React.FC<PoidexModalProps> = ({ pins, setShowPoidex }) => {
           ? [pin.exact_longitude, pin.exact_latitude]
           : [pin.search_longitude, pin.search_latitude],
         duration: 1000,
-        minZoom: 24,
         zoom: 17,
       });
     } catch (error) {
