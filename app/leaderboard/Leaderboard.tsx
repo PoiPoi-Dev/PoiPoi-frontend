@@ -47,7 +47,7 @@ const Leaderboard: React.FC<LeaderboardProps> = () => {
   return (
     <>
       {/* LEADERBOARD */}
-      <div className="animate-fade fade-in">
+      <div className="animate-fade fade-in overflow-y-scroll">
         <h1 className="text-center text-2xl font-bold text-primary bg-secondary py-4 my-0">
           Leaderboard
         </h1>
