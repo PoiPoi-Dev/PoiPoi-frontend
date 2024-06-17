@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  redirects: async () => [
+    {
+      source: "/",
+      destination: "/map",
+      permanent: false,
+    },
+  ],
   images: {
     remotePatterns: [
       {
@@ -7,42 +14,6 @@ const nextConfig = {
         hostname: "firebasestorage.googleapis.com",
         port: "",
         pathname: "/**/**/**",
-      },
-      {
-        protocol: "https",
-        hostname: "travelmate.tech",
-        port: "",
-        pathname: "/media/images/cache/**",
-      },
-      {
-        protocol: "https",
-        hostname: "japandeluxetours.com",
-        port: "",
-        pathname: "/uploads/**",
-      },
-      {
-        protocol: "https",
-        hostname: "www.japan-guide.com",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "static.gltjp.com",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "upload.wikimedia.org",
-        port: "",
-        pathname: "/wikipedia/commons/thumb/**/**/**",
-      },
-      {
-        protocol: "http",
-        hostname: "w3.org",
-        port: "",
-        pathname: "/**/**",
       },
     ],
   },
