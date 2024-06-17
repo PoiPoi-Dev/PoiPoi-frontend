@@ -4,14 +4,14 @@ import { NavigationControl, GeolocateControl} from "react-map-gl/maplibre";
 
 const MapControls = (): React.JSX.Element => {
 
-  const geolocateFitBoundsOptions:FitBoundsOptions = {
-    duration: 1500,
+  // const geolocateFitBoundsOptions:FitBoundsOptions = {
+    // duration: 1500,
     // minZoom: 14,
     // maxZoom: 17,
     // zoom: 17,
     // linear: true,
     // curve: undefined,
-  }
+  // }
 
   const geolocationRef = useRef<maplibregl.GeolocateControl|null>(null);
 
