@@ -9,11 +9,11 @@ import { AuthContext } from "./useContext/AuthContext";
 import { getAuthService } from "@/config/firebaseconfig";
 import GameControls from "./GameControls";
 import {
-  ConvertGeolocationPositionToCoordinates,
+  // ConvertGeolocationPositionToCoordinates,
   Coordinates,
   GetDistanceFromCoordinatesToMeters,
 } from "../_utils/coordinateMath";
-import useGeolocation from "../_hooks/useGeolocation";
+// import useGeolocation from "../_hooks/useGeolocation";
 import FilterButton from "./FilterButton";
 import GuessPolyline from "./ui/guessPolyline";
 import PopoverCard from "./PopoverCard";
@@ -109,6 +109,7 @@ function MapInner() {
   useEffect(() => {
     if (!closestNotCompletedPin || !userCoordinates) return;
     handleDistanceToClosestPin(userCoordinates, closestNotCompletedPin);
+    console.log("use effect closestNotCompletedPin");
   }, [closestNotCompletedPin, userCoordinates]);
 
   useEffect(() => {
@@ -223,9 +224,13 @@ function MapInner() {
    * Sets the user's coordinates
    * @param position
    */
-  const handleSetUserCoordinates = (position: GeolocationPosition) => {
-    const userCoord: Coordinates =
-      ConvertGeolocationPositionToCoordinates(position);
+  const handleSetUserCoordinates = (position: GeolocationCoordinates) => {
+    const userCoord: Coordinates = {
+      longitude: position.longitude,
+      latitude: position.latitude,
+    }
+      // ConvertGeolocationPositionToCoordinates(position);
+    console.log(userCoord);
     setUserCoordinates(userCoord);
   };
 
@@ -234,10 +239,10 @@ function MapInner() {
    * Accounts for the toggled filters
    * @param position
    */
-  const handleSetClosestNotCompletedPin = (position: GeolocationPosition) => {
+  const handleSetClosestNotCompletedPin = (position: GeolocationCoordinates) => {
     const userCoordinates: Coordinates = {
-      longitude: position.coords.longitude,
-      latitude: position.coords.latitude,
+      longitude: position.longitude,
+      latitude: position.latitude,
     };
 
     let shortestDistance: number = Number.MAX_SAFE_INTEGER;
@@ -270,8 +275,8 @@ function MapInner() {
     setClosestNotCompletedPin(closestPin);
   };
 
-  useGeolocation(handleSetUserCoordinates);
-  useGeolocation(handleSetClosestNotCompletedPin);
+  // useGeolocation(handleSetUserCoordinates);
+  // useGeolocation(handleSetClosestNotCompletedPin);
 
   const handleLevelAndXp = async () => {
     try {
@@ -399,7 +404,10 @@ function MapInner() {
             </>
           )}
         <MainQuest closestNotCompletedPin={closestNotCompletedPin} />
-        <MapControls />
+        <MapControls 
+        handleUserCoordinates={handleSetUserCoordinates}
+        handleSetClosestNotCompletedPin={handleSetClosestNotCompletedPin}
+        />
       </Map>
 
       <LevelContainer levelAndXp={levelAndXp} />
