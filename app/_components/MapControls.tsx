@@ -8,7 +8,7 @@ const MapControls = (): React.JSX.Element => {
     duration: 1500,
     // minZoom: 14,
     // maxZoom: 17,
-    zoom: 17,
+    // zoom: 17,
     // linear: true,
     // curve: undefined,
   }
@@ -38,7 +38,7 @@ const MapControls = (): React.JSX.Element => {
       <NavigationControl position="top-right" />
       <GeolocateControl position="bottom-right" 
       ref={geolocationRef} 
-      fitBoundsOptions={geolocateFitBoundsOptions} 
+      // fitBoundsOptions={geolocateFitBoundsOptions} 
       trackUserLocation={true} 
       onError={handleGeolocateError} 
       />
