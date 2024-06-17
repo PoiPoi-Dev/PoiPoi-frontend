@@ -6,7 +6,7 @@ import FooterMenu from "./_components/FooterMenu";
 export default function Home(): JSX.Element {
   // RETURN
   return (
-    <main className="text-primary bg-gray-200 flex min-h-screen flex-col items-center justify-start p-24">
+    <main className="text-primary bg-gray-200 flex min-h-svh flex-col items-center justify-start p-24">
       <h1>Got lost?</h1>
       <Link
         href="/map"

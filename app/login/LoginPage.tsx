@@ -325,7 +325,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 w-screen h-screen px-4">
+    <div className="flex flex-col items-center justify-center gap-4 w-screen h-svh px-4 bg-gray-200">
       {!isLoading ? (
         <>
           {renderLoginWindow(loginWindowStatus)}

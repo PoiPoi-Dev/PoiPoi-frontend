@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
+import { useState, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -11,20 +12,14 @@ import {
 import FooterMenu from "../_components/FooterMenu";
 import { Leaderboards } from "../_utils/global";
 
-interface LeaderboardProps {}
-
-const Leaderboard: React.FC<LeaderboardProps> = () => {
-  const [storedName, setStoredName] = useState<string | null>(null);
+export default function Leaderboard() {
   const [leaderboardData, setLeaderboardData] = useState<Leaderboards[]>([]);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.localStorage) {
-      const name = localStorage.getItem("username");
-      setStoredName(name);
-    }
+    void handleLeaderboardData();
   }, []);
 
-  const getLeaderboardData = async () => {
+  const handleLeaderboardData = async () => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
       const cacheBuster = Date.now();
@@ -40,16 +35,12 @@ const Leaderboard: React.FC<LeaderboardProps> = () => {
         }
       );
       const resData: Leaderboards[] = (await response.json()) as Leaderboards[];
+      console.log(resData);
       setLeaderboardData(resData);
     } catch (error) {
-      alert("Leaderboard currently unavailable");
-      console.error("Error fetching leaderboard:", error);
+      alert(error);
     }
   };
-
-  useEffect(() => {
-    void getLeaderboardData();
-  }, []);
 
   return (
     <>
@@ -66,6 +57,15 @@ const Leaderboard: React.FC<LeaderboardProps> = () => {
               <TableHead>Score</TableHead>
             </TableRow>
           </TableHeader>
+          <TableBody>
+            {leaderboardData.map((player, index) => (
+              <TableRow key={index}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{player.username}</TableCell>
+                <TableCell>{player.score}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
         </Table>
         <div className="max-h-[60vh] overflow-y-scroll">
           <Table className="table-fixed w-full">
@@ -93,5 +93,3 @@ const Leaderboard: React.FC<LeaderboardProps> = () => {
     </>
   );
 };
-
-export default Leaderboard;
