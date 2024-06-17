@@ -35,7 +35,7 @@ const PoidexModal: React.FC<PoidexModalProps> = ({ pins, setShowPoidex }) => {
   };
 
   return (
-    <main className="fixed flex h-[100svh] flex-col items-center justify-between">
+    <main className="fixed flex h-svh flex-col items-center justify-between">
       <Popover defaultOpen>
         <PopoverContent>
           <Dialog defaultOpen>
