@@ -14,7 +14,7 @@ export default function HowToPlay() {
     <div className="w-screen h-[100svh] px-4 overflow-y-scroll">
       <Carousel className="w-full h-full">
         <CarouselContent>
-          <CarouselItem className="flex-col h-svh overflow-y-scroll items-end justify-center text-center">
+          <CarouselItem className="flex-col h-svh overflow-y-scroll no-scrollbar items-end justify-center text-center">
             <Image
               alt="welcome screen"
               className="mt-4 rounded-2xl"
@@ -28,7 +28,7 @@ export default function HowToPlay() {
              players will be collecting throughout the game.`}
             </p>
           </CarouselItem>
-          <CarouselItem className="flex-col h-svh overflow-y-scroll items-end justify-center text-center">
+          <CarouselItem className="flex-col h-svh overflow-y-scroll no-scrollbar items-end justify-center text-center">
             <Image
               alt="Tutorial 1"
               className="mt-4 rounded-2xl"
@@ -48,7 +48,7 @@ export default function HowToPlay() {
            the thumbnail photo will also open the POI card.`}
             </p>
           </CarouselItem>
-          <CarouselItem className="flex-col h-svh overflow-y-scroll items-end justify-center text-center">
+          <CarouselItem className="flex-col h-svh overflow-y-scroll no-scrollbar items-end justify-center text-center">
             <Image
               alt="Tutorial 2"
               className="mt-4 rounded-2xl"
@@ -67,7 +67,7 @@ export default function HowToPlay() {
              card to the Collection.`}
             </p>
           </CarouselItem>
-          <CarouselItem className="flex-col h-svh overflow-y-scroll items-end justify-center text-center">
+          <CarouselItem className="flex-col h-svh overflow-y-scroll no-scrollbar items-end justify-center text-center">
             <Image
               alt="Tutorial 3"
               className="mt-4 rounded-2xl"
@@ -83,7 +83,7 @@ export default function HowToPlay() {
              added to the overall XP, which raises the player's level.`}
             </p>
           </CarouselItem>
-          <CarouselItem className="flex-col h-svh overflow-y-scroll items-end justify-center text-center">
+          <CarouselItem className="flex-col h-svh overflow-y-scroll no-scrollbar items-end justify-center text-center">
             <Image
               alt="Tutorial 4"
               className="mt-4 rounded-2xl"
@@ -100,7 +100,7 @@ export default function HowToPlay() {
              understand, but doesn't give away too much.`}
             </p>
           </CarouselItem>
-          <CarouselItem className="flex-col h-svh overflow-y-scroll items-end justify-center text-center">
+          <CarouselItem className="flex-col h-svh overflow-y-scroll no-scrollbar items-end justify-center text-center">
             <Image
               alt="Tutorial 5"
               className="mt-4 rounded-2xl"
