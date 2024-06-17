@@ -33,7 +33,6 @@ export async function createUser(
       firebase_uuid: newUserUuid,
       username: displayName,
     };
-    console.log("Create new user with uuid: ", newUserUuid);
 
     const response = await fetch(`${baseUrl}/api/user_profiles`, {
       credentials: "include",
@@ -100,9 +99,8 @@ export async function isVerified(bearerToken: string) {
         Authorization: "Bearer " + bearerToken,
       },
     });
-    const data = (await response.json()) as { message: string };
-    console.log("verified with uuid:", data);
+    (await response.json()) as { message: string };
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }

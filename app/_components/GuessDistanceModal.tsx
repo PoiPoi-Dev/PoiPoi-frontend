@@ -46,8 +46,6 @@ const GuessDistanceModal = ({
       poi_id: guessedPin.poi_id,
       content: hint,
     };
-    console.log(hintData);
-
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/posthint`,
@@ -66,7 +64,6 @@ const GuessDistanceModal = ({
         );
         drawerRef.current?.click(); // Simulate clicking the Done button
       } else {
-        console.log(hintData);
         const responseData = (await response.json()) as { message?: string };
         alert(
           `Failed to submit hint: ${responseData.message || "Unknown error"}`
