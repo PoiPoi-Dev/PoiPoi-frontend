@@ -177,7 +177,7 @@ export function PoiCard({
 
   //cycle thru hints in toast
   const toastHintCycle = (i: number = 0) => {
-    if (hints[0] === "You sure? Click again to show hints!") {
+    if (hints[0] === "You sure? Click the hint button again to show hints!") {
       toast(hints[0]);
     } else {
       toast("Hint:", {
