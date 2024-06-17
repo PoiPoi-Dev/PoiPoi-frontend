@@ -8,9 +8,11 @@ export default function Home(): JSX.Element {
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       ></meta>
-      <AuthProvider>
-        <LoginPage />
-      </AuthProvider>
+      <body>
+        <AuthProvider>
+          <LoginPage />
+        </AuthProvider>
+      </body>
     </html>
   );
 }
