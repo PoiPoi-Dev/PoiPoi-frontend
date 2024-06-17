@@ -21,7 +21,7 @@ export default function FooterMenu({
           </ButtonIconCircle>
         </Link>
 
-        <Link href={"/map?tab=collection"}>
+        <Link href={"/map"}>
           <ButtonIconCircle
             variant={variant === "collection" ? "active" : "default"}
             text="collection"
