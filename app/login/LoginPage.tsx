@@ -91,7 +91,7 @@ const LoginPage: React.FC = () => {
       );
       setIsCreating(false);
       //to be used for Leaderboard
-      localStorage.setItem("username", user.displayName);
+      // localStorage.setItem("username", user.displayName);
     } catch (error) {
       console.error(error);
     }
@@ -106,7 +106,7 @@ const LoginPage: React.FC = () => {
       if (!user.email || !user.password) throw "Invalid User/Password";
       const isLoginSuccess = await loginUser(user.email, user.password);
       if (isLoginSuccess) router.push("/map");
-      localStorage.setItem("username", user.displayName);
+      // localStorage.setItem("username", user.displayName);
     } catch (error) {
       console.error(error);
     }
@@ -117,7 +117,7 @@ const LoginPage: React.FC = () => {
       await logoutUser();
       setCurrAccount({} as Account);
       setLoginWindowStatus(0);
-      localStorage.removeItem("username");
+      // localStorage.removeItem("username");
     } catch (error) {
       console.error(error);
     }
