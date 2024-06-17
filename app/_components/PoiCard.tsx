@@ -12,6 +12,7 @@ import {
 import { Badge } from "./ui/badge";
 import { Toaster, toast } from "sonner";
 import Link from "next/link";
+import { useMap } from "react-map-gl/maplibre";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -36,6 +37,7 @@ export function PoiCard({
   );
   const user = useContext(AuthContext);
   const importantPinContext = useContext(ImportantPinContext);
+  const { gameMap } = useMap();
   const { search_latitude, search_longitude } = payload;
   const pinCoordinates: Coordinates = {
     latitude: search_latitude,
@@ -43,7 +45,7 @@ export function PoiCard({
   };
   //hint useStates
   const [hints, setHints] = useState<string[] | undefined[]>([
-    "You sure? Click again to show hints!",
+    "You sure? Click the hint button again to show hints!",
   ]);
 
   // HANDLERS FUNCTIONS
@@ -54,6 +56,20 @@ export function PoiCard({
       payload.search_radius
     );
   };
+
+  const handlePanMapToTrackingPin = (pin: Pin) => {
+    try {
+      if (!gameMap) throw "Can't find map";
+      gameMap.flyTo({
+        center: [pin.search_longitude, pin.search_latitude],
+        duration: 1000,
+        minZoom: 24,
+        zoom: 17
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const PostGuess = async (
     user: User,
@@ -161,7 +177,7 @@ export function PoiCard({
 
   //cycle thru hints in toast
   const toastHintCycle = (i: number = 0) => {
-    if (hints[0] === "You sure? Click again to show hints!") {
+    if (hints[0] === "You sure? Click the hint button again to show hints!") {
       toast(hints[0]);
     } else {
       toast("Hint:", {
@@ -263,6 +279,7 @@ export function PoiCard({
 
                   if (importantPinContext) {
                     importantPinContext.setTrackingPin(payload);
+                    handlePanMapToTrackingPin(payload);
                     setShowPopup && setShowPopup(false);
                   }
                 }}
@@ -290,6 +307,7 @@ export function PoiCard({
                 if (!handleCheckUserInSearchZone()) {
                   if (importantPinContext) {
                     importantPinContext.setTrackingPin(payload);
+                    handlePanMapToTrackingPin(payload);
                     setShowPopup && setShowPopup(false);
                   }
                 } else {

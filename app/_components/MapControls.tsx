@@ -1,22 +1,17 @@
-import { useEffect, useContext, useRef } from "react";
-import { FitBoundsOptions } from "maplibre-gl";
-import { NavigationControl, GeolocateControl, useMap } from "react-map-gl/maplibre";
-import {ImportantPinContext} from "./useContext/ImportantPinContext";
-import { Pin } from "../_utils/global";
-
+import { useEffect, useRef } from "react";
+// import { FitBoundsOptions } from "maplibre-gl";
+import { NavigationControl, GeolocateControl} from "react-map-gl/maplibre";
 
 const MapControls = (): React.JSX.Element => {
 
-  const trackingPinContext = useContext(ImportantPinContext);
-  const {current: map} = useMap();
-
-  const geolocateFitBoundsOptions:FitBoundsOptions = {
-    duration: 1500,
-    minZoom: 16,
-    maxZoom: 17,
-    zoom: 17,
-    curve: undefined,
-  }
+  // const geolocateFitBoundsOptions:FitBoundsOptions = {
+    // duration: 1500,
+    // minZoom: 14,
+    // maxZoom: 17,
+    // zoom: 17,
+    // linear: true,
+    // curve: undefined,
+  // }
 
   const geolocationRef = useRef<maplibregl.GeolocateControl|null>(null);
 
@@ -27,35 +22,15 @@ const MapControls = (): React.JSX.Element => {
     geolocationRef.current.trigger();
   }, [geolocationRef.current])
 
-  useEffect(() => {
-    if (!trackingPinContext) return;
-    if (!trackingPinContext.trackingPin) return;
-    console.table(trackingPinContext.trackingPin);
-      handlePanMapToTrackingPin(trackingPinContext.trackingPin);
-  },[trackingPinContext?.trackingPin])
-
-  const handlePanMapToTrackingPin = (pin: Pin) => {
-    try {
-      if (!map) throw "Can't find map";
-      map.flyTo({
-        center: [pin.search_longitude, pin.search_latitude],
-        duration: 1000,
-        minZoom: 24,
-        zoom: 17
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   const handleGeolocateError = (error: GeolocationPositionError) => {
     console.log("geolocate error detected");
     if (error.code === error.PERMISSION_DENIED) {
       alert("Geolocation permission denied. Please enable geolocation in your browser settings.");
     } 
-    if (error.code === error.POSITION_UNAVAILABLE) {
-      alert("Geolocation has permission, however position unavailable.");
-    }
+    // if (error.code === error.POSITION_UNAVAILABLE) {
+    //   alert("Geolocation has permission, however position unavailable.");
+    // }
   };
 
   return (
@@ -63,7 +38,7 @@ const MapControls = (): React.JSX.Element => {
       <NavigationControl position="top-right" />
       <GeolocateControl position="bottom-right" 
       ref={geolocationRef} 
-      fitBoundsOptions={geolocateFitBoundsOptions} 
+      // fitBoundsOptions={geolocateFitBoundsOptions} 
       trackUserLocation={true} 
       onError={handleGeolocateError} 
       />
