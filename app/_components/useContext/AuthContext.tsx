@@ -28,7 +28,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           if (!user) throw "No user";
           setUser(user);
         } catch (error) {
-          console.log(error);
+          console.error(error);
           setUser(null);
         }
       });

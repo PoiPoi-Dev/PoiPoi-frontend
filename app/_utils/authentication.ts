@@ -40,7 +40,7 @@ const loginEmailPassword = async (
   } catch (e: unknown) {
     if (isFirebaseAuthError(e)) {
       const errorCode = e.code;
-      console.log("errorCode: ", errorCode);
+      console.error("errorCode: ", errorCode);
       if (errorCode === 'auth/invalid-credential') {
         throw new Error('Email or password incorrect! Please try again.');
       } else {
