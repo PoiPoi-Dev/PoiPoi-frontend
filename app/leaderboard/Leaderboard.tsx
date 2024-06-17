@@ -1,5 +1,6 @@
-import { Leaderboards } from "../_utils/global";
-import { getLeaderboardData } from "../_utils/fetchLeaderboard";
+"use client";
+
+import { useState, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -9,18 +10,37 @@ import {
   TableCell,
 } from "../_components/ui/table";
 import FooterMenu from "../_components/FooterMenu";
-import { revalidatePath } from "next/cache";
+import { Leaderboards } from "../_utils/global";
 
-export default async function Leaderboard() {
-  const LeaderboardData: Leaderboards[] | undefined =
-    await getLeaderboardData();
+export default function Leaderboard() {
+  const [leaderboardData, setLeaderboardData] = useState<Leaderboards[]>([]);
 
-  if (!LeaderboardData) {
-    alert("Leaderboard currently unavailble");
-    return;
-  }
+  useEffect(() => {
+    void handleLeaderboardData();
+  }, []);
 
-  revalidatePath("/api/leaderboard");
+  const handleLeaderboardData = async () => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+      const cacheBuster = Date.now();
+      const response = await fetch(
+        `${baseUrl}/api/leaderboards?_=${cacheBuster}`,
+        {
+          credentials: "include",
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache",
+          },
+        }
+      );
+      const resData: Leaderboards[] = (await response.json()) as Leaderboards[];
+      console.log(resData);
+      setLeaderboardData(resData);
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   return (
     <>
@@ -38,7 +58,7 @@ export default async function Leaderboard() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {LeaderboardData.map((player, index) => (
+            {leaderboardData.map((player, index) => (
               <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{player.username}</TableCell>
