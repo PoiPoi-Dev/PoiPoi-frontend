@@ -9,6 +9,7 @@ import {
   TableCell,
 } from "../_components/ui/table";
 import FooterMenu from "../_components/FooterMenu";
+import { revalidatePath } from "next/cache";
 
 export default async function Leaderboard() {
   const LeaderboardData: Leaderboards[] | undefined =
@@ -18,6 +19,8 @@ export default async function Leaderboard() {
     alert("Leaderboard currently unavailble");
     return;
   }
+
+  revalidatePath("/api/leaderboard");
 
   return (
     <>
