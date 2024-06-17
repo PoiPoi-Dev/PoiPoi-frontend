@@ -10,7 +10,7 @@ import Image from "next/image";
 import { Button } from "../_components/ui/button";
 
 const contentStyle =
-  "flex-col h-svh overflow-y-scroll no-scrollbar items-end justify-center text-center mb-8";
+  "flex-col h-svh overflow-y-scroll no-scrollbar items-end justify-center text-center pb-8";
 
 export default function HowToPlay() {
   return (
@@ -18,6 +18,13 @@ export default function HowToPlay() {
       <Carousel className="w-full h-full">
         <CarouselContent>
           <CarouselItem className={contentStyle}>
+            <Image
+              alt="welcome screen"
+              className="mt-4 rounded-2xl"
+              src="https://firebasestorage.googleapis.com/v0/b/tokyo-quest.appspot.com/o/devPhotos%2FIMG_3593.jpg?alt=media&token=47a552ab-701a-48e2-b1fb-e3dcaeab52a3"
+              width={400}
+              height={600}
+            ></Image>
             <Image
               alt="welcome screen"
               className="mt-4 rounded-2xl"
