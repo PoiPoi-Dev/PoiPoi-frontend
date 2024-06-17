@@ -6,9 +6,10 @@ const MapControls = (): React.JSX.Element => {
 
   const geolocateFitBoundsOptions:FitBoundsOptions = {
     duration: 1500,
-    minZoom: 16,
-    maxZoom: 17,
+    minZoom: 14,
+    // maxZoom: 17,
     zoom: 17,
+    // linear: true,
     curve: undefined,
   }
 
