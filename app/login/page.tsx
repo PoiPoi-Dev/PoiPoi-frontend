@@ -3,10 +3,14 @@ import { AuthProvider } from "../_components/useContext/AuthContext";
 
 export default function Home(): JSX.Element {
   return (
-    <div className="absolute overflow-hidden inset-0 bg-gray-200">
+    <html lang="en">
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      ></meta>
       <AuthProvider>
         <LoginPage />
       </AuthProvider>
-    </div>
+    </html>
   );
 }
