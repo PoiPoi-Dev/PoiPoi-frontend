@@ -23,7 +23,7 @@ const Poidex = ({
     if (tab === "collection") {
       setShowPoidex(true);
     }
-  }, [tab]);
+  }, []);
 
   return (
     <>
