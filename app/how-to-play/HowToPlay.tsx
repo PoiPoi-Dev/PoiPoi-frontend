@@ -198,11 +198,11 @@ export default function HowToPlay() {
               height={600}
             ></Image>
             <h2 className="text-primary text-2xl">Poidex {`(2/2)`}</h2>
-            <p className="mb-20">
+            <p>
               {`If the POI has been collected, the navigation icon will take you to the exact location of POI. You may revisit your favorite POIs anytime!`}
             </p>
             <Link href="/map">
-              <Button className="w-full mt-4">Return to Map</Button>
+              <Button className="w-full mt-4 mb-20">Return to Map</Button>
             </Link>
           </CarouselItem>
         </CarouselContent>
