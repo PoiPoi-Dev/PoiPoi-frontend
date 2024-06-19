@@ -10,7 +10,7 @@ import Poipoi from "@/public/Poipoi.png";
 
 export default function Landing(): JSX.Element {
   return (
-    <div className="absolute overflow-scroll no-scrollbar inset-0 bg-mapBg px-8 pt-6 pb-0 h-full gradient-background text-white">
+    <div className="absolute overflow-scroll no-scrollbar inset-0 bg-mapBg pt-6 pb-0 h-full gradient-background text-white">
       <div className="bg-white/40 min-w-fit px-12 w-3/5 mx-auto rounded-full">
         <Image
           src={Poipoi}
@@ -68,7 +68,7 @@ export default function Landing(): JSX.Element {
         </div>
       </div>
 
-      <footer className="m-0 mt-12 bg-black w-screen p-8 -ml-8 flex flex-col items-center">
+      <footer className="m-0 mt-12 bg-black w-screen p-8 flex flex-col items-center">
         <h3 className="text-3xl mb-8">Meet the creators</h3>
         <div className="flex flex-wrap w-full justify-center gap-2">
           <div className="flex flex-wrap gap-2">
