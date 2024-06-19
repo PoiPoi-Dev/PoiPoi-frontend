@@ -34,7 +34,7 @@ export default function HowToPlay() {
               height={600}
             ></Image>
             <h1 className="text-primary text-xl">WELCOME</h1>
-            <p>
+            <p className="mb-20">
               {`Welcome to POIPOI! POI stands for "Point of Interest", which is what you will be collecting throughout the game.`}
             </p>
           </CarouselItem>
@@ -47,7 +47,7 @@ export default function HowToPlay() {
               height={600}
             ></Image>
             <h2 className="text-primary text-xl">**BEFORE YOU PLAY**</h2>
-            <p>
+            <p className="mb-20">
               {`Please make sure to give permission to location tracking in your browser, as well as your phone!`}
               <br></br>
               {`While you are playing, please be aware of your surroundings, avoid dangerous areas, and follow local laws and regulations.`}
@@ -62,7 +62,7 @@ export default function HowToPlay() {
               height={600}
             ></Image>
             <h2 className="text-primary text-xl">HOW TO PLAY</h2>
-            <p>
+            <p className="mb-20">
               {`1. Select a question mark to start tracking your first POI.`}
               <br></br>
               {`2. Walk to where you think the picture is taken.`}
@@ -79,7 +79,7 @@ export default function HowToPlay() {
               height={600}
             ></Image>
             <h2 className="text-primary text-xl">Tracking a POI {`(1/3)`}</h2>
-            <p>
+            <p className="mb-20">
               {`Each question mark on the map is a POI. The yellow circle around it indicates the "search zone", where hints and guessing will be activated.`}
             </p>
           </CarouselItem>
@@ -92,7 +92,7 @@ export default function HowToPlay() {
               height={600}
             ></Image>
             <h2 className="text-primary text-xl">Tracking a POI {`(2/3)`}</h2>
-            <p>
+            <p className="mb-20">
               {`Clicking on any of the question marks will open the POI card and give you the option to track that POI, which is then visible at the top of the screen.`}
             </p>
           </CarouselItem>
@@ -105,7 +105,7 @@ export default function HowToPlay() {
               height={600}
             ></Image>
             <h2 className="text-primary text-xl">Tracking a POI {`(3/3)`}</h2>
-            <p>
+            <p className="mb-20">
               {`If you are currently inside a search zone, the closest POI will be selected and tracked for you, and the photo will be displayed as a thumbnail in the bottom right corner. Clicking the thumbnail will also open the POI card.`}
             </p>
           </CarouselItem>
@@ -118,7 +118,7 @@ export default function HowToPlay() {
               height={600}
             ></Image>
             <h2 className="text-primary text-xl">Making a Guess {`(1/2)`}</h2>
-            <p>
+            <p className="mb-20">
               {`The goal of the game is to be as close to the location as possible.
            Remember, it is NOT the location of the object, but *WHERE THE PHOTO WAS TAKEN*! Once you enter a search zone, it will be possible to
            submit a guess or get hints.`}
@@ -133,7 +133,7 @@ export default function HowToPlay() {
               height={600}
             ></Image>
             <h2 className="text-primary text-xl">Making a Guess {`(2/2)`}</h2>
-            <p>
+            <p className="mb-20">
               {`Submitting a guess will take your current location and compare it to the POI's location, giving you the distance in meters and a score. It will also add the POI card to the Poidex.`}
             </p>
           </CarouselItem>
@@ -146,7 +146,7 @@ export default function HowToPlay() {
               height={600}
             ></Image>
             <h2 className="text-primary text-xl">Scoring and Leveling Up</h2>
-            <p>
+            <p className="mb-20">
               {`Scores are calculated based on the distance between your guess and the exact location of the POI. You can get as many as 1000 points per POI! Points also get added to the overall XP, which raises your level.`}
             </p>
           </CarouselItem>
@@ -159,7 +159,7 @@ export default function HowToPlay() {
               height={600}
             ></Image>
             <h2 className="text-primary text-xl">Leaving Hints {`(1/2)`}</h2>
-            <p>
+            <p className="mb-20">
               {`If your guess is within 20 meters of the POI, you get the option to leave a hint! This hint can then be seen by others who have not yet collected the POI.`}
             </p>
           </CarouselItem>
@@ -172,7 +172,7 @@ export default function HowToPlay() {
               height={600}
             ></Image>
             <h2 className="text-primary text-xl">Leaving Hints {`(2/2)`}</h2>
-            <p>
+            <p className="mb-20">
               {`Please leave a short comment that will help others find the POI! Try to make it easy to understand, but not giving away too much 😉.`}
             </p>
           </CarouselItem>
@@ -185,7 +185,7 @@ export default function HowToPlay() {
               height={600}
             ></Image>
             <h2 className="text-primary text-2xl">Poidex {`(1/2)`}</h2>
-            <p>
+            <p className="mb-20">
               {`In the Poidex, you can see thumbnail photos of all the POIs and their current status. Clicking on a thumbnail will display the POI card. Clicking on the "navigate" icon in the top-right corner will take you to the search zone if the POI has not been collected.`}
             </p>
           </CarouselItem>
@@ -198,7 +198,7 @@ export default function HowToPlay() {
               height={600}
             ></Image>
             <h2 className="text-primary text-2xl">Poidex {`(2/2)`}</h2>
-            <p>
+            <p className="mb-20">
               {`If the POI has been collected, the navigation icon will take you to the exact location of POI. You may revisit your favorite POIs anytime!`}
             </p>
             <Link href="/map">
