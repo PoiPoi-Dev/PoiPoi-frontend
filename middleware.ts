@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse, userAgent } from "next/server";
 
 export function middleware(req: NextRequest) {
-
   const { device } = userAgent(req);
 
   if (device.type !== "mobile") {
@@ -12,5 +11,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/map", "/leaderboard", "/login"],
+  matcher: ["/map", "/leaderboard", "/login", "/how-to-play"],
 };
