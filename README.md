@@ -1,5 +1,5 @@
+![alt text](Poipoi-1.webp)
 # POI POI
-
 is an immersive web game that challenges players to identify locations within Tokyo using visual clues from carefully curated images.
 
 ## Features
