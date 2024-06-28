@@ -25,7 +25,7 @@ is an immersive web game that challenges players to identify locations within To
 - **Architectural Highlights:** The application follows a microservices architecture, with the frontend and backend components deployed and scaled independently. The frontend is deployed on Vercel, a cloud platform for static sites and Serverless Functions, while the backend is deployed on Heroku, a cloud platform for hosting and running applications. This architectural approach promotes scalability, flexibility, and separation of concerns, allowing each component to evolve and be maintained independently.
 - **Server-side Rendering (SSR):** Next.js is used to provide server-side rendering, improving initial load times and enhancing the overall performance of the application.
 - **Component-based Architecture:** The application follows a component-based architecture, promoting code reusability and modular development.
-- **State Management:** The application utilizes React's built-in state management capabilities, along with Redux for managing global application state when necessary.
+- **State Management:** The application utilizes React's built-in state management.
 - **Testing:** The codebase includes unit tests and integration tests, ensuring code quality and facilitating easier maintenance and refactoring.
 - **Modular Architecture:** The codebase is structured using a modular approach, promoting code reusability, maintainability, and scalability.
 
@@ -96,7 +96,7 @@ npm start
 To lint the codebase, run:
 
 ```
-npm run lint
+npx next lint
 ```
 
 To run the test suite, execute:
@@ -109,6 +109,20 @@ For watching changes and re-running tests, use:
 
 ```
 npm run test:watch
+```
+
+For E2E Testing
+
+Start the backend and Frontend:
+
+```
+npm run dev
+```
+
+Start E2E testing:
+
+```
+npx cypress open
 ```
 
 ## Contributing
