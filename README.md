@@ -4,7 +4,7 @@ is an immersive web game that challenges players to identify locations within To
 
 ## Features
 
-- **Responsive Design:** The application is desinged with Mobile first in mind.
+- **Responsive Design:** The application is designed with Mobile first in mind.
 - **Interactive Maps:** Leveraging MapLibre GL, the application offers interactive map functionality, allowing users to explore and interact with geographical data.
 - **Accessibility:** The user interface components are built with accessibility in mind, following best practices and guidelines for inclusive design.
 
