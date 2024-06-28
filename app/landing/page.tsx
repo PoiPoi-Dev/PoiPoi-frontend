@@ -73,6 +73,7 @@ export default function Landing(): JSX.Element {
         <div className="flex flex-wrap w-full justify-center gap-2">
           <div className="flex flex-wrap gap-2">
             <a
+              id="Nattawat"
               href="https://github.com/departurelv"
               className="flex justify-center items-center relative group w-20 h-20"
             >
@@ -81,7 +82,6 @@ export default function Landing(): JSX.Element {
                 alt={"Nattawat"}
                 width={200}
                 height={200}
-                title="Deana"
                 className="absolute w-full h-full rounded-full object-cover z-0 group-hover:brightness-50"
               />
               <div className="text-sm h-fit z-10 opacity-0 group-hover:opacity-100 duration-300 flex text-center text-white font-semibold">
@@ -89,6 +89,7 @@ export default function Landing(): JSX.Element {
               </div>
             </a>
             <a
+              id="Jarrod"
               href="https://github.com/J-Ariola"
               className="flex justify-center items-center relative group w-20 h-20"
             >
@@ -97,7 +98,7 @@ export default function Landing(): JSX.Element {
                 alt={"Jarrod"}
                 width={200}
                 height={200}
-                title="Deana"
+                title="Jarrod"
                 className="absolute w-full h-full rounded-full object-cover z-0 group-hover:brightness-50"
               />
               <div className="text-sm h-fit z-10 opacity-0 group-hover:opacity-100 duration-300 flex text-center text-white font-semibold">
@@ -105,6 +106,7 @@ export default function Landing(): JSX.Element {
               </div>
             </a>
             <a
+              id="Dominik"
               href="https://github.com/dominiksakic"
               className="flex justify-center items-center relative group w-20 h-20"
             >
@@ -123,6 +125,7 @@ export default function Landing(): JSX.Element {
           </div>
           <div className="flex flex-wrap gap-2">
             <a
+              id="Ning"
               href="https://github.com/NChang55"
               className="flex justify-center items-center relative group w-20 h-20"
             >
@@ -139,6 +142,7 @@ export default function Landing(): JSX.Element {
               </div>
             </a>
             <a
+              id="Deana"
               href="https://github.com/deanachou"
               className="flex justify-center items-center relative group w-20 h-20"
             >
@@ -155,6 +159,7 @@ export default function Landing(): JSX.Element {
               </div>
             </a>
             <a
+              id="Jacob"
               href="https://github.com/Flumanuck"
               className="flex justify-center items-center relative group w-20 h-20"
             >
