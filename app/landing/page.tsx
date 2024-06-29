@@ -57,6 +57,7 @@ export default function Landing(): JSX.Element {
 
             <div className="flex flex-col justify-center items-center w-fit">
               <Image
+                id="QRcode"
                 alt="QR code"
                 src={QRcode}
                 width={500}
