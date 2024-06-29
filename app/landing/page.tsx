@@ -13,6 +13,7 @@ export default function Landing(): JSX.Element {
     <div className="absolute overflow-scroll no-scrollbar inset-0 bg-mapBg pt-6 pb-0 h-full gradient-background text-white">
       <div className="bg-white/40 min-w-fit px-12 w-3/5 mx-auto rounded-full">
         <Image
+          id="logo"
           src={Poipoi}
           alt="Poipoi"
           width={200}
