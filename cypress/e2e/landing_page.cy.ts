@@ -1,7 +1,7 @@
 import { BrowserMultiFormatReader } from "@zxing/browser";
 
 describe("Mobile users", () => {
-  it("should be able to enter the map", () => {
+  it("should be able to enter the map page", () => {
     cy.viewport("iphone-8");
     cy.visit({
       url: "/map",
@@ -14,7 +14,7 @@ describe("Mobile users", () => {
     cy.url().should("include", "/map");
   });
 
-  it("should be able to enter the leaderboard", () => {
+  it("should be able to enter the leaderboard page", () => {
     cy.viewport("iphone-8");
     cy.visit({
       url: "/leaderboard",
@@ -52,6 +52,19 @@ describe("Mobile users", () => {
     });
     cy.url().should("include", "/how-to-play");
   });
+
+  it("should be able to enter the landing page", () => {
+    cy.viewport("iphone-8");
+    cy.visit({
+      url: "/landing",
+      method: "POST",
+      headers: {
+        "user-agent":
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1",
+      },
+    });
+    cy.url().should("include", "/landing");
+  });
 });
 
 describe("Desktop users", () => {
@@ -79,6 +92,13 @@ describe("Desktop users", () => {
   it("should not be able to enter the tutorial page", () => {
     cy.visit({
       url: "/how-to-play",
+    });
+    cy.url().should("include", "/landing");
+  });
+
+  it("should be able to enter the landing page", () => {
+    cy.visit({
+      url: "/landing",
     });
     cy.url().should("include", "/landing");
   });
