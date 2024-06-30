@@ -1,4 +1,7 @@
 import { BrowserMultiFormatReader } from "@zxing/browser";
+import { userAgent } from "next/server";
+
+const url = "/map";
 
 describe("The logo", () => {
   it("should contain src as poipoi.img", () => {
@@ -61,5 +64,20 @@ describe("QR Code", () => {
       .then((result) => {
         expect(result.getText()).to.equal("https://poipoi.vercel.app/map");
       });
+  });
+});
+
+describe("Mobile users", () => {
+  it("should be able to enter the game", () => {
+    cy.viewport("iphone-8");
+    cy.visit({
+      url,
+      method: "POST",
+      headers: {
+        "user-agent":
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1",
+      },
+    });
+    cy.url().should("include", "/map");
   });
 });
