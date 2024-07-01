@@ -116,31 +116,31 @@ describe("The Creator Link", () => {
     cy.visit("/");
   });
 
-  it("should navigate to Nattawat Github", async () => {
+  it("should navigate to Nattawat Github", () => {
     cy.get("#Nattawat")
       .should("have.attr", "href")
       .and("include", "departurelv");
   });
 
-  it("should navigate to Jarrod Github", async () => {
+  it("should navigate to Jarrod Github", () => {
     cy.get("#Jarrod").should("have.attr", "href").and("include", "J-Ariola");
   });
 
-  it("should navigate to Dominik Github", async () => {
+  it("should navigate to Dominik Github", () => {
     cy.get("#Dominik")
       .should("have.attr", "href")
       .and("include", "dominiksakic");
   });
 
-  it("should navigate to Ning Github", async () => {
+  it("should navigate to Ning Github", () => {
     cy.get("#Ning").should("have.attr", "href").and("include", "NChang55");
   });
 
-  it("should navigate to Jacob Github", async () => {
+  it("should navigate to Jacob Github", () => {
     cy.get("#Jacob").should("have.attr", "href").and("include", "Flumanuck");
   });
 
-  it("should navigate to Deana Github", async () => {
+  it("should navigate to Deana Github", () => {
     cy.get("#Deana").should("have.attr", "href").and("include", "deanachou");
   });
 });
