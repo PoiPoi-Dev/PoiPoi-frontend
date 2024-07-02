@@ -10,9 +10,10 @@ import Poipoi from "@/public/Poipoi.png";
 
 export default function Landing(): JSX.Element {
   return (
-    <div className="absolute overflow-scroll no-scrollbar inset-0 bg-mapBg px-8 pt-6 pb-0 h-full gradient-background text-white">
+    <div className="absolute overflow-scroll no-scrollbar inset-0 bg-mapBg pt-6 pb-0 h-full gradient-background text-white">
       <div className="bg-white/40 min-w-fit px-12 w-3/5 mx-auto rounded-full">
         <Image
+          id="logo"
           src={Poipoi}
           alt="Poipoi"
           width={200}
@@ -56,6 +57,7 @@ export default function Landing(): JSX.Element {
 
             <div className="flex flex-col justify-center items-center w-fit">
               <Image
+                id="QRcode"
                 alt="QR code"
                 src={QRcode}
                 width={500}
@@ -68,11 +70,12 @@ export default function Landing(): JSX.Element {
         </div>
       </div>
 
-      <footer className="m-0 mt-12 bg-black w-screen p-8 -ml-8 flex flex-col items-center">
+      <footer className="m-0 mt-12 bg-black w-screen p-8 flex flex-col items-center">
         <h3 className="text-3xl mb-8">Meet the creators</h3>
         <div className="flex flex-wrap w-full justify-center gap-2">
           <div className="flex flex-wrap gap-2">
             <a
+              id="Nattawat"
               href="https://github.com/departurelv"
               className="flex justify-center items-center relative group w-20 h-20"
             >
@@ -81,7 +84,6 @@ export default function Landing(): JSX.Element {
                 alt={"Nattawat"}
                 width={200}
                 height={200}
-                title="Deana"
                 className="absolute w-full h-full rounded-full object-cover z-0 group-hover:brightness-50"
               />
               <div className="text-sm h-fit z-10 opacity-0 group-hover:opacity-100 duration-300 flex text-center text-white font-semibold">
@@ -89,6 +91,7 @@ export default function Landing(): JSX.Element {
               </div>
             </a>
             <a
+              id="Jarrod"
               href="https://github.com/J-Ariola"
               className="flex justify-center items-center relative group w-20 h-20"
             >
@@ -97,7 +100,7 @@ export default function Landing(): JSX.Element {
                 alt={"Jarrod"}
                 width={200}
                 height={200}
-                title="Deana"
+                title="Jarrod"
                 className="absolute w-full h-full rounded-full object-cover z-0 group-hover:brightness-50"
               />
               <div className="text-sm h-fit z-10 opacity-0 group-hover:opacity-100 duration-300 flex text-center text-white font-semibold">
@@ -105,6 +108,7 @@ export default function Landing(): JSX.Element {
               </div>
             </a>
             <a
+              id="Dominik"
               href="https://github.com/dominiksakic"
               className="flex justify-center items-center relative group w-20 h-20"
             >
@@ -123,6 +127,7 @@ export default function Landing(): JSX.Element {
           </div>
           <div className="flex flex-wrap gap-2">
             <a
+              id="Ning"
               href="https://github.com/NChang55"
               className="flex justify-center items-center relative group w-20 h-20"
             >
@@ -139,6 +144,7 @@ export default function Landing(): JSX.Element {
               </div>
             </a>
             <a
+              id="Deana"
               href="https://github.com/deanachou"
               className="flex justify-center items-center relative group w-20 h-20"
             >
@@ -155,6 +161,7 @@ export default function Landing(): JSX.Element {
               </div>
             </a>
             <a
+              id="Jacob"
               href="https://github.com/Flumanuck"
               className="flex justify-center items-center relative group w-20 h-20"
             >

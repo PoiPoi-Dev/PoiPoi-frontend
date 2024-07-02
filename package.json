@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
+    "cy:open": "cypress open",
     "test:watch": "jest --watch"
   },
   "dependencies": {
@@ -44,6 +45,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@typescript-eslint/eslint-plugin": "^7.10.0",
+    "cypress": "^13.12.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.3",
     "eslint-plugin-jest-dom": "^5.4.0",
@@ -54,7 +56,9 @@
     "tailwindcss": "^3.4.1",
     "ts-jest": "29.1.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "@zxing/browser": "^0.1.5",
+    "@zxing/library": "^0.21.1"
   },
   "repository": {
     "type": "git",
