@@ -28,6 +28,7 @@ const Poidex = ({
   return (
     <>
       <ButtonIconCircle
+        data-testid="collection-button"
         text="Collection"
         variant={showPoidex ? "secondary" : "default"}
         onClick={(): void => void setShowPoidex(true)}
@@ -36,7 +37,10 @@ const Poidex = ({
       </ButtonIconCircle>
 
       {showPoidex ? (
-        <PoidexModal pins={pins} setShowPoidex={setShowPoidex} />
+        <PoidexModal
+          pins={pins}
+          setShowPoidex={setShowPoidex}
+        />
       ) : null}
     </>
   );
