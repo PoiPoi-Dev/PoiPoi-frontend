@@ -22,6 +22,7 @@ const PopoverCard = ({
     <div className="fixed top-0 left-0 w-screen h-svh">
       <Popover defaultOpen>
         <PopoverContent>
+          {/* userCoordinate can pass deep down even if it is still set to null (default state, geolocate not working for users outside mapbox so it'll still set to null) */}
           {setShowPopup && (
             <PoiPopup
               setCheckLevel={setCheckLevel}
