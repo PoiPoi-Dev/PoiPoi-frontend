@@ -23,6 +23,7 @@ import ImportantPinContextProvider, {
 import MainQuest from "./MainQuest";
 import LevelContainer from "./LevelContainer";
 import { useSearchParams } from "next/navigation";
+import { useMap } from "react-map-gl/maplibre";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -79,18 +80,25 @@ function MapInner() {
   const importantPinContext = useContext(ImportantPinContext);
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+  const { gameMap } = useMap();
 
   // USE EFFECT
   // open poiCard that match the URL params id
   useEffect(() => {
     if (id && poiData.length > 0) {
       const poiId = Number(id);
-      if (poiData.find((pin) => pin.poi_id === poiId)) {
+      const pinStart = poiData.find((pin) => pin.poi_id === poiId);
+      if (pinStart) {
         setShowPopup(true);
         setSelectedPoiId(poiId);
+        gameMap?.flyTo({
+          center: [pinStart.search_longitude, pinStart.search_latitude],
+          duration: 1000,
+          zoom: 17,
+        });
       }
     }
-  }, [id, poiData]);
+  }, [poiData]);
 
   useEffect(() => {
     user ? void handleFetchPoiByUid() : void handleFetchPoiByAnonymous();
