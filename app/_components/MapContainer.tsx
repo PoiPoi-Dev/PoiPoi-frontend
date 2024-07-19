@@ -22,6 +22,7 @@ import ImportantPinContextProvider, {
 } from "./useContext/ImportantPinContext";
 import MainQuest from "./MainQuest";
 import LevelContainer from "./LevelContainer";
+import { useSearchParams } from "next/navigation";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -76,8 +77,19 @@ function MapInner() {
 
   const user = useContext(AuthContext);
   const importantPinContext = useContext(ImportantPinContext);
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
 
   // USE EFFECT
+  // open poiCard that match the URL params id
+  useEffect(() => {
+    if (id && poiData.length > 0) {
+      const poiId = Number(id);
+      setShowPopup(true);
+      setSelectedPoiId(poiId);
+    }
+  }, [id, poiData]);
+
   useEffect(() => {
     user ? void handleFetchPoiByUid() : void handleFetchPoiByAnonymous();
     void handleFetchFilters();
@@ -305,7 +317,10 @@ function MapInner() {
       {/* GAME UI */}
       <div className="absolute top-0 left-0 z-50 w-screen pt-4 gap-4 flex flex-col">
         {/* HEADER CONTROLLER */}
-        <div id="headerMenu" className="fixed top-20 flex flex-col gap-4 w-full">
+        <div
+          id="headerMenu"
+          className="fixed top-20 flex flex-col gap-4 w-full"
+        >
           <FilterButton
             filters={filters}
             selectedFilters={selectedFilters}
