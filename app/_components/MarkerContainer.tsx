@@ -4,6 +4,7 @@ import { MarkerContainerProps } from "../_utils/global";
 import { PiSealQuestionDuotone } from "react-icons/pi";
 import { IoMdCheckmarkCircle } from "react-icons/io";
 import { ImportantPinContext } from "./useContext/ImportantPinContext";
+import { useRouter } from "next/navigation";
 
 const geojson = (lat: number, long: number) => {
   return {
@@ -59,9 +60,12 @@ function MarkerContainer({
     pin.search_latitude
   );
 
+  const router = useRouter();
+
   const handleClick = () => {
     setShowPopup(true);
     setSelectedPoiId(pin.poi_id);
+    router.replace(`/?id=${pin.poi_id}`);
   };
 
   const styleTop: number = 0;

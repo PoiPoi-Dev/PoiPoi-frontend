@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/app/_components/ui/dialog";
+import { useRouter } from "next/navigation";
 
 export default function PoiPopup({
   id,
@@ -22,12 +23,19 @@ export default function PoiPopup({
   setScore: (arg0: number | null) => void;
   setCheckLevel: (arg: boolean) => void;
 }): JSX.Element {
+  const router = useRouter();
+
   // RETURN
   return (
     <main className="flex h-svh flex-col items-center justify-between">
       <Dialog defaultOpen>
         <DialogTrigger />
-        <DialogContent onClick={() => setShowPopup(false)}>
+        <DialogContent
+          onClick={() => {
+            setShowPopup(false);
+            router.replace("/map");
+          }}
+        >
           <PoiCard
             setCheckLevel={setCheckLevel}
             id={id}
