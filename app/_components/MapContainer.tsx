@@ -85,8 +85,10 @@ function MapInner() {
   useEffect(() => {
     if (id && poiData.length > 0) {
       const poiId = Number(id);
-      setShowPopup(true);
-      setSelectedPoiId(poiId);
+      if (poiData.find((pin) => pin.poi_id === poiId)) {
+        setShowPopup(true);
+        setSelectedPoiId(poiId);
+      }
     }
   }, [id, poiData]);
 
