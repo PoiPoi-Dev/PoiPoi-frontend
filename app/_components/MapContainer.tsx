@@ -24,6 +24,7 @@ import MainQuest from "./MainQuest";
 import LevelContainer from "./LevelContainer";
 import { useSearchParams } from "next/navigation";
 import { useMap } from "react-map-gl/maplibre";
+import { useRouter } from "next/navigation";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -81,6 +82,7 @@ function MapInner() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const { gameMap } = useMap();
+  const router = useRouter();
 
   // USE EFFECT
   // open poiCard that match the URL params id
@@ -96,6 +98,8 @@ function MapInner() {
           duration: 1000,
           zoom: 17,
         });
+      } else {
+        router.replace("/map");
       }
     }
   }, [poiData]);
