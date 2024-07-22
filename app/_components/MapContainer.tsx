@@ -80,15 +80,15 @@ function MapInner() {
   const user = useContext(AuthContext);
   const importantPinContext = useContext(ImportantPinContext);
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const poicardId = searchParams.get("poicardid");
   const { gameMap } = useMap();
   const router = useRouter();
 
   // USE EFFECT
   // open poiCard that match the URL params id
   useEffect(() => {
-    if (id && poiData.length > 0) {
-      const poiId = Number(id);
+    if (poicardId && poiData.length > 0) {
+      const poiId = Number(poicardId);
       const pinStart = poiData.find((pin) => pin.poi_id === poiId);
       if (pinStart) {
         setShowPopup(true);

@@ -65,7 +65,7 @@ function MarkerContainer({
   const handleClick = () => {
     setShowPopup(true);
     setSelectedPoiId(pin.poi_id);
-    router.replace(`/?id=${pin.poi_id}`);
+    router.replace(`/?poicardid=${pin.poi_id}`);
   };
 
   const styleTop: number = 0;
