@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { Coordinates } from "../_utils/coordinateMath";
 import { Pin } from "../_utils/global";
 import { PoiCard } from "./PoiCard";
@@ -6,7 +7,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/app/_components/ui/dialog";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function PoiPopup({
   id,
@@ -24,6 +25,16 @@ export default function PoiPopup({
   setCheckLevel: (arg: boolean) => void;
 }): JSX.Element {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // close popup will set poiIdOpen param to "" in URL
+  const removePoiIdQueryString = useCallback((): string => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("poiIdOpen", "");
+
+    return params.toString();
+  }, [searchParams]);
 
   // RETURN
   return (
@@ -33,7 +44,7 @@ export default function PoiPopup({
         <DialogContent
           onClick={() => {
             setShowPopup(false);
-            router.replace("/map");
+            router.push(pathname + "?" + removePoiIdQueryString());
           }}
         >
           <PoiCard

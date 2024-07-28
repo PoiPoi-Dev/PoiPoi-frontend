@@ -4,7 +4,7 @@ import { MarkerContainerProps } from "../_utils/global";
 import { PiSealQuestionDuotone } from "react-icons/pi";
 import { IoMdCheckmarkCircle } from "react-icons/io";
 import { ImportantPinContext } from "./useContext/ImportantPinContext";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const geojson = (lat: number, long: number) => {
   return {
@@ -61,11 +61,28 @@ function MarkerContainer({
   );
 
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // add poiIdOpen param's value to URL
+  const createPoicardidQueryString = useCallback(
+    (value: string): string => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("poiIdOpen", value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
 
   const handleClick = () => {
     setShowPopup(true);
     setSelectedPoiId(pin.poi_id);
-    router.replace(`/?poicardid=${pin.poi_id}`);
+
+    // update URL param with current opened poiCardID
+    router.push(
+      pathname + "?" + createPoicardidQueryString(pin.poi_id.toString())
+    );
   };
 
   const styleTop: number = 0;

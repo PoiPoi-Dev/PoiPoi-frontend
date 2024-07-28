@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import { LngLatBoundsLike, MapProvider, Map } from "react-map-gl/maplibre";
 import { Pin, levelAndXp, trackingPinID } from "../_utils/global";
 import MarkerContainer from "./MarkerContainer";
@@ -22,9 +22,8 @@ import ImportantPinContextProvider, {
 } from "./useContext/ImportantPinContext";
 import MainQuest from "./MainQuest";
 import LevelContainer from "./LevelContainer";
-import { useSearchParams } from "next/navigation";
 import { useMap } from "react-map-gl/maplibre";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -79,16 +78,29 @@ function MapInner() {
 
   const user = useContext(AuthContext);
   const importantPinContext = useContext(ImportantPinContext);
-  const searchParams = useSearchParams();
-  const poicardId = searchParams.get("poicardid");
-  const { gameMap } = useMap();
+
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const paramsPoicardId = searchParams.get("poiIdOpen");
+  const paramsFilters = searchParams.get("filters");
+
+  const { gameMap } = useMap();
+
+  // USE CALLBACK
+  // remove poiIdOpen param's value from URL when no valid poi id detected
+  const removePoicardidQueryString = useCallback((): string => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("poiIdOpen", "");
+
+    return params.toString();
+  }, [searchParams]);
 
   // USE EFFECT
   // open poiCard that match the URL params id
   useEffect(() => {
-    if (poicardId && poiData.length > 0) {
-      const poiId = Number(poicardId);
+    if (paramsPoicardId && poiData.length > 0) {
+      const poiId = Number(paramsPoicardId);
       const pinStart = poiData.find((pin) => pin.poi_id === poiId);
       if (pinStart) {
         setShowPopup(true);
@@ -99,10 +111,19 @@ function MapInner() {
           zoom: 17,
         });
       } else {
-        router.replace("/map");
+        router.push(pathname + "?" + removePoicardidQueryString());
       }
     }
   }, [poiData]);
+
+  // apply filters that match the URL params filters
+  useEffect(() => {
+    if (paramsFilters) {
+      setSelectedFilters(
+        paramsFilters.split(",").map((param) => param.toLowerCase())
+      );
+    }
+  }, [filters]);
 
   useEffect(() => {
     user ? void handleFetchPoiByUid() : void handleFetchPoiByAnonymous();
@@ -385,7 +406,11 @@ function MapInner() {
           .filter((pin) =>
             selectedFilters.length === 0
               ? true
-              : selectedFilters.every((tag) => pin.tags.includes(tag))
+              : selectedFilters.every((tag) =>
+                  pin.tags
+                    .map((t) => t.toLowerCase())
+                    .includes(tag.toLowerCase())
+                )
           )
           .map((pin: Pin): JSX.Element => {
             return (
