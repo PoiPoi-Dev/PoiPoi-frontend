@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback, useContext } from "react";
 import { Layer, Marker, Source, LayerProps } from "react-map-gl/maplibre";
 import { MarkerContainerProps } from "../_utils/global";
 import { PiSealQuestionDuotone } from "react-icons/pi";
@@ -52,7 +52,7 @@ function MarkerContainer({
   setShowPopup,
   setSelectedPoiId,
 }: MarkerContainerProps): JSX.Element {
-  const importantPinContext = React.useContext(ImportantPinContext);
+  const importantPinContext = useContext(ImportantPinContext);
 
   const generateLayerStyle: LayerProps = layerStyle(
     pin.title,
